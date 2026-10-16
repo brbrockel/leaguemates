@@ -7,6 +7,8 @@ import {
   KeyRound,
   Unlock,
   LogOut,
+  Mail,
+  MessageSquare,
   MoreHorizontal,
   Pencil,
   Share2,
@@ -33,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ContactLinks } from '@/components/ContactLinks';
+import { smsHref } from '@/lib/sms';
 import {
   MembershipFields,
   membershipBody,
@@ -172,6 +175,39 @@ function PersonCard({
     onSuccess: onLink,
     onError: (e) => setError(e.message),
   });
+  // Site admins: email the link, or text it from their own phone.
+  const [notice, setNotice] = useState<string | null>(null);
+  const [textHref, setTextHref] = useState<string | null>(null);
+  const emailLink = useMutation({
+    mutationFn: () =>
+      api<{ sent: boolean; to: string }>(`/users/${p.id}/password-link/email`, {
+        method: 'POST',
+      }),
+    onSuccess: (r) => {
+      setError(null);
+      setNotice(r.sent ? `Sign-in link emailed to ${r.to}.` : null);
+      if (!r.sent) setError(`Held back by the mail guard (${r.to}). See Site settings → Email.`);
+    },
+    onError: (e) => setError(e.message),
+  });
+  const textLink = useMutation({
+    mutationFn: () =>
+      api<{ link: string; phone: string; hours: number; greeting: string | null }>(
+        `/users/${p.id}/password-link/text`,
+        { method: 'POST' },
+      ),
+    onSuccess: (d) => {
+      setError(null);
+      setNotice(null);
+      setTextHref(
+        smsHref(
+          [d.phone],
+          `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your TeeMate sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`,
+        ),
+      );
+    },
+    onError: (e) => setError(e.message),
+  });
 
   const managed =
     viewerIsSiteAdmin || (!p.isSiteAdmin && p.leagues.every((l) => l.role === 'user'));
@@ -230,6 +266,22 @@ function PersonCard({
               {managed && !p.disabled && !p.isSelf && (
                 <DropdownMenuItem onSelect={() => link.mutate()}>
                   <KeyRound /> {p.hasPassword ? 'Get password reset link' : 'Get password link'}
+                </DropdownMenuItem>
+              )}
+              {viewerIsSiteAdmin && !p.disabled && (
+                <DropdownMenuItem
+                  onSelect={() =>
+                    window.confirm(
+                      `Email ${displayName(p)} a link to set their password and sign in?`,
+                    ) && emailLink.mutate()
+                  }
+                >
+                  <Mail /> Email sign-in link
+                </DropdownMenuItem>
+              )}
+              {viewerIsSiteAdmin && !p.disabled && p.phone && (
+                <DropdownMenuItem onSelect={() => textLink.mutate()}>
+                  <MessageSquare /> Text sign-in link
                 </DropdownMenuItem>
               )}
               {managed && p.lockedUntil && (
@@ -352,6 +404,19 @@ function PersonCard({
           </DropdownMenu>
         )}
       </div>
+      {notice && <Alert className="mt-3">{notice}</Alert>}
+      {textHref && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Button asChild size="sm">
+            <a href={textHref} onClick={() => setTimeout(() => setTextHref(null), 500)}>
+              <MessageSquare /> Send the text to {displayName(p)}
+            </a>
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            Opens Messages on your phone with the link filled in.
+          </span>
+        </div>
+      )}
       {error && (
         <Alert variant="destructive" className="mt-3">
           {error}

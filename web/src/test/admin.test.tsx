@@ -63,6 +63,43 @@ describe('people page', () => {
     expect(calls.filter((c) => c.key.startsWith('POST'))).toHaveLength(1);
   });
 
+  it('site admins email or text a sign-in link, even to themselves', async () => {
+    const { vi } = await import('vitest');
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const siteAdmin = { ...me, user: { ...me.user, isSiteAdmin: true } };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: siteAdmin }),
+      'GET /api/users': () => ({
+        status: 200,
+        body: [person({ id: 'u1', name: 'Brian', isSelf: true, phone: '+18605551234' })],
+      }),
+      'POST /api/users/u1/password-link/email': () => ({
+        status: 201,
+        body: { sent: true, to: 'b***@example.com' },
+      }),
+      'POST /api/users/u1/password-link/text': () => ({
+        status: 201,
+        body: {
+          link: 'https://teemate.test/set-password#token=abc',
+          phone: '+18605551234',
+          hours: 72,
+          greeting: 'Brian',
+        },
+      }),
+    });
+    renderAt('/people');
+    await userEvent.click(await screen.findByRole('button', { name: 'Actions for Brian' }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: /Email sign-in link/ }));
+    expect(
+      await screen.findByText('Sign-in link emailed to b***@example.com.'),
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Actions for Brian' }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: /Text sign-in link/ }));
+    const send = await screen.findByRole('link', { name: /Send the text to Brian/ });
+    expect(send.getAttribute('href')).toMatch(/^sms:\+18605551234[?&]body=/);
+  });
+
   it('site admins add a person, optionally to a league as an existing player', async () => {
     const siteAdmin = { ...me, user: { ...me.user, isSiteAdmin: true } };
     const calls = mockApi({
