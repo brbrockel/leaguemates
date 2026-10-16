@@ -168,6 +168,23 @@ describe('playoffs', () => {
     // Playoff rounds never change the regular-season standings.
     const after = (await as(site).get(`/leagues/${L}/seasons/${S}/standings`).expect(200)).body;
     expect(after.rows).toEqual(before.rows);
+
+    // Player histories show playoff results as the bracket decided them.
+    const playoffResults = async (playerId: string) =>
+      (await as(site).get(`/leagues/${L}/players/${playerId}/history`).expect(200)).body.matches
+        .filter((m: { playoffRound: number | null }) => m.playoffRound !== null)
+        .map((m: { playoffRound: number; result: string | null }) => [m.playoffRound, m.result]);
+    expect(await playoffResults(m2.b.playerId)).toEqual([
+      [2, 'W'], // won the Finals
+      [1, 'W'], // level on net, won on the cards
+    ]);
+    expect(await playoffResults(m2.a.playerId)).toEqual([[1, 'L']]);
+    expect(await playoffResults(m3.b.playerId)).toEqual([[1, 'L']]); // absent: loses
+    expect(await playoffResults(m4.a.playerId)).toEqual([[1, 'L']]); // the admin's decision
+    expect(await playoffResults(m1.a.playerId)).toEqual([
+      [2, 'L'],
+      [1, 'W'],
+    ]);
   });
 
   it('a league with "final foursome" playoffs goes straight to the top 4', async () => {

@@ -19,6 +19,7 @@ import {
   seasons,
   weeks,
 } from '../db/schema.js';
+import { finalsResult, knockoutResult } from '../playoffs/results.js';
 import { grossOf, matchResults, type RoundData } from './results.js';
 import { effectiveStatus, ScorecardsService } from './scorecards.service.js';
 
@@ -121,7 +122,12 @@ export class PlayerStatsService {
       const card = cs.find((c) => c.groupId === r.groupId);
       if (!card) continue;
       const settings = withDefaults(r.season.settings as Partial<LeagueSettings>);
-      if (effectiveStatus(card, settings.scorecards.disputeWindowHours) === 'draft') continue;
+      const isPlayoff = r.week.playoffRound !== null;
+      if (
+        effectiveStatus(card, settings.scorecards.disputeWindowHours) === 'draft' &&
+        !(isPlayoff && r.match.decidedWinnerId)
+      )
+        continue;
       const rounds: RoundData[] = rs
         .filter((x) => x.scorecardId === card.id)
         .map((x) => ({
@@ -146,7 +152,49 @@ export class PlayerStatsService {
         layoutById.get(card.layoutId)!,
       );
       const mine = rounds.find((x) => x.playerId === playerId);
+      const layout = layoutById.get(card.layoutId)!;
       const outcome = res?.result?.outcome;
+      // Playoffs follow their own rules (card tie-breaks, absences lose, admin decisions,
+      // the Finals foursome), exactly as the bracket shows them.
+      let playoff: { result: 'W' | 'L' | null; net: number | null } | null = null;
+      if (isPlayoff) {
+        let winner: string | null;
+        let net: number | null;
+        if (r.week.isFinal) {
+          const group = await this.db.select().from(matches).where(eq(matches.groupId, r.groupId));
+          const finalists = group.flatMap((m) => [
+            { playerId: m.playerAId, seed: m.seedA ?? 99 },
+            { playerId: m.playerBId, seed: m.seedB ?? 99 },
+          ]);
+          const f = finalsResult(
+            finalists,
+            rounds,
+            layout,
+            settings,
+            group.find((m) => m.decidedWinnerId)?.decidedWinnerId ?? null,
+          );
+          winner = f?.winner ?? null;
+          net = f?.standings.find((x) => x.id === playerId)?.net ?? null;
+        } else {
+          const k = knockoutResult(
+            {
+              id: r.match.id,
+              playerA: r.match.playerAId,
+              playerB: r.match.playerBId,
+              seedA: r.match.seedA,
+              seedB: r.match.seedB,
+              bracketSlot: r.match.bracketSlot,
+              decidedWinnerId: r.match.decidedWinnerId,
+            },
+            rounds,
+            layout,
+            settings,
+          );
+          winner = k.winner;
+          net = k.net[side];
+        }
+        playoff = { result: winner ? (winner === playerId ? 'W' : 'L') : null, net };
+      }
       matchesOut.push({
         matchId: r.match.id,
         seasonId: r.season.id,
@@ -161,13 +209,21 @@ export class PlayerStatsService {
         handicap: mine?.handicap ?? null,
         absent: mine?.attendance === 'absent',
         gross: mine ? grossOf(mine) : null,
-        net: res?.result?.net[side] ?? null,
-        result: outcome ? (outcome === 'T' ? 'T' : outcome === side ? 'W' : 'L') : null,
+        net: playoff ? playoff.net : (res?.result?.net[side] ?? null),
+        result: playoff
+          ? playoff.result
+          : outcome
+            ? outcome === 'T'
+              ? 'T'
+              : outcome === side
+                ? 'W'
+                : 'L'
+            : null,
         points:
           outcome && r.week.playoffRound === null
             ? pointsFor(outcome as Outcome, side, settings.points)
             : null,
-        official: res?.result?.decidedBy === 'official',
+        official: !playoff && res?.result?.decidedBy === 'official',
       });
     }
     matchesOut.sort((a, b) => b.date.localeCompare(a.date));

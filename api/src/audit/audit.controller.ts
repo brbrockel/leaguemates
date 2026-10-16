@@ -93,7 +93,7 @@ export class AuditController {
   /**
    * One person's activity: what they did, and what was done to their account (sign-ins,
    * lockouts, password links, roles). Site admins see all of it; a league admin sees it for
-   * people in a league they run, limited to their leagues plus account-level entries.
+   * people in a league they run, limited to their leagues plus what was done to the account.
    */
   @Get('users/:userId/audit')
   async person(
@@ -120,8 +120,17 @@ export class AuditController {
           )
       : [];
     if (theirs.length === 0) throw new ForbiddenException('Admins of their league only.');
+    // Outside their leagues, only what was done to this person's account (sign-ins, lockouts,
+    // links): not site-wide things they did, such as a site admin managing other people.
     return this.page(
-      and(about, or(isNull(auditLog.leagueId), inArray(auditLog.leagueId, adminOf))),
+      or(
+        and(about, inArray(auditLog.leagueId, adminOf)),
+        and(
+          isNull(auditLog.leagueId),
+          eq(auditLog.entityType, 'user'),
+          eq(auditLog.entityId, userId),
+        ),
+      ),
       q,
     );
   }

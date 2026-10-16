@@ -9,7 +9,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { and, count, eq, gt, isNull, ne } from 'drizzle-orm';
+import { and, count, eq, gt, isNull, lt, lte, ne, or, sql } from 'drizzle-orm';
 import { AuditService } from '../audit/audit.js';
 import { CONFIG, type Config } from '../config.js';
 import { DB, type Database } from '../db/db.js';
@@ -80,8 +80,7 @@ export class AuthService {
    */
   async requestMagicLink(rawEmail: string, ip: string): Promise<void> {
     const email = normalizeEmail(rawEmail);
-    await this.checkIpLimit('magic_link', ip, this.config.MAGIC_LINK_LIMIT_PER_IP);
-    await this.db.insert(authAttempts).values({ kind: 'magic_link', email, ip });
+    await this.checkIpLimit('magic_link', ip, this.config.MAGIC_LINK_LIMIT_PER_IP, email);
 
     const since = new Date(Date.now() - WINDOW_MS);
     const [{ recent } = { recent: 0 }] = await this.db
@@ -126,7 +125,6 @@ export class AuthService {
    */
   async verifyMagicLink(token: string, ip: string, userAgent: string | undefined) {
     await this.checkIpLimit('verify', ip, this.config.MAGIC_LINK_LIMIT_PER_IP * 2);
-    await this.db.insert(authAttempts).values({ kind: 'verify', ip });
 
     return this.db.transaction(async (tx) => {
       const [used] = await tx
@@ -231,8 +229,7 @@ export class AuthService {
     userAgent: string | undefined,
   ) {
     const email = normalizeEmail(input.email);
-    await this.checkIpLimit('login', ip, this.config.LOGIN_LIMIT_PER_IP);
-    await this.db.insert(authAttempts).values({ kind: 'login', email, ip });
+    await this.checkIpLimit('login', ip, this.config.LOGIN_LIMIT_PER_IP, email);
     const wrong = new UnauthorizedException('Email or password is incorrect.');
 
     const [user] = await this.db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -242,20 +239,31 @@ export class AuthService {
     }
     if (user.lockedUntil && user.lockedUntil > new Date())
       throw new LockedException(user.lockedUntil);
+    // Each try uses up one of the allowed attempts before the (slow) password check, so a
+    // burst of parallel guesses can't get past the limit.
+    const attempt = await this.reserveAttempt(user.id);
+    if (attempt === null) throw new TooManyRequestsException();
     if (!(await verifyPassword(user.passwordHash, input.password))) {
-      await this.failedLogin(user, ip);
+      await this.failedLogin(user, attempt, ip);
       throw wrong;
     }
 
     let totpStep: number | null = null;
     let recovery = user.totpRecovery;
     if (user.totpEnabledAt && user.totpSecret) {
-      if (!input.code) return { needsCode: true as const };
+      if (!input.code) {
+        // The right password without a code yet isn't a wrong try.
+        await this.db
+          .update(users)
+          .set({ failedLogins: sql`greatest(${users.failedLogins} - 1, 0)` })
+          .where(eq(users.id, user.id));
+        return { needsCode: true as const };
+      }
       totpStep = matchTotp(this.decrypt(user.totpSecret), input.code, user.totpLastStep);
       if (totpStep === null) {
         const h = hashRecovery(input.code);
         if (!recovery?.includes(h)) {
-          await this.failedLogin(user, ip);
+          await this.failedLogin(user, attempt, ip);
           throw new UnauthorizedException('That code is not right.');
         }
         recovery = recovery.filter((x) => x !== h);
@@ -300,12 +308,28 @@ export class AuthService {
     });
   }
 
-  private async failedLogin(user: typeof users.$inferSelect, ip: string) {
-    const failed = user.failedLogins + 1;
-    if (failed < this.config.LOGIN_MAX_FAILURES) {
-      await this.db.update(users).set({ failedLogins: failed }).where(eq(users.id, user.id));
-      return;
-    }
+  /**
+   * Takes one attempt for the account: the attempt's number, or null if none are left (the
+   * account is cooling down, or other tries in flight have used them up).
+   */
+  private async reserveAttempt(userId: string): Promise<number | null> {
+    const [row] = await this.db
+      .update(users)
+      .set({ failedLogins: sql`${users.failedLogins} + 1` })
+      .where(
+        and(
+          eq(users.id, userId),
+          lt(users.failedLogins, this.config.LOGIN_MAX_FAILURES),
+          or(isNull(users.lockedUntil), lte(users.lockedUntil, new Date())),
+        ),
+      )
+      .returning({ failedLogins: users.failedLogins });
+    return row?.failedLogins ?? null;
+  }
+
+  /** A wrong password or code on `attempt`: the last allowed one starts a cooldown. */
+  private async failedLogin(user: typeof users.$inferSelect, attempt: number, ip: string) {
+    if (attempt < this.config.LOGIN_MAX_FAILURES) return;
     const minutes = Math.min(this.config.LOGIN_LOCK_MINUTES * 2 ** user.lockouts, 24 * 60);
     const until = new Date(Date.now() + minutes * 60_000);
     await this.db
@@ -366,7 +390,6 @@ export class AuthService {
     userAgent: string | undefined,
   ) {
     await this.checkIpLimit('verify', ip, this.config.MAGIC_LINK_LIMIT_PER_IP * 2);
-    await this.db.insert(authAttempts).values({ kind: 'verify', ip });
     const { email } = await this.checkPasswordLink(token);
     assertGoodPassword(password, email);
     const passwordHash = await hashPassword(password);
@@ -535,8 +558,7 @@ export class AuthService {
     userAgent: string | undefined,
   ) {
     if (!(await this.site.testLoginActive())) throw new NotFoundException();
-    await this.checkIpLimit('test_login', ip, this.config.MAGIC_LINK_LIMIT_PER_IP);
-    await this.db.insert(authAttempts).values({ kind: 'test_login', email: input.email, ip });
+    await this.checkIpLimit('test_login', ip, this.config.MAGIC_LINK_LIMIT_PER_IP, input.email);
     if (!(await this.site.checkTestCode(input.code))) {
       throw new UnauthorizedException('That test access code is not right.');
     }
@@ -621,11 +643,17 @@ export class AuthService {
     return Boolean(invite);
   }
 
+  /**
+   * Records this attempt, then refuses it if it's over the per-IP limit. Recording first means
+   * a burst of parallel requests can't all pass a count taken before any of them landed.
+   */
   private async checkIpLimit(
     kind: 'magic_link' | 'verify' | 'test_login' | 'login',
     ip: string,
     limit: number,
+    email?: string,
   ) {
+    await this.db.insert(authAttempts).values({ kind, ip, ...(email ? { email } : {}) });
     const since = new Date(Date.now() - WINDOW_MS);
     const [{ recent } = { recent: 0 }] = await this.db
       .select({ recent: count() })
@@ -637,6 +665,6 @@ export class AuthService {
           gt(authAttempts.createdAt, since),
         ),
       );
-    if (recent >= limit) throw new TooManyRequestsException();
+    if (recent > limit) throw new TooManyRequestsException();
   }
 }

@@ -101,6 +101,20 @@ describe('password sign-in', () => {
     expect(actions).toContain('user.unlock');
   });
 
+  it('a burst of parallel wrong passwords gets no more than 5 tries', async () => {
+    const jerryId = await jerryWithPassword();
+    const tries = await Promise.all(
+      Array.from({ length: 12 }, (_, i) => login('jerry@example.com', `wrong guess ${i}xx`).res),
+    );
+    const checked = tries.filter((r) => r.status === 401);
+    expect(checked.length).toBeLessThanOrEqual(5);
+    expect(tries.every((r) => [401, 423, 429].includes(r.status))).toBe(true);
+    const [row] = await t.db.select().from(users).where(eq(users.id, jerryId));
+    expect(row!.lockedUntil).not.toBeNull();
+    // Even the right password waits out the cooldown.
+    expect((await login('jerry@example.com', PASSWORD).res).status).not.toBe(200);
+  });
+
   it('changing your password signs out your other sessions', async () => {
     await jerryWithPassword();
     const phone = login('jerry@example.com', PASSWORD);

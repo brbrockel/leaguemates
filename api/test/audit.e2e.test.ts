@@ -207,4 +207,30 @@ describe('audit trail guarantees', () => {
     await as(thuAdmin).get(`/users/${jerryId}/audit`).expect(403);
     await as(jerry).get(`/users/${jerryId}/audit`).expect(401);
   });
+
+  it("a league admin doesn't see a member's site-wide actions, only what was done to them", async () => {
+    const { body: wed } = await as(site).post('/leagues', { name: 'Wednesday League' }).expect(201);
+    await createUser(t.db, 'wedadmin@example.com');
+    await as(site)
+      .post('/users', { email: 'wedadmin@example.com', leagueId: wed.id, role: 'admin' })
+      .expect(201);
+    // The site admin plays in Wednesday League, and also manages people site-wide.
+    await as(site).post('/users', { email: 'site@example.com', leagueId: wed.id }).expect(201);
+    await as(site).post('/users', { email: 'outsider@example.com' }).expect(201);
+    const people = (await as(site).get('/users').expect(200)).body as {
+      id: string;
+      email: string;
+    }[];
+    const siteId = people.find((p) => p.email === 'site@example.com')!.id;
+
+    const wedAdmin = await signIn(t, 'wedadmin@example.com');
+    const seen = (await as(wedAdmin).get(`/users/${siteId}/audit`).expect(200)).body.entries as {
+      action: string;
+      leagueId: string | null;
+      entityId: string;
+    }[];
+    expect(seen.some((e) => e.action === 'auth.login')).toBe(true);
+    expect(seen.filter((e) => e.leagueId === null).every((e) => e.entityId === siteId)).toBe(true);
+    expect(JSON.stringify(seen)).not.toContain('outsider@example.com');
+  });
 });
