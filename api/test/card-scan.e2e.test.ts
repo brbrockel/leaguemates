@@ -171,3 +171,47 @@ describe('scanning from the round', () => {
     expect(none.body.groupId).toBeNull();
   });
 });
+
+describe('practice scans (Account)', () => {
+  it('reads a card against your league without saving anything', async () => {
+    const { body: league } = await as(site).post('/leagues', { name: 'Practice' }).expect(201);
+    for (const nickname of ['Jerry', 'Keith'])
+      await as(site).post(`/leagues/${league.id}/players`, { nickname }).expect(201);
+    await createUser(t.db, 'jerry@example.com');
+    await as(site).post('/users', { email: 'jerry@example.com', leagueId: league.id }).expect(201);
+    const jerry = await signIn(t, 'jerry@example.com');
+
+    const image = await cardImage([
+      ['Jerry', [5, 4, 3, 5, 4, 4, 5, 3, 4]],
+      ['Keith', [6, 5, 4, 5, 5, 4, 6, 4, 5]],
+    ]);
+    const { body } = await jerry.agent
+      .post('/api/me/card-scan/practice')
+      .set('X-CSRF-Token', jerry.csrf)
+      .attach('file', image, 'card.jpg')
+      .expect(200);
+    expect(body.provider).toBe('ocr');
+    expect(body.layout.holes).toHaveLength(9);
+    const jerryRow = body.rows.find((r: { player: string | null }) => r.player === 'Jerry');
+    expect(jerryRow.holeScores).toEqual([5, 4, 3, 5, 4, 4, 5, 3, 4]);
+    expect(body.left).toBe(9);
+
+    // Nothing kept: no photos.
+    const photos = await t.db.execute('select count(*)::int as n from photos');
+    expect(photos.rows[0]).toEqual({ n: 0 });
+  });
+
+  it("refuses files that aren't photos", async () => {
+    await jerryWithNoLeague();
+    const jerry = await signIn(t, 'jerry@example.com');
+    await jerry.agent
+      .post('/api/me/card-scan/practice')
+      .set('X-CSRF-Token', jerry.csrf)
+      .attach('file', Buffer.from('not an image'), 'card.jpg')
+      .expect(400);
+  });
+});
+
+async function jerryWithNoLeague() {
+  await createUser(t.db, 'jerry@example.com');
+}

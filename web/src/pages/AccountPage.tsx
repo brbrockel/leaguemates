@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTheme, type Theme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
+import { PracticeScanCard } from '@/components/PracticeScanCard';
 
 const THEMES: { value: Theme; label: string }[] = [
   { value: 'system', label: 'Device' },
@@ -59,6 +60,7 @@ export function AccountPage() {
           />
         </CardContent>
       </Card>
+      <PracticeScanCard />
       <SecurityCard isAdmin={me.user.isSiteAdmin || me.leagues.some((l) => l.role === 'admin')} />
       <Card>
         <CardHeader>

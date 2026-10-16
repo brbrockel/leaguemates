@@ -53,7 +53,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-005 | Scorecard Entry and Match Results | MVP | Done (hole-by-hole cards, absences/subs, live results, submit/dispute/approve, audited corrections) |
 | EH-006 | Calculated Handicaps | MVP | Done, rule awaiting league confirmation (see [Handicaps.md](Handicaps.md)) |
 | EH-007 | Standings and Player History | MVP | Done |
-| EH-008 | Scorecard Photo Scan | Phase 2 | Done (Claude reads the card; local OCR fallback; always reviewed before saving) |
+| EH-008 | Scorecard Photo Scan | Phase 2 | Done (Claude reads the card; local OCR fallback; always reviewed before saving; anyone can practise on Account, nothing saved) |
 | EH-009 | Match Photos | Phase 2 | Done |
 | EH-010 | Audit Log | MVP | Done (league Activity for admins, site-wide Activity for site admins) |
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |

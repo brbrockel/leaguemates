@@ -76,7 +76,8 @@ export class ScorecardsService {
   ) {}
 
   /** Layouts of a course with their holes, in the shape the scoring rules expect. */
-  private async courseLayouts(courseId: string) {
+  /** A course's nines with their holes, in order. */
+  async courseLayouts(courseId: string) {
     const ls = await this.db
       .select()
       .from(layouts)
