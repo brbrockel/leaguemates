@@ -6,6 +6,7 @@ import { clientIp } from './common/client-ip.js';
 import { AnnouncementsModule } from './announcements/announcements.js';
 import { AuditModule } from './audit/audit.js';
 import { AuthModule } from './auth/auth.module.js';
+import { BugReportsModule } from './bugs/bug-reports.js';
 import { Public } from './auth/decorators.js';
 import { SessionGuard } from './auth/guards.js';
 import { CONFIG, type Config } from './config.js';
@@ -72,6 +73,7 @@ export class AppModule {
         ScorecardsModule,
         PlayoffsModule,
         AnnouncementsModule,
+        BugReportsModule,
         HandicapsModule,
         ScrambleModule,
         PhotosModule,

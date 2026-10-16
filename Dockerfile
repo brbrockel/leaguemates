@@ -18,7 +18,10 @@ RUN pnpm --filter @teemate/api deploy --prod --legacy /out/api \
  && cp -r api/dist /out/api/dist
 
 FROM node:24-slim
+# The git commit, shown on problem reports: docker build --build-arg APP_VERSION=$TAG
+ARG APP_VERSION=dev
 ENV NODE_ENV=production \
+    APP_VERSION=$APP_VERSION \
     PORT=4100 \
     WEB_DIST=/app/web \
     PHOTOS_DIR=/data/photos

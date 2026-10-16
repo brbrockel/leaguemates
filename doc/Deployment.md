@@ -12,7 +12,7 @@ How TeeMate runs in the homelab, and how to update it.
 | Host ports | **None.** Nothing is published on the host. Traefik reaches the app over `traefik-public` |
 | Data | Docker volume `teemate_prod-db`. It's kept separate from the dev volume `teemate_postgres-data`; the two must never share a name |
 | Backups | Service `teemate_backup`: compressed `pg_dump` nightly at 07:00 UTC (about 3 AM Eastern), checked with `pg_restore --list`, 30 days kept in the volume `teemate_backups`. A test restore was done on 2026-10-15 and matched production exactly |
-| Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) and `teemate_anthropic_api_key` (reads scorecard photos), created once and never stored in a file |
+| Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) `teemate_anthropic_api_key` (reads scorecard photos) and `teemate_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/teemate`), created once and never stored in a file |
 | Photos | Volume `teemate_photos` at `/data/photos` (`PHOTOS_DIR`). Files are served only through the app, to league members |
 | Email | Set in the app: profile menu → **Site settings → Email** (site admins only): who gets email (off, an allowlist, or everyone), the mail server and its password (stored encrypted with `APP_SECRET`), and the From address. **Send me a test email** checks it. Until it's saved there, the stack's `MAIL_MODE=off` applies and nothing is sent. Sending to everyone is only with the owner's consent |
 | Dashboard | Heimdall tile "TeeMate" (dashboard.bhbslp.org) |
@@ -24,7 +24,7 @@ How TeeMate runs in the homelab, and how to update it.
 cd ~/repos/teemate
 git pull && pnpm check                      # must pass
 TAG=$(git rev-parse --short HEAD)
-docker build -t teemate:$TAG -t teemate:latest .
+docker build --build-arg APP_VERSION=$TAG -t teemate:$TAG -t teemate:latest .
 cd ~/repos/homelab-docker-linux
 TEEMATE_TAG=$TAG docker stack deploy -c teemate/teemate-stack.yml teemate
 docker service logs -f teemate_teemate       # expect "Migrations applied" then "listening"

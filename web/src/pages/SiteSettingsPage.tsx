@@ -1,5 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check, Copy, FlaskConical, KeyRound, Mail, Power, RefreshCw, Send } from 'lucide-react';
+import {
+  Bug,
+  Check,
+  Copy,
+  ExternalLink,
+  FlaskConical,
+  KeyRound,
+  Mail,
+  Power,
+  RefreshCw,
+  Send,
+} from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
 import { useMe } from '@/auth/session';
@@ -207,7 +218,78 @@ export function SiteSettingsPage() {
         onSaved={(view) => qc.setQueryData(KEY, view)}
         testLocked={t.enabled}
       />
+
+      <BugReportsCard />
     </div>
+  );
+}
+
+interface BugReportRow {
+  id: string;
+  title: string;
+  happened: string;
+  page: string | null;
+  issueNumber: number | null;
+  issueUrl: string | null;
+  issueError: string | null;
+  createdAt: string;
+  reporterName: string | null;
+  reporterEmail: string | null;
+}
+
+/** Problems people reported, with who sent them (the public issue only has their nickname). */
+function BugReportsCard() {
+  const reports = useQuery({
+    queryKey: ['bug-reports'],
+    queryFn: () => api<BugReportRow[]>('/bug-reports'),
+  });
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bug className="size-5 text-primary" aria-hidden /> Problem reports
+        </CardTitle>
+        <CardDescription>
+          From “Report a problem” in the profile menu. Each is filed as a GitHub issue; this list
+          also shows who sent it.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {!reports.data?.length ? (
+          <p className="text-sm text-muted-foreground">
+            {reports.isLoading ? 'Loading…' : 'No reports yet.'}
+          </p>
+        ) : (
+          <ul className="divide-y">
+            {reports.data.map((r) => (
+              <li key={r.id} className="flex flex-col gap-0.5 py-2 text-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="font-medium">{r.title}</span>
+                  {r.issueUrl ? (
+                    <a
+                      href={r.issueUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex shrink-0 items-center gap-1 text-primary hover:underline"
+                    >
+                      #{r.issueNumber} <ExternalLink className="size-3.5" />
+                    </a>
+                  ) : (
+                    <span className="shrink-0 text-xs text-destructive" title={r.issueError ?? ''}>
+                      Not on GitHub
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {r.reporterName ?? r.reporterEmail ?? 'Someone'} ·{' '}
+                  {new Date(r.createdAt).toLocaleString()} {r.page && `· ${r.page}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 

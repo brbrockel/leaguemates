@@ -57,6 +57,18 @@ const EnvSchema = z.object({
    */
   ANTHROPIC_API_KEY: z.string().min(20).optional(),
   CARD_SCAN_MODEL: z.string().default('claude-sonnet-5-5'),
+  /**
+   * "Report a problem" files a GitHub issue with this token (GITHUB_TOKEN_FILE in production:
+   * a fine-grained token limited to Issues on GITHUB_ISSUES_REPO). Without it, reports are
+   * only kept in the app.
+   */
+  GITHUB_TOKEN: z.string().min(20).optional(),
+  GITHUB_ISSUES_REPO: z
+    .string()
+    .regex(/^[\w.-]+\/[\w.-]+$/)
+    .default('brbrockel/teemate'),
+  /** Shown on problem reports; set at image build time (the git commit). */
+  APP_VERSION: z.string().default('dev'),
   /** Wrong passwords before an account cools down, and the first cooldown (doubles each time). */
   LOGIN_MAX_FAILURES: z.coerce.number().int().positive().default(5),
   LOGIN_LOCK_MINUTES: z.coerce.number().int().positive().default(15),

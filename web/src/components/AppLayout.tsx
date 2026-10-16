@@ -1,4 +1,5 @@
 import {
+  Bug,
   CalendarDays,
   Check,
   ChevronDown,
@@ -11,9 +12,11 @@ import {
   UserRound,
   Users,
 } from 'lucide-react';
+import { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router';
 import { useMe, useSignOut } from '@/auth/session';
 import { Logo } from '@/components/logo';
+import { ReportProblemDialog } from '@/components/ReportProblem';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -33,6 +36,7 @@ export function AppLayout() {
   const { leagueId } = useParams();
   const current = useCurrentLeague(leagueId);
   const { pathname } = useLocation();
+  const [reporting, setReporting] = useState(false);
   /** A tab also counts as active on its related pages (Schedule on season pages). */
   const onAlso = (t: { also?: string[] }) => Boolean(t.also?.some((p) => pathname.startsWith(p)));
   if (!me) return null;
@@ -143,6 +147,9 @@ export function AppLayout() {
                     </DropdownMenuItem>
                   </>
                 )}
+                <DropdownMenuItem onSelect={() => setReporting(true)}>
+                  <Bug /> Report a problem
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={() =>
                     signOut.mutate(undefined, { onSettled: () => navigate('/sign-in') })
@@ -155,6 +162,7 @@ export function AppLayout() {
           </div>
         </div>
       </header>
+      <ReportProblemDialog open={reporting} onClose={() => setReporting(false)} />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-28 pt-6 md:pb-10">
         <Outlet />

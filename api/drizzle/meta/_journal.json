@@ -232,6 +232,13 @@
       "when": 1792144767817,
       "tag": "0032_site_mail_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1792148788885,
+      "tag": "0033_bug_reports",
+      "breakpoints": true
     }
   ]
 }

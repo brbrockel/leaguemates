@@ -241,6 +241,26 @@ export interface StoredMailSettings {
   from: string;
 }
 
+/**
+ * Problems people report from the app. Each becomes a public GitHub issue (signed with their
+ * nickname or first name only); this copy keeps who sent it, for site admins to follow up.
+ */
+export const bugReports = pgTable('bug_reports', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  title: text('title').notNull(),
+  happened: text('happened').notNull(),
+  expected: text('expected'),
+  page: text('page'),
+  userAgent: text('user_agent'),
+  appVersion: text('app_version'),
+  issueNumber: integer('issue_number'),
+  issueUrl: text('issue_url'),
+  /** Why GitHub didn't take it (no token, an error); the report is kept either way. */
+  issueError: text('issue_error'),
+  createdAt: createdAt(),
+});
+
 /** A golf course; shared by all leagues. */
 export const courses = pgTable('courses', {
   id: uuid('id').primaryKey().defaultRandom(),

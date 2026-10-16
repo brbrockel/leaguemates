@@ -102,6 +102,7 @@ describe('site settings', () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: siteAdmin }),
       'GET /api/site-settings': () => ({ status: 200, body: state }),
+      'GET /api/bug-reports': () => ({ status: 200, body: [] }),
       'PUT /api/site-settings/test-login': (init) => {
         const body = JSON.parse(String(init?.body));
         bodies.push(body);
@@ -131,6 +132,7 @@ describe('site settings', () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: siteAdmin }),
       'GET /api/site-settings': () => ({ status: 200, body: state }),
+      'GET /api/bug-reports': () => ({ status: 200, body: [] }),
       'PUT /api/site-settings/mail': (init) => {
         const body = JSON.parse(String(init?.body));
         bodies.push(body);
