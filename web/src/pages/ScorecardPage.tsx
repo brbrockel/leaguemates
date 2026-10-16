@@ -47,11 +47,13 @@ const STATUS: Record<CardStatus, { label: string; className: string }> = {
 function toEntries(view: ScorecardView, holes: number): Entry[] {
   return view.players.map((p) => {
     const r = view.card?.rounds.find((x) => x.playerId === p.playerId);
+    // Before the card exists, anyone who said they can't make it starts absent.
+    const out = !r && p.out;
     return {
       playerId: p.playerId,
       handicap: r?.handicap ?? p.handicap,
-      attendance: r?.attendance ?? 'played',
-      subName: r?.subName ?? '',
+      attendance: r?.attendance ?? (out ? 'absent' : 'played'),
+      subName: r?.subName ?? (out ? (p.out!.subName ?? '') : ''),
       holeScores: r?.holeScores ?? Array.from({ length: holes }, () => null),
     };
   });

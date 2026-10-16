@@ -515,6 +515,26 @@ export const announcements = pgTable(
   (t) => [index('announcements_league_idx').on(t.leagueId, t.createdAt)],
 );
 
+/**
+ * Said ahead of a round: a player can't make it (optionally with a sub's name). It fills in
+ * the card as absent; whoever enters the card can still change it on the day.
+ */
+export const roundAbsences = pgTable(
+  'round_absences',
+  {
+    weekId: uuid('week_id')
+      .notNull()
+      .references(() => weeks.id, { onDelete: 'cascade' }),
+    playerId: uuid('player_id')
+      .notNull()
+      .references(() => players.id, { onDelete: 'cascade' }),
+    subName: text('sub_name'),
+    markedBy: uuid('marked_by').references(() => users.id, { onDelete: 'set null' }),
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.weekId, t.playerId] })],
+);
+
 /** Per person: when they read a notice, and when they dismissed it from the Home strip. */
 export const announcementReads = pgTable(
   'announcement_reads',

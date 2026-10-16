@@ -27,6 +27,7 @@ import {
   layouts,
   matches,
   players,
+  roundAbsences,
   scorecards,
   seasonPlayers,
   seasons,
@@ -199,6 +200,19 @@ export class ScorecardsService {
     };
   }
 
+  /** Every match of a round, with its foursome. */
+  async matchesOf(weekId: string) {
+    return this.db
+      .select({
+        id: matches.id,
+        groupId: matches.groupId,
+        playerA: matches.playerAId,
+        playerB: matches.playerBId,
+      })
+      .from(matches)
+      .where(eq(matches.weekId, weekId));
+  }
+
   /** The foursomes of a round, in tee order (the round must belong to the league and season). */
   async groupIdsOf(leagueId: string, seasonId: string, weekId: string): Promise<string[]> {
     const rows = await this.db
@@ -240,6 +254,15 @@ export class ScorecardsService {
           };
     });
     const names = await this.userNames([c.card?.enteredBy, c.card?.disputedBy]);
+    // Who said ahead of time they can't make it: the card starts with them absent.
+    const outs = new Map(
+      (
+        await this.db
+          .select({ playerId: roundAbsences.playerId, subName: roundAbsences.subName })
+          .from(roundAbsences)
+          .where(eq(roundAbsences.weekId, c.week.id))
+      ).map((a) => [a.playerId, a.subName]),
+    );
 
     return {
       round: c.week.round,
@@ -254,6 +277,7 @@ export class ScorecardsService {
         playerId: p.id,
         nickname: p.nickname,
         handicap: p.handicap,
+        out: outs.has(p.id) ? { subName: outs.get(p.id) ?? null } : null,
       })),
       card: c.card
         ? {

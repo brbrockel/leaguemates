@@ -38,6 +38,7 @@ Each league can configure these rules. The defaults below are the rules of the W
 | Handicap | League average over the player's last N rounds (5 or 10). The exact formula is still to be confirmed (see EH-006) |
 | Absence: one player | A sub may play, but the sub's score never counts. The player who showed up wins only if their net score is lower than the absent player's baseline (par + handicap). Otherwise the match is a tie. The player who showed up cannot lose. |
 | Absence: both players | Tie |
+| Saying you're out | A player can mark themselves out of an upcoming round (with an optional sub's name) until their foursome's card is started; admins can mark anyone. The foursome is notified and the card starts with them absent |
 | Subs | Sub scores never count towards results, standings or handicaps |
 | Season | 16 players and 15 regular-season games, so everyone plays everyone exactly once. This has been the format every year since 2021 (see `HistoryReview.md` in the private `teemate-data` repository). Each league can change it |
 | Nine played | Front and back nine alternate each week. The starter can change the nine on game day, so the nine actually played is recorded on each scorecard |

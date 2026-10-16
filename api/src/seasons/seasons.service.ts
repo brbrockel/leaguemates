@@ -30,6 +30,7 @@ import {
   matches,
   photos,
   players,
+  roundAbsences,
   scorecards,
   seasonPlayers,
   seasons,
@@ -300,9 +301,16 @@ export class SeasonsService {
     const ms = weekIds.length
       ? await this.db.select().from(matches).where(inArray(matches.weekId, weekIds))
       : [];
+    const outs = weekIds.length
+      ? await this.db.select().from(roundAbsences).where(inArray(roundAbsences.weekId, weekIds))
+      : [];
 
     const weeksOut = ws.map((w) => ({
       ...w,
+      /** Players who said ahead of time they can't make it. */
+      absences: outs
+        .filter((a) => a.weekId === w.id)
+        .map((a) => ({ playerId: a.playerId, subName: a.subName })),
       groups: gs
         .filter((g) => g.weekId === w.id)
         .map((g) => ({
@@ -756,6 +764,78 @@ export class SeasonsService {
     return this.schedule(leagueId, seasonId);
   }
 
+  /**
+   * "Can't make it": a player marks themselves out of an upcoming round (an admin can mark
+   * anyone), optionally naming a sub. Their foursome gets a notice, and the card starts with
+   * them absent. Only before their foursome's card is started; after that, mark it on the card.
+   */
+  async setAbsence(
+    actor: SessionUser,
+    leagueId: string,
+    seasonId: string,
+    weekId: string,
+    playerId: string,
+    out: { subName?: string | null | undefined } | null,
+  ) {
+    const week = await this.gameDayRound(actor, leagueId, seasonId, weekId);
+    const [match] = await this.db
+      .select()
+      .from(matches)
+      .where(
+        and(
+          eq(matches.weekId, weekId),
+          sql`${playerId} in (${matches.playerAId}, ${matches.playerBId})`,
+        ),
+      )
+      .limit(1);
+    if (!match) throw new NotFoundException("That player isn't in this round.");
+    const [player] = await this.db.select().from(players).where(eq(players.id, playerId)).limit(1);
+    const isAdmin = (await this.memberships.roleIn(actor, leagueId)) === 'admin';
+    if (!isAdmin && player!.userId !== actor.id)
+      throw new ForbiddenException("You can only say you can't make it yourself; ask an admin.");
+    const [card] = await this.db
+      .select({ id: scorecards.id })
+      .from(scorecards)
+      .where(eq(scorecards.groupId, match.groupId))
+      .limit(1);
+    if (card)
+      throw new BadRequestException(
+        'Their foursome has started the card: mark them absent on the card instead.',
+      );
+    const subName = out?.subName?.trim() || null;
+    if (out) {
+      await this.db
+        .insert(roundAbsences)
+        .values({ weekId, playerId, subName, markedBy: actor.id })
+        .onConflictDoUpdate({
+          target: [roundAbsences.weekId, roundAbsences.playerId],
+          set: { subName, markedBy: actor.id },
+        });
+    } else {
+      await this.db
+        .delete(roundAbsences)
+        .where(and(eq(roundAbsences.weekId, weekId), eq(roundAbsences.playerId, playerId)));
+    }
+    await this.audit.record({
+      leagueId,
+      actorUserId: actor.id,
+      action: out ? 'week.absent' : 'week.absent_undo',
+      entityType: 'week',
+      entityId: weekId,
+      after: { playerId, subName, round: week.round },
+    });
+    await this.notices.notify(leagueId, {
+      audience: 'group',
+      groupId: match.groupId,
+      kind: out ? 'round.absent' : 'round.absent_undo',
+      title: out
+        ? `${player!.nickname} can't make round ${week.round}`
+        : `${player!.nickname} is playing round ${week.round} after all`,
+      body: out ? (subName ? `${subName} is subbing.` : 'No sub yet.') : '',
+    });
+    return this.schedule(leagueId, seasonId);
+  }
+
   /** Rainout: this round and every later unplayed round move back one week. */
   async rainout(actor: SessionUser, leagueId: string, seasonId: string, weekId: string) {
     const season = await this.season(leagueId, seasonId);
@@ -890,6 +970,16 @@ export class SeasonsService {
             : null,
           foursome: groupMatches.map((x) => [names.get(x.playerAId), names.get(x.playerBId)]),
           bye: !myMatch,
+          playerId: m.playerId,
+          /** Set when you've said you can't make it. */
+          out: await this.db
+            .select({ subName: roundAbsences.subName })
+            .from(roundAbsences)
+            .where(
+              and(eq(roundAbsences.weekId, next.weekId), eq(roundAbsences.playerId, m.playerId)),
+            )
+            .limit(1)
+            .then((r) => r[0] ?? null),
         },
       });
     }

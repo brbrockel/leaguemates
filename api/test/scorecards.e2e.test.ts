@@ -558,4 +558,60 @@ describe('game-day changes', () => {
       })
       .expect(400);
   });
+
+  it("a player says they can't make it: the foursome is told and the card starts with them absent", async () => {
+    const { L, S, ids, week, jerryGroup } = await setup();
+    const jerry = await signIn(t, 'jerry@example.com');
+    const keith = await signIn(t, 'keith@example.com');
+    const absence = (who: string) =>
+      `/leagues/${L}/seasons/${S}/weeks/${week.id}/absences/${ids[who]}`;
+
+    // Keith can't mark Jerry out; Jerry can, with a sub.
+    await keith.agent
+      .put(`/api${absence('Jerry')}`)
+      .set('X-CSRF-Token', keith.csrf)
+      .send({})
+      .expect(403);
+    const { body } = await jerry.agent
+      .put(`/api${absence('Jerry')}`)
+      .set('X-CSRF-Token', jerry.csrf)
+      .send({ subName: 'Uncle Bob' })
+      .expect(200);
+    expect(body.weeks[0].absences).toEqual([{ playerId: ids['Jerry'], subName: 'Uncle Bob' }]);
+
+    const notices = (await as(jerry).get(`/leagues/${L}/announcements`).expect(200)).body;
+    expect(notices[0]).toMatchObject({
+      title: "Jerry can't make round 1",
+      body: 'Uncle Bob is subbing.',
+      to: 'Your foursome',
+    });
+
+    const path = cardPath(L, S, week.id, jerryGroup.id);
+    const view = (await as(site).get(path).expect(200)).body;
+    expect(view.players.find((p: { playerId: string }) => p.playerId === ids['Jerry']).out).toEqual(
+      {
+        subName: 'Uncle Bob',
+      },
+    );
+
+    // Once the card is started it's marked there instead.
+    await as(site)
+      .put(path, { layoutId: view.plannedLayoutId, rounds: roundsFor(jerryGroup, () => 5) })
+      .expect(200);
+    await jerry.agent
+      .delete(`/api${absence('Jerry')}`)
+      .set('X-CSRF-Token', jerry.csrf)
+      .expect(400);
+  });
+
+  it('admins mark anyone out, and back in', async () => {
+    const { L, S, ids, week } = await setup();
+    const absence = `/leagues/${L}/seasons/${S}/weeks/${week.id}/absences/${ids['Keith']}`;
+    await site.agent.put(`/api${absence}`).set('X-CSRF-Token', site.csrf).send({}).expect(200);
+    const { body } = await site.agent
+      .delete(`/api${absence}`)
+      .set('X-CSRF-Token', site.csrf)
+      .expect(200);
+    expect(body.weeks[0].absences).toEqual([]);
+  });
 });

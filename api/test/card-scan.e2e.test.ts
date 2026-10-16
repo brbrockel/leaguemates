@@ -169,6 +169,36 @@ describe('scanning from the round', () => {
       .attach('file', stranger, 'card.jpg')
       .expect(201);
     expect(none.body.groupId).toBeNull();
+    expect(none.body.regroup).toBeNull();
+
+    // Two matches from different foursomes on one card: suggest putting them together.
+    const [g1, g2] = week.groups;
+    const m1 = g1.matches[0];
+    const m2 = g2.matches[0];
+    const mixed = await cardImage(
+      [m1.playerA, m1.playerB, m2.playerA, m2.playerB].map((id: string, i: number) => [
+        nameOf(id),
+        Array(9).fill(4 + (i % 3)),
+      ]),
+    );
+    const both = await site.agent
+      .post(`/api/leagues/${L}/seasons/${S}/weeks/${week.id}/scan`)
+      .set('X-CSRF-Token', site.csrf)
+      .attach('file', mixed, 'card.jpg')
+      .expect(201);
+    expect(both.body.groupId).toBeNull();
+    const other = g1.matches.find((m: { id: string }) => m.id !== m1.id);
+    expect(both.body.regroup).toEqual({ matchA: other.id, matchB: m2.id, groupId: g1.id });
+    // Doing it puts both matches in the first foursome.
+    const { body: after } = await as(site)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/regroup`, both.body.regroup)
+      .expect(201);
+    expect(
+      after.weeks[0].groups
+        .find((g: { id: string }) => g.id === g1.id)
+        .matches.map((m: { id: string }) => m.id)
+        .sort(),
+    ).toEqual([m1.id, m2.id].sort());
   });
 });
 

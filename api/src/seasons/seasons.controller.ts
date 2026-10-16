@@ -28,6 +28,7 @@ const Generate = z.object({ seed: z.number().int().positive().optional() });
 const Swap = z.object({ playerA: z.uuid(), playerB: z.uuid() });
 const TeeOrder = z.object({ groupId: z.uuid(), direction: z.enum(['up', 'down']) });
 const Regroup = z.object({ matchA: z.uuid(), matchB: z.uuid() });
+const Absence = z.object({ subName: z.string().trim().max(60).nullable().optional() });
 const Roster = z.object({ playerIds: z.array(z.uuid()).max(64) });
 const Cover = z.object({ photoId: z.uuid().nullable() });
 const Uuid = new ParseUUIDPipe();
@@ -146,6 +147,32 @@ export class SeasonsController {
     @Body(new ZodPipe(TeeOrder)) body: z.infer<typeof TeeOrder>,
   ) {
     return this.seasons.teeOrder(user, leagueId, seasonId, weekId, body.groupId, body.direction);
+  }
+
+  /** "Can't make it": a player marks themselves out (an admin, anyone), with an optional sub. */
+  @Put('leagues/:leagueId/seasons/:seasonId/weeks/:weekId/absences/:playerId')
+  @UseGuards(LeagueGuard)
+  markAbsent(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('seasonId', Uuid) seasonId: string,
+    @Param('weekId', Uuid) weekId: string,
+    @Param('playerId', Uuid) playerId: string,
+    @Body(new ZodPipe(Absence)) body: z.infer<typeof Absence>,
+  ) {
+    return this.seasons.setAbsence(user, leagueId, seasonId, weekId, playerId, body);
+  }
+
+  @Delete('leagues/:leagueId/seasons/:seasonId/weeks/:weekId/absences/:playerId')
+  @UseGuards(LeagueGuard)
+  clearAbsent(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('seasonId', Uuid) seasonId: string,
+    @Param('weekId', Uuid) weekId: string,
+    @Param('playerId', Uuid) playerId: string,
+  ) {
+    return this.seasons.setAbsence(user, leagueId, seasonId, weekId, playerId, null);
   }
 
   /** Game day: two matches trade foursomes (admins and players in the round). */

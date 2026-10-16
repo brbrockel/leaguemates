@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Camera } from 'lucide-react';
 import { useRef, type MouseEvent } from 'react';
 import { useNavigate } from 'react-router';
@@ -89,6 +89,8 @@ export function ScanCardButton({
 interface RoundScan extends ScanResult {
   groupId: string | null;
   matchedPlayers: number;
+  /** Two matches from different foursomes on one card: swap them into one foursome. */
+  regroup: { matchA: string; matchB: string; groupId: string } | null;
 }
 
 /**
@@ -111,6 +113,22 @@ export function RoundScanButton({
   const navigate = useNavigate();
   const input = useRef<HTMLInputElement>(null);
   const base = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}`;
+  const qc = useQueryClient();
+  // The card shows two matches that were regrouped at the course: do the same here, then
+  // open that foursome's card with the scores filled in.
+  const together = useMutation({
+    mutationFn: async (r: RoundScan) => {
+      await api(`${base}/regroup`, {
+        method: 'POST',
+        body: { matchA: r.regroup!.matchA, matchB: r.regroup!.matchB },
+      });
+      return r;
+    },
+    onSuccess: async (r) => {
+      await qc.invalidateQueries({ queryKey: ['season', seasonId] });
+      void navigate(`${base}/groups/${r.regroup!.groupId}`, { state: { scanned: r } });
+    },
+  });
   const scan = useMutation({
     mutationFn: async (files: File[]) => {
       const out: RoundScan[] = [];
@@ -156,6 +174,9 @@ export function RoundScanButton({
         }}
       />
       {scan.isError && <span className="text-xs text-destructive">{scan.error.message}</span>}
+      {together.isError && (
+        <span className="text-xs text-destructive">{together.error.message}</span>
+      )}
       {results && (
         <ul className="flex flex-col gap-1 rounded-lg border border-amber-500/40 bg-amber-500/10 p-2 text-sm">
           {results.map((r, i) => (
@@ -166,6 +187,8 @@ export function RoundScanButton({
                   <>
                     {groupLabel(r.groupId)} ({r.matchedPlayers} of 4 names matched)
                   </>
+                ) : r.regroup ? (
+                  <>two matches from different foursomes were played together</>
                 ) : (
                   <span className="text-destructive">
                     couldn't tell which foursome; it's saved in the season's scorecards
@@ -181,6 +204,16 @@ export function RoundScanButton({
                   }
                 >
                   Check and save
+                </Button>
+              )}
+              {!r.groupId && r.regroup && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={together.isPending}
+                  onClick={() => together.mutate(r)}
+                >
+                  Put them together
                 </Button>
               )}
             </li>

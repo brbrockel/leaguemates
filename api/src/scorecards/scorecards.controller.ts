@@ -144,6 +144,20 @@ export class ScorecardsController {
         )
       : reading.rows;
 
+    // Two complete matches from different foursomes on one card: they were regrouped at the
+    // course. Suggest swapping so both matches share the first one's foursome.
+    let regroup: { matchA: string; matchB: string; groupId: string } | null = null;
+    if (!groupId) {
+      const onCard = new Set(reading.rows.flatMap((r) => (r.playerId ? [r.playerId] : [])));
+      const all = await this.cards.matchesOf(weekId);
+      const full = all.filter((m) => onCard.has(m.playerA) && onCard.has(m.playerB));
+      if (full.length === 2 && full[0]!.groupId !== full[1]!.groupId) {
+        const [keep, move] = full as [(typeof all)[number], (typeof all)[number]];
+        const out = all.find((m) => m.groupId === keep.groupId && m.id !== keep.id);
+        if (out) regroup = { matchA: out.id, matchB: move.id, groupId: keep.groupId };
+      }
+    }
+
     const photo = await this.photos.upload(user, leagueId, file, {
       kind: 'card',
       ...(groupId ? { groupId } : { seasonId }),
@@ -153,6 +167,7 @@ export class ScorecardsController {
       matchedPlayers: groupId ? best.hits : 0,
       photo,
       reading: { ...reading, rows },
+      regroup,
     };
   }
 

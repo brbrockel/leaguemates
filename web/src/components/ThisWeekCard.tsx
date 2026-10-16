@@ -1,8 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { CalendarClock, Flag, Users } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { CalendarClock, Flag, UserX, Users } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { ScanCardButton } from '@/components/ScanCardButton';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { api, type ThisWeekEntry } from '@/lib/api';
 import { formatDay, formatTeeTime, todayIso } from '@/lib/time';
 
@@ -83,6 +87,7 @@ export function ThisWeek() {
                 </div>
               </Card>
             </Link>
+            {n.groupId && <CantMakeIt leagueId={e.leagueId} next={n} />}
             {n.groupId && n.date <= todayIso() && (
               <ScanCardButton
                 leagueId={e.leagueId}
@@ -96,5 +101,81 @@ export function ThisWeek() {
         );
       })}
     </section>
+  );
+}
+
+/**
+ * "Can't make it": mark yourself out of your next round (optionally naming a sub). Your
+ * foursome is told, and the card starts with you absent. Undo until the card is started.
+ */
+function CantMakeIt({
+  leagueId,
+  next,
+}: {
+  leagueId: string;
+  next: NonNullable<ThisWeekEntry['next']>;
+}) {
+  const qc = useQueryClient();
+  const [asking, setAsking] = useState(false);
+  const [sub, setSub] = useState('');
+  const path = `/leagues/${leagueId}/seasons/${next.seasonId}/weeks/${next.weekId}/absences/${next.playerId}`;
+  const change = useMutation({
+    mutationFn: (out: boolean) =>
+      api(
+        path,
+        out ? { method: 'PUT', body: { subName: sub.trim() || null } } : { method: 'DELETE' },
+      ),
+    onSuccess: async () => {
+      setAsking(false);
+      await qc.invalidateQueries({ queryKey: ['this-week'] });
+      await qc.invalidateQueries({ queryKey: ['season', next.seasonId] });
+    },
+  });
+  if (next.out)
+    return (
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <span className="flex items-center gap-1.5 text-muted-foreground">
+          <UserX className="size-4" aria-hidden /> You're out this round
+          {next.out.subName && `; ${next.out.subName} is subbing`}.
+        </span>
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled={change.isPending}
+          onClick={() => change.mutate(false)}
+        >
+          I can play after all
+        </Button>
+        {change.isError && <Alert variant="destructive">{change.error.message}</Alert>}
+      </div>
+    );
+  if (!asking)
+    return (
+      <div>
+        <Button size="sm" variant="outline" onClick={() => setAsking(true)}>
+          <UserX /> Can't make it
+        </Button>
+      </div>
+    );
+  return (
+    <div className="flex flex-col gap-2 rounded-lg border p-3 text-sm">
+      <span>Your foursome will be told, and the card will start with you absent.</span>
+      <Input
+        aria-label="Sub's name (optional)"
+        placeholder="Sub's name (optional)"
+        maxLength={60}
+        value={sub}
+        onChange={(e) => setSub(e.target.value)}
+      />
+      <div className="flex gap-2">
+        <Button size="sm" disabled={change.isPending} onClick={() => change.mutate(true)}>
+          Mark me out
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setAsking(false)}>
+          Cancel
+        </Button>
+      </div>
+      {change.isError && <Alert variant="destructive">{change.error.message}</Alert>}
+    </div>
   );
 }

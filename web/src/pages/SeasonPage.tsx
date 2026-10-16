@@ -30,7 +30,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Select } from '@/components/ui/input';
+import { Input, Select } from '@/components/ui/input';
 import { api, ApiError, type SeasonResultGroup, type SeasonSchedule } from '@/lib/api';
 import { aboutTeeTime, formatDay, todayIso } from '@/lib/time';
 import { cn } from '@/lib/utils';
@@ -459,6 +459,7 @@ export function SeasonPage() {
                               handicaps={handicaps}
                               me={myPlayerId}
                               mine={mine}
+                              outs={new Map((w.absences ?? []).map((a) => [a.playerId, a.subName]))}
                               onNotice={
                                 isAdmin && season.status !== 'draft'
                                   ? () =>
@@ -491,6 +492,7 @@ export function SeasonPage() {
           week={schedule.data.weeks.find((x) => x.id === rearranging)!}
           names={names}
           started={(groupId) => Boolean(resultFor(groupId))}
+          isAdmin={isAdmin}
           onChanged={(data) => qc.setQueryData(key, data)}
           onClose={() => setRearranging(null)}
         />
@@ -631,6 +633,7 @@ function GroupCard({
   me,
   mine,
   onNotice,
+  outs,
 }: {
   leagueId: string;
   to: string;
@@ -646,6 +649,8 @@ function GroupCard({
   mine: boolean;
   /** Admins: a notice to this foursome. */
   onNotice?: (() => void) | undefined;
+  /** Players who said they can't make it, with their sub's name. */
+  outs?: Map<string, string | null> | undefined;
 }) {
   const navigate = useNavigate();
   // The whole card opens the scorecard (names inside link to players, so it can't be a link itself).
@@ -762,6 +767,10 @@ function GroupCard({
                         </span>
                       </>
                     )
+                  ) : outs?.has(id) ? (
+                    <span className="col-span-2 text-right text-xs text-muted-foreground">
+                      out{outs.get(id) ? ` · sub ${outs.get(id)}` : ''}
+                    </span>
                   ) : (
                     <span className="col-span-2" />
                   )}
@@ -785,11 +794,13 @@ function RearrangeDialog({
   week,
   names,
   started,
+  isAdmin,
   onChanged,
   onClose,
 }: {
   leagueId: string;
   seasonId: string;
+  isAdmin: boolean;
   week: SeasonSchedule['weeks'][number];
   names: Map<string, string>;
   started: (groupId: string) => boolean;
@@ -799,8 +810,15 @@ function RearrangeDialog({
   const [picked, setPicked] = useState<{ matchId: string; groupId: string } | null>(null);
   const base = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${week.id}`;
   const change = useMutation({
-    mutationFn: ({ path, body }: { path: string; body: object }) =>
-      api<SeasonSchedule>(`${base}/${path}`, { method: 'POST', body }),
+    mutationFn: ({
+      path,
+      method = 'POST',
+      body,
+    }: {
+      path: string;
+      method?: 'POST' | 'PUT' | 'DELETE';
+      body?: object;
+    }) => api<SeasonSchedule>(`${base}/${path}`, { method, ...(body ? { body } : {}) }),
     onSuccess: (data) => {
       setPicked(null);
       onChanged(data);
@@ -888,6 +906,20 @@ function RearrangeDialog({
             Now tap a match in another foursome to swap with.
           </p>
         )}
+        {isAdmin && (
+          <Absences
+            week={week}
+            names={names}
+            started={started}
+            onChange={(playerId, sub) =>
+              change.mutate(
+                sub === null
+                  ? { path: `absences/${playerId}`, method: 'DELETE' }
+                  : { path: `absences/${playerId}`, method: 'PUT', body: { subName: sub || null } },
+              )
+            }
+          />
+        )}
         {change.isError && (
           <Alert variant="destructive" className="mt-2">
             {change.error.message}
@@ -895,5 +927,83 @@ function RearrangeDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** Admins: who's out this round (said ahead of time), and marking someone out or back in. */
+function Absences({
+  week,
+  names,
+  started,
+  onChange,
+}: {
+  week: SeasonSchedule['weeks'][number];
+  names: Map<string, string>;
+  started: (groupId: string) => boolean;
+  onChange: (playerId: string, sub: string | null) => void;
+}) {
+  const [who, setWho] = useState('');
+  const [sub, setSub] = useState('');
+  const outs = week.absences ?? [];
+  const open = week.groups
+    .filter((g) => !started(g.id))
+    .flatMap((g) => g.matches.flatMap((m) => [m.playerA, m.playerB]))
+    .filter((id) => !outs.some((a) => a.playerId === id))
+    .sort((a, b) => (names.get(a) ?? '').localeCompare(names.get(b) ?? ''));
+  return (
+    <div className="mt-3 flex flex-col gap-2 border-t pt-3">
+      <h3 className="text-sm font-medium">Who's out</h3>
+      {outs.length === 0 ? (
+        <p className="text-xs text-muted-foreground">Nobody has said they can't make it.</p>
+      ) : (
+        <ul className="flex flex-col gap-1 text-sm">
+          {outs.map((a) => (
+            <li key={a.playerId} className="flex items-center justify-between gap-2">
+              <span>
+                {names.get(a.playerId)}
+                {a.subName && <span className="text-muted-foreground"> · sub {a.subName}</span>}
+              </span>
+              <Button size="sm" variant="ghost" onClick={() => onChange(a.playerId, null)}>
+                Back in
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {open.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          <Select
+            aria-label="Player who's out"
+            value={who}
+            onChange={(e) => setWho(e.target.value)}
+          >
+            <option value="">Mark someone out…</option>
+            {open.map((id) => (
+              <option key={id} value={id}>
+                {names.get(id)}
+              </option>
+            ))}
+          </Select>
+          <Input
+            aria-label="Sub (optional)"
+            placeholder="Sub (optional)"
+            className="w-40"
+            value={sub}
+            onChange={(e) => setSub(e.target.value)}
+          />
+          <Button
+            size="sm"
+            disabled={!who}
+            onClick={() => {
+              onChange(who, sub.trim());
+              setWho('');
+              setSub('');
+            }}
+          >
+            Mark out
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }

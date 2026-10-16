@@ -179,6 +179,8 @@ export interface SeasonSchedule {
     layout: string;
     playoffRound: number | null;
     isFinal: boolean;
+    /** Players who said ahead of time they can't make it. */
+    absences?: { playerId: string; subName: string | null }[];
     groups: {
       id: string;
       slot: number;
@@ -213,6 +215,9 @@ export interface ThisWeekEntry {
     opponent: string | null;
     foursome: [string, string][];
     bye: boolean;
+    playerId: string;
+    /** Set when you've said you can't make it. */
+    out: { subName: string | null } | null;
   } | null;
 }
 
@@ -240,7 +245,13 @@ export interface ScorecardView {
   teeTime: string;
   plannedLayoutId: string;
   layouts: { id: string; name: string; holes: HoleInfo[] }[];
-  players: { playerId: string; nickname: string; handicap: number | null }[];
+  players: {
+    playerId: string;
+    nickname: string;
+    handicap: number | null;
+    /** Said ahead of time they can't make it (and who's subbing). */
+    out?: { subName: string | null } | null;
+  }[];
   card: {
     id: string;
     status: CardStatus;
