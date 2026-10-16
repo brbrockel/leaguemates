@@ -1,0 +1,1 @@
+ALTER TABLE "photos" ADD COLUMN "kind" text DEFAULT 'photo' NOT NULL;

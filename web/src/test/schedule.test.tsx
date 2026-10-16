@@ -1,0 +1,238 @@
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it } from 'vitest';
+import type { SeasonSchedule } from '@/lib/api';
+import { me, mockApi, renderAt } from './render';
+
+const LEAGUE = me.leagues[0]!.id;
+const SEASON = '22222222-2222-4222-8222-222222222222';
+const P = (n: number) => `p${n}`;
+const roster = ['Brian', 'Doc', 'Jerry', 'Paul'].map((nickname, i) => ({
+  playerId: P(i + 1),
+  spot: i + 1,
+  nickname,
+  fullName: null,
+  handicap: 10,
+  userId: i === 0 ? me.user.id : null,
+}));
+const week = (
+  round: number,
+  date: string,
+  layout: string,
+  a: [number, number],
+  b: [number, number],
+) => ({
+  id: `w${round}`,
+  round,
+  date,
+  status: 'scheduled' as const,
+  layout,
+  playoffRound: null,
+  isFinal: false,
+  groups: [
+    {
+      id: `g${round}a`,
+      slot: 0,
+      teeTime: '16:30',
+      matches: [{ id: `m${round}a`, playerA: P(a[0]), playerB: P(a[1]) }],
+    },
+    {
+      id: `g${round}b`,
+      slot: 1,
+      teeTime: '16:39',
+      matches: [{ id: `m${round}b`, playerA: P(b[0]), playerB: P(b[1]) }],
+    },
+  ],
+});
+const generated = (status: 'draft' | 'scheduled'): SeasonSchedule => ({
+  season: { id: SEASON, name: '2027', status, startDate: '2099-04-21', seed: 7 },
+  roster,
+  weeks: [
+    week(1, '2099-04-21', 'Front 9', [1, 2], [3, 4]),
+    week(2, '2099-04-28', 'Back 9', [3, 1], [2, 4]),
+  ],
+  report: {
+    pairsMet: 6,
+    possiblePairs: 6,
+    maxOpponentRepeats: 1,
+    maxGroupMateRepeats: 2,
+    everyoneTeesFirstAndLast: true,
+  },
+});
+
+describe('season page', () => {
+  it('admins generate the schedule, review the report, and lock it', async () => {
+    let state: SeasonSchedule = { ...generated('draft'), weeks: [], report: null };
+    const posts: string[] = [];
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({ status: 200, body: state }),
+      [`POST /api/leagues/${LEAGUE}/seasons/${SEASON}/generate`]: () => {
+        posts.push('generate');
+        state = generated('draft');
+        return { status: 201, body: state };
+      },
+      [`POST /api/leagues/${LEAGUE}/seasons/${SEASON}/lock`]: () => {
+        posts.push('lock');
+        state = generated('scheduled');
+        return { status: 201, body: state };
+      },
+      [`GET /api/leagues/${LEAGUE}/seasons`]: () => ({ status: 200, body: [] }),
+      'GET /api/me/this-week': () => ({ status: 200, body: [] }),
+    });
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    await userEvent.click(await screen.findByRole('button', { name: /Generate schedule/ }));
+    expect(await screen.findByText(/Everyone plays everyone: 6 of 6/)).toBeInTheDocument();
+    expect(screen.getByText('Round 1')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /Lock schedule/ }));
+    expect(await screen.findByRole('button', { name: /Unlock/ })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /Rainout/ })).toHaveLength(2);
+    expect(posts).toEqual(['generate', 'lock']);
+  });
+
+  it('players can filter to their own matches, which are highlighted', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({
+        status: 200,
+        body: { ...me, leagues: [{ ...me.leagues[0]!, role: 'user' }] },
+      }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({
+        status: 200,
+        body: generated('scheduled'),
+      }),
+    });
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const round1 = (await screen.findByText('Round 1')).closest('li') as HTMLElement;
+    expect(within(round1).getByText('Jerry')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Rainout/ })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('radio', { name: 'My matches' }));
+    expect(within(round1).queryByText('Jerry')).not.toBeInTheDocument();
+    expect(within(round1).getByText('Brian')).toHaveClass('text-primary');
+  });
+});
+
+describe('home: this week', () => {
+  it('shows the tee time, opponent, nine and group', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      'GET /api/me/this-week': () => ({
+        status: 200,
+        body: [
+          {
+            leagueId: LEAGUE,
+            leagueName: 'Wednesday League',
+            next: {
+              seasonId: SEASON,
+              seasonName: '2027',
+              round: 3,
+              rounds: 15,
+              date: '2099-05-05',
+              layout: 'Front 9',
+              teeTime: '16:48',
+              opponent: 'Doc',
+              foursome: [
+                ['Brian', 'Doc'],
+                ['Jerry', 'Paul'],
+              ],
+              bye: false,
+            },
+          },
+        ],
+      }),
+    });
+    renderAt('/');
+    expect(await screen.findByText(/Round 3 of 15/)).toBeInTheDocument();
+    expect(screen.getByText('4:48 PM')).toBeInTheDocument();
+    expect(screen.getByText('Doc', { selector: 'span.font-semibold' })).toBeInTheDocument();
+    expect(screen.getByText('Front 9')).toBeInTheDocument();
+    expect(screen.getByText(/Jerry vs Paul/)).toBeInTheDocument();
+  });
+});
+
+describe('season tools', () => {
+  it('admins skip a rained-out round from the Rainout menu, and can delete the season', async () => {
+    const { vi } = await import('vitest');
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    vi.spyOn(window, 'prompt').mockReturnValue('2027');
+    const posts: string[] = [];
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({
+        status: 200,
+        body: generated('scheduled'),
+      }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/results`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/playoffs`]: () => ({
+        status: 200,
+        body: { format: 'none', canStart: false, regularRoundsLeft: 2, champion: null, rounds: [] },
+      }),
+      [`POST /api/leagues/${LEAGUE}/seasons/${SEASON}/weeks/w2/skip`]: () => {
+        posts.push('skip');
+        return { status: 201, body: generated('scheduled') };
+      },
+      [`DELETE /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => {
+        posts.push('delete');
+        return { status: 204 };
+      },
+      [`GET /api/leagues/${LEAGUE}/seasons`]: () => ({ status: 200, body: [] }),
+      'GET /api/me/this-week': () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}`]: () => ({
+        status: 200,
+        body: { ...me.leagues[0], role: 'admin' },
+      }),
+      [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+        status: 200,
+        body: { members: [], players: [] },
+      }),
+    });
+    const router = renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const rainouts = await screen.findAllByRole('button', { name: /Rainout/ });
+    await userEvent.click(rainouts[1]!);
+    await userEvent.click(await screen.findByRole('menuitem', { name: /Skip this round/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Delete season/ }));
+    await screen.findByRole('heading', { name: 'Seasons' });
+    expect(router.state.location.pathname).toBe(`/leagues/${LEAGUE}`);
+    expect(posts).toEqual(['skip', 'delete']);
+  });
+});
+
+describe('roster sign-in links', () => {
+  const handlers = (who: typeof me, posts: string[] = []) => ({
+    'GET /api/auth/me': () => ({ status: 200, body: who }),
+    [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({
+      status: 200,
+      body: generated('scheduled'),
+    }),
+    [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/results`]: () => ({ status: 200, body: [] }),
+    [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/playoffs`]: () => ({
+      status: 200,
+      body: { format: 'none', canStart: false, regularRoundsLeft: 2, champion: null, rounds: [] },
+    }),
+    [`POST /api/users/${me.user.id}/password-link/email`]: () => {
+      posts.push('email');
+      return { status: 201, body: { sent: true, to: 'b***@example.com' } };
+    },
+  });
+
+  it('site admins email a player a link from the roster', async () => {
+    const { vi } = await import('vitest');
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const posts: string[] = [];
+    mockApi(handlers({ ...me, user: { ...me.user, isSiteAdmin: true } }, posts));
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    await userEvent.click(await screen.findByText('Show spots and handicaps'));
+    // Only players with an account get the button (Brian here).
+    const buttons = screen.getAllByRole('button', { name: /a sign-in link/ });
+    expect(buttons).toHaveLength(1);
+    await userEvent.click(buttons[0]!);
+    expect(await screen.findByText('Sent to b***@example.com')).toBeInTheDocument();
+    expect(posts).toEqual(['email']);
+  });
+
+  it("league admins who aren't site admins don't see it", async () => {
+    mockApi(handlers(me));
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    await userEvent.click(await screen.findByText('Show spots and handicaps'));
+    expect(screen.queryByRole('button', { name: /a sign-in link/ })).toBeNull();
+  });
+});

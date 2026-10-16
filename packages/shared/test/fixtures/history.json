@@ -1,0 +1,9409 @@
+{
+ "source": "teemate-data/history (names anonymized)",
+ "seasons": [
+  {
+   "year": 2021,
+   "finalStandings": [
+    {
+     "name": "Player 15",
+     "W": 10,
+     "L": 3,
+     "T": 2,
+     "points": 32
+    },
+    {
+     "name": "Player 01",
+     "W": 10,
+     "L": 4,
+     "T": 1,
+     "points": 31
+    },
+    {
+     "name": "Player 07",
+     "W": 9,
+     "L": 4,
+     "T": 2,
+     "points": 29
+    },
+    {
+     "name": "Player 09",
+     "W": 8,
+     "L": 3,
+     "T": 4,
+     "points": 28
+    },
+    {
+     "name": "Player 13",
+     "W": 9,
+     "L": 5,
+     "T": 1,
+     "points": 28
+    },
+    {
+     "name": "Player 14",
+     "W": 8,
+     "L": 5,
+     "T": 2,
+     "points": 26
+    },
+    {
+     "name": "Player 08",
+     "W": 7,
+     "L": 4,
+     "T": 4,
+     "points": 25
+    },
+    {
+     "name": "Player 10",
+     "W": 4,
+     "L": 3,
+     "T": 8,
+     "points": 20
+    },
+    {
+     "name": "Player 11",
+     "W": 6,
+     "L": 8,
+     "T": 1,
+     "points": 19
+    },
+    {
+     "name": "Player 18",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 03",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 02",
+     "W": 3,
+     "L": 6,
+     "T": 6,
+     "points": 15
+    },
+    {
+     "name": "Player 19",
+     "W": 3,
+     "L": 7,
+     "T": 5,
+     "points": 14
+    },
+    {
+     "name": "Player 05",
+     "W": 3,
+     "L": 8,
+     "T": 4,
+     "points": 13
+    },
+    {
+     "name": "Player 12",
+     "W": 2,
+     "L": 6,
+     "T": 7,
+     "points": 13
+    },
+    {
+     "name": "Player 04",
+     "W": 1,
+     "L": 12,
+     "T": 2,
+     "points": 5
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2021-04-28",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 63
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 03",
+        "handicap": 10,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2021-05-05",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 66
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 03",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 58
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-05-12",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 66
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 03",
+        "handicap": 10,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2021-05-19",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 46
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 03",
+        "handicap": 10,
+        "gross": 52
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-05-26",
+     "game": 5,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 8,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 10,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2021-06-09",
+     "game": 7,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 8,
+        "gross": 41
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-06-16",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 6,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 70
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2021-06-23",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-06-30",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 51
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2021-07-07",
+     "game": 11,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 6,
+        "gross": 39
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-07-14",
+     "game": 12,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 61
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-07-28",
+     "game": 14,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 38
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 8,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2021-08-04",
+     "game": 15,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 03",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 50
+       },
+       "recorded": "T"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "year": 2022,
+   "finalStandings": [
+    {
+     "name": "Player 01",
+     "W": 10,
+     "L": 2,
+     "T": 3,
+     "points": 33
+    },
+    {
+     "name": "Player 15",
+     "W": 10,
+     "L": 2,
+     "T": 3,
+     "points": 33
+    },
+    {
+     "name": "Player 08",
+     "W": 8,
+     "L": 3,
+     "T": 4,
+     "points": 28
+    },
+    {
+     "name": "Player 07",
+     "W": 7,
+     "L": 3,
+     "T": 5,
+     "points": 26
+    },
+    {
+     "name": "Player 14",
+     "W": 7,
+     "L": 4,
+     "T": 4,
+     "points": 25
+    },
+    {
+     "name": "Player 13",
+     "W": 7,
+     "L": 5,
+     "T": 3,
+     "points": 24
+    },
+    {
+     "name": "Player 11",
+     "W": 6,
+     "L": 7,
+     "T": 2,
+     "points": 20
+    },
+    {
+     "name": "Player 02",
+     "W": 5,
+     "L": 5,
+     "T": 5,
+     "points": 20
+    },
+    {
+     "name": "Player 18",
+     "W": 6,
+     "L": 8,
+     "T": 1,
+     "points": 19
+    },
+    {
+     "name": "Player 09",
+     "W": 6,
+     "L": 8,
+     "T": 1,
+     "points": 19
+    },
+    {
+     "name": "Player 19",
+     "W": 5,
+     "L": 7,
+     "T": 3,
+     "points": 18
+    },
+    {
+     "name": "Player 12",
+     "W": 5,
+     "L": 8,
+     "T": 2,
+     "points": 17
+    },
+    {
+     "name": "Player 10",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 05",
+     "W": 4,
+     "L": 8,
+     "T": 3,
+     "points": 15
+    },
+    {
+     "name": "Player 04",
+     "W": 4,
+     "L": 8,
+     "T": 3,
+     "points": 15
+    },
+    {
+     "name": "Player 20",
+     "W": 2,
+     "L": 11,
+     "T": 2,
+     "points": 8
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2022-04-27",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 49
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 69
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 60
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2022-05-04",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 69
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-05-11",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 18,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 65
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-05-18",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 52
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 62
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 12,
+        "gross": 70
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 51
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2022-06-08",
+     "game": 7,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 39
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 9,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 62
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 39
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-06-15",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 60
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-06-22",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 17,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 69
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 67
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2022-06-29",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 55
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 17,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 71
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-07-06",
+     "game": 11,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 49
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 4,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 47
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2022-07-13",
+     "game": 12,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 63
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 64
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 53
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 68
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-07-20",
+     "game": 13,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 15,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 17,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-07-27",
+     "game": 14,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 42
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 9,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 15,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 56
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 51
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 58
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2022-08-03",
+     "game": 15,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 01",
+        "handicap": 5,
+        "gross": 43
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 54
+       },
+       "recorded": "A"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "year": 2023,
+   "finalStandings": [
+    {
+     "name": "Player 09",
+     "W": 10,
+     "L": 3,
+     "T": 2,
+     "points": 32
+    },
+    {
+     "name": "Player 13",
+     "W": 9,
+     "L": 3,
+     "T": 3,
+     "points": 30
+    },
+    {
+     "name": "Player 15",
+     "W": 9,
+     "L": 5,
+     "T": 1,
+     "points": 28
+    },
+    {
+     "name": "Player 18",
+     "W": 9,
+     "L": 6,
+     "T": 0,
+     "points": 27
+    },
+    {
+     "name": "Player 10",
+     "W": 8,
+     "L": 4,
+     "T": 3,
+     "points": 27
+    },
+    {
+     "name": "Player 21",
+     "W": 8,
+     "L": 5,
+     "T": 2,
+     "points": 26
+    },
+    {
+     "name": "Player 04",
+     "W": 6,
+     "L": 5,
+     "T": 4,
+     "points": 22
+    },
+    {
+     "name": "Player 05",
+     "W": 6,
+     "L": 5,
+     "T": 4,
+     "points": 22
+    },
+    {
+     "name": "Player 14",
+     "W": 6,
+     "L": 5,
+     "T": 4,
+     "points": 22
+    },
+    {
+     "name": "Player 07",
+     "W": 5,
+     "L": 5,
+     "T": 5,
+     "points": 20
+    },
+    {
+     "name": "Player 11",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 02",
+     "W": 4,
+     "L": 8,
+     "T": 3,
+     "points": 15
+    },
+    {
+     "name": "Player 08",
+     "W": 3,
+     "L": 6,
+     "T": 6,
+     "points": 15
+    },
+    {
+     "name": "Player 12",
+     "W": 2,
+     "L": 6,
+     "T": 7,
+     "points": 13
+    },
+    {
+     "name": "Player 20",
+     "W": 3,
+     "L": 9,
+     "T": 3,
+     "points": 12
+    },
+    {
+     "name": "Player 19",
+     "W": 2,
+     "L": 10,
+     "T": 3,
+     "points": 9
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2023-04-19",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 41
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 52
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2023-04-26",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 4,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 62
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-05-03",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 4,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 60
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2023-05-10",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 4,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 49
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 54
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2023-05-17",
+     "game": 5,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 60
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 66
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 51
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2023-05-24",
+     "game": 6,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 17,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-05-31",
+     "game": 7,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 61
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 10,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2023-06-07",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 63
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-06-21",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 56
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 15",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 52
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 52
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2023-07-05",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 51
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 51
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 60
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-07-12",
+     "game": 11,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 67
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2023-07-19",
+     "game": 12,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 62
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-07-26",
+     "game": 13,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 60
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 62
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2023-08-09",
+     "game": 15,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 19",
+        "handicap": 11,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 64
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 62
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 11,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "A"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "year": 2024,
+   "finalStandings": [
+    {
+     "name": "Player 09",
+     "W": 11,
+     "L": 1,
+     "T": 3,
+     "points": 36
+    },
+    {
+     "name": "Player 08",
+     "W": 8,
+     "L": 4,
+     "T": 3,
+     "points": 27
+    },
+    {
+     "name": "Player 21",
+     "W": 8,
+     "L": 4,
+     "T": 3,
+     "points": 27
+    },
+    {
+     "name": "Player 15",
+     "W": 7,
+     "L": 4,
+     "T": 4,
+     "points": 25
+    },
+    {
+     "name": "Player 20",
+     "W": 7,
+     "L": 5,
+     "T": 3,
+     "points": 24
+    },
+    {
+     "name": "Player 18",
+     "W": 7,
+     "L": 5,
+     "T": 3,
+     "points": 24
+    },
+    {
+     "name": "Player 10",
+     "W": 7,
+     "L": 6,
+     "T": 2,
+     "points": 23
+    },
+    {
+     "name": "Player 13",
+     "W": 7,
+     "L": 7,
+     "T": 1,
+     "points": 22
+    },
+    {
+     "name": "Player 14",
+     "W": 6,
+     "L": 5,
+     "T": 4,
+     "points": 22
+    },
+    {
+     "name": "Player 11",
+     "W": 6,
+     "L": 6,
+     "T": 3,
+     "points": 21
+    },
+    {
+     "name": "Player 06",
+     "W": 6,
+     "L": 6,
+     "T": 3,
+     "points": 21
+    },
+    {
+     "name": "Player 07",
+     "W": 4,
+     "L": 5,
+     "T": 6,
+     "points": 18
+    },
+    {
+     "name": "Player 05",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 12",
+     "W": 3,
+     "L": 8,
+     "T": 4,
+     "points": 13
+    },
+    {
+     "name": "Player 02",
+     "W": 2,
+     "L": 8,
+     "T": 5,
+     "points": 11
+    },
+    {
+     "name": "Player 04",
+     "W": 0,
+     "L": 12,
+     "T": 3,
+     "points": 3
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2024-04-17",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 65
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 49
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 44.55
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 63
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44.4
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2024-04-24",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-05-01",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 21",
+        "handicap": 6,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 15,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 51
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-05-08",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 14,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-05-15",
+     "game": 5,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 66
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 17,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-05-22",
+     "game": 6,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 51
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 17,
+        "gross": 55
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 53
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-05-29",
+     "game": 7,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-06-05",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-06-12",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-06-19",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 7,
+        "gross": 41
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 47
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 54
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2024-06-26",
+     "game": 11,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 9,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-07-03",
+     "game": 12,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 64
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-07-10",
+     "game": 13,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 7,
+        "gross": 38
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2024-07-24",
+     "game": 14,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 50
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2024-08-14",
+     "game": 15,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "A"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "finalStandings": [
+    {
+     "name": "Player 15",
+     "W": 10,
+     "L": 4,
+     "T": 1,
+     "points": 31
+    },
+    {
+     "name": "Player 08",
+     "W": 8,
+     "L": 3,
+     "T": 4,
+     "points": 28
+    },
+    {
+     "name": "Player 06",
+     "W": 8,
+     "L": 4,
+     "T": 3,
+     "points": 27
+    },
+    {
+     "name": "Player 09",
+     "W": 8,
+     "L": 4,
+     "T": 3,
+     "points": 27
+    },
+    {
+     "name": "Player 14",
+     "W": 7,
+     "L": 4,
+     "T": 4,
+     "points": 25
+    },
+    {
+     "name": "Player 13",
+     "W": 6,
+     "L": 4,
+     "T": 5,
+     "points": 23
+    },
+    {
+     "name": "Player 18",
+     "W": 5,
+     "L": 6,
+     "T": 4,
+     "points": 19
+    },
+    {
+     "name": "Player 07",
+     "W": 4,
+     "L": 4,
+     "T": 7,
+     "points": 19
+    },
+    {
+     "name": "Player 05",
+     "W": 5,
+     "L": 6,
+     "T": 4,
+     "points": 19
+    },
+    {
+     "name": "Player 11",
+     "W": 5,
+     "L": 8,
+     "T": 2,
+     "points": 17
+    },
+    {
+     "name": "Player 21",
+     "W": 3,
+     "L": 4,
+     "T": 8,
+     "points": 17
+    },
+    {
+     "name": "Player 10",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 02",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 04",
+     "W": 3,
+     "L": 6,
+     "T": 6,
+     "points": 15
+    },
+    {
+     "name": "Player 20",
+     "W": 3,
+     "L": 7,
+     "T": 5,
+     "points": 14
+    },
+    {
+     "name": "Player 12",
+     "W": 2,
+     "L": 7,
+     "T": 6,
+     "points": 12
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2025-04-16",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 15,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44.2
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 52
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-04-23",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 15,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 55
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 53
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-04-30",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 17,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 66
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 54
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-05-07",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 10,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 17,
+        "gross": 60
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 15",
+        "handicap": 6,
+        "gross": 42
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2025-05-14",
+     "game": 5,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 9,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 17,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 8,
+        "gross": 45
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2025-05-21",
+     "game": 6,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 17,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 9,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 51
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2025-05-28",
+     "game": 7,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 9,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 56
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 55
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 9,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-06-04",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 60
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 57
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 9,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 60
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-06-11",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 9,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 7,
+        "gross": 41
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 52
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2025-06-18",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 53
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 7,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 18,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 10",
+        "handicap": 7,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 7,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "A"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "year": 2026,
+   "finalStandings": [
+    {
+     "name": "Player 17",
+     "W": 12,
+     "L": 2,
+     "T": 1,
+     "points": 37
+    },
+    {
+     "name": "Player 09",
+     "W": 11,
+     "L": 2,
+     "T": 2,
+     "points": 35
+    },
+    {
+     "name": "Player 14",
+     "W": 9,
+     "L": 3,
+     "T": 3,
+     "points": 30
+    },
+    {
+     "name": "Player 05",
+     "W": 8,
+     "L": 3,
+     "T": 4,
+     "points": 28
+    },
+    {
+     "name": "Player 15",
+     "W": 6,
+     "L": 4,
+     "T": 5,
+     "points": 23
+    },
+    {
+     "name": "Player 07",
+     "W": 5,
+     "L": 3,
+     "T": 7,
+     "points": 22
+    },
+    {
+     "name": "Player 20",
+     "W": 5,
+     "L": 6,
+     "T": 4,
+     "points": 19
+    },
+    {
+     "name": "Player 12",
+     "W": 5,
+     "L": 6,
+     "T": 4,
+     "points": 19
+    },
+    {
+     "name": "Player 06",
+     "W": 4,
+     "L": 5,
+     "T": 6,
+     "points": 18
+    },
+    {
+     "name": "Player 11",
+     "W": 5,
+     "L": 7,
+     "T": 3,
+     "points": 18
+    },
+    {
+     "name": "Player 08",
+     "W": 4,
+     "L": 7,
+     "T": 4,
+     "points": 16
+    },
+    {
+     "name": "Player 02",
+     "W": 3,
+     "L": 8,
+     "T": 4,
+     "points": 13
+    },
+    {
+     "name": "Player 21",
+     "W": 2,
+     "L": 7,
+     "T": 6,
+     "points": 12
+    },
+    {
+     "name": "Player 18",
+     "W": 1,
+     "L": 5,
+     "T": 9,
+     "points": 12
+    },
+    {
+     "name": "Player 04",
+     "W": 3,
+     "L": 9,
+     "T": 3,
+     "points": 12
+    },
+    {
+     "name": "Player 13",
+     "W": 3,
+     "L": 9,
+     "T": 3,
+     "points": 12
+    }
+   ],
+   "weeks": [
+    {
+     "date": "2026-04-22",
+     "game": 1,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 16",
+        "handicap": 6,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 39
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 46
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2026-04-29",
+     "game": 2,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 16",
+        "handicap": 6,
+        "gross": 39
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 5,
+        "gross": 38
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 3,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 42
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-05-13",
+     "game": 3,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 57
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 16",
+        "handicap": 4,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 48
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 3,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 50
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2026-05-20",
+     "game": 4,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 51
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 16",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 61
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 52
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 55
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-05-27",
+     "game": 5,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 60
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 7,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 16",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 13,
+        "gross": 62
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 44
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 13,
+        "gross": 59
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-03",
+     "game": 6,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 64
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 62
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 48
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 16",
+        "handicap": 6,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 70
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 62
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-24",
+     "game": 8,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 49
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 47
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 62
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-01",
+     "game": 9,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 14,
+        "gross": 52
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 41
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 65
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 48
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 5,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 53
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 54
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 48
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-08",
+     "game": 10,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 52
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 43
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 56
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 67
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 5,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 63
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 5,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 49
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-15",
+     "game": 11,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 56
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 56
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 53
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 49
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 8,
+        "gross": 42
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 59
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 57
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 5,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 45
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 44
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-22",
+     "game": 12,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 15,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 54
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 54
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 4,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 46
+       },
+       "recorded": "B"
+      }
+     ]
+    },
+    {
+     "date": "2026-08-06",
+     "game": 13,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 13,
+        "gross": 52
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 44
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 52
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 05",
+        "handicap": 7,
+        "gross": 50
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 4,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 4,
+        "gross": 41
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 52
+       },
+       "recorded": "A"
+      }
+     ]
+    },
+    {
+     "date": "2026-08-12",
+     "game": 14,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 4,
+        "gross": 46
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 55
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 51
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 0
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 0
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 59
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 7,
+        "gross": 50
+       },
+       "b": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 51
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 43
+       },
+       "b": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "T"
+      }
+     ]
+    },
+    {
+     "date": "2026-08-19",
+     "game": 15,
+     "matches": [
+      {
+       "a": {
+        "name": "Player 06",
+        "handicap": 6,
+        "gross": 42
+       },
+       "b": {
+        "name": "Player 11",
+        "handicap": 12,
+        "gross": 54
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 17",
+        "handicap": 4,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 09",
+        "handicap": 7,
+        "gross": 46
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 13",
+        "handicap": 8,
+        "gross": 51
+       },
+       "b": {
+        "name": "Player 18",
+        "handicap": 10,
+        "gross": 51
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 14",
+        "handicap": 6,
+        "gross": 49
+       },
+       "b": {
+        "name": "Player 07",
+        "handicap": 6,
+        "gross": 44
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 05",
+        "handicap": 7,
+        "gross": 47
+       },
+       "b": {
+        "name": "Player 12",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "A"
+      },
+      {
+       "a": {
+        "name": "Player 02",
+        "handicap": 14,
+        "gross": 58
+       },
+       "b": {
+        "name": "Player 04",
+        "handicap": 16,
+        "gross": 58
+       },
+       "recorded": "B"
+      },
+      {
+       "a": {
+        "name": "Player 08",
+        "handicap": 6,
+        "gross": 45
+       },
+       "b": {
+        "name": "Player 20",
+        "handicap": 14,
+        "gross": 57
+       },
+       "recorded": "T"
+      },
+      {
+       "a": {
+        "name": "Player 15",
+        "handicap": 5,
+        "gross": 40
+       },
+       "b": {
+        "name": "Player 21",
+        "handicap": 5,
+        "gross": 45
+       },
+       "recorded": "A"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

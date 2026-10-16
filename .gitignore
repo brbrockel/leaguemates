@@ -1,0 +1,21 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+*.log
+.DS_Store
+~$*.xlsx
+*:Zone.Identifier
+coverage/
+.turbo/
+*.tsbuildinfo
+web/dev-dist/
+# Match photos stored locally in development
+api/data/
+
+# Photos of people go in the app (members only), not in the repository
+doc/img/*.jpg
+doc/img/*.jpeg
+doc/img/*.png
+doc/img/*.heic

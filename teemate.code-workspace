@@ -1,0 +1,17 @@
+{
+  "folders": [{ "path": ".", "name": "teemate" }],
+  "settings": {
+    "files.exclude": { "**/.git": true },
+    "editor.formatOnSave": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "editorconfig.editorconfig",
+      "esbenp.prettier-vscode",
+      "GrapeCity.gc-excelviewer",
+    ],
+  },
+}

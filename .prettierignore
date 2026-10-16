@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+dist/
+coverage/
+doc/reference/
+packages/shared/test/fixtures/
+*.md
+api/drizzle/
