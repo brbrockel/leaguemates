@@ -464,6 +464,37 @@ export class UsersService {
     return { sent: true as const, to };
   }
 
+  /**
+   * Site admins: a password link to text from their own phone. Returns the link and the
+   * person's phone; the app opens Messages with both filled in, and nothing is sent from
+   * the server.
+   */
+  async textPasswordLink(actor: SessionUser, userId: string) {
+    if (!actor.isSiteAdmin) throw new ForbiddenException('Only site admins can text links.');
+    const target = await this.getUser(userId);
+    if (target.disabledAt) throw new BadRequestException('This account is disabled.');
+    if (!target.phone) throw new BadRequestException('There is no phone number for them yet.');
+    const { link } = await issuePasswordLink(
+      this.db,
+      this.config.APP_URL,
+      target.email,
+      this.config.ADMIN_LINK_TTL_HOURS * 3600 * 1000,
+    );
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: 'user.password_link',
+      entityType: 'user',
+      entityId: userId,
+      after: { texted: true },
+    });
+    return {
+      link,
+      phone: target.phone,
+      hours: this.config.ADMIN_LINK_TTL_HOURS,
+      greeting: target.nickname?.trim() || target.name?.trim().split(/\s+/)[0] || null,
+    };
+  }
+
   /** Ends a cooldown after too many wrong passwords. */
   async unlock(actor: SessionUser, userId: string) {
     await this.manageable(actor, userId);

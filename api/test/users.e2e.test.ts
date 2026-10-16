@@ -161,6 +161,19 @@ describe('emailing a password link', () => {
     expect(t.outbox).toHaveLength(1);
   });
 
+  it('site admins get a link and phone to text from their own phone; nothing is sent', async () => {
+    const wed = await league('Wednesday League');
+    const jerry = await addPerson(site, { email: 'jerry@example.com', leagueId: wed.id });
+    await as(site).post(`/users/${jerry.id}/password-link/text`).expect(400); // no phone yet
+    await as(site).patch(`/users/${jerry.id}`, { phone: '860-555-1234', nickname: 'Big Dog' });
+    const { body } = await as(site).post(`/users/${jerry.id}/password-link/text`).expect(201);
+    expect(body).toMatchObject({ phone: '+18605551234', hours: 72, greeting: 'Big Dog' });
+    expect(body.link).toMatch(/\/set-password#token=/);
+    expect(t.outbox).toHaveLength(0);
+    const audit = await t.db.select().from(auditLog).where(eq(auditLog.entityId, jerry.id));
+    expect(audit.some((e) => e.action === 'user.password_link')).toBe(true);
+  });
+
   it('only site admins can email links', async () => {
     const wed = await league('Wednesday League');
     const paul = await signInWithLink(
@@ -169,6 +182,7 @@ describe('emailing a password link', () => {
     );
     const jerry = await addPerson(site, { email: 'allowed@example.com', leagueId: wed.id });
     await as(paul).post(`/users/${jerry.id}/password-link/email`).expect(403);
+    await as(paul).post(`/users/${jerry.id}/password-link/text`).expect(403);
     expect(t.outbox).toHaveLength(0);
   });
 });

@@ -212,6 +212,28 @@ describe('roster sign-in links', () => {
       posts.push('email');
       return { status: 201, body: { sent: true, to: 'b***@example.com' } };
     },
+    [`POST /api/users/${me.user.id}/password-link/text`]: () => {
+      posts.push('text');
+      return {
+        status: 201,
+        body: {
+          link: 'https://teemate.test/set-password#token=abc',
+          phone: '+18605551234',
+          hours: 72,
+          greeting: 'Brian',
+        },
+      };
+    },
+    [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+      status: 200,
+      body: {
+        players: [],
+        members: [
+          { userId: me.user.id, phone: '+18605551234' },
+          { userId: 'u2', phone: '+18605550000' },
+        ],
+      },
+    }),
   });
 
   it('site admins email a player a link from the roster', async () => {
@@ -222,7 +244,7 @@ describe('roster sign-in links', () => {
     renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
     await userEvent.click(await screen.findByText('Show spots and handicaps'));
     // Only players with an account get the button (Brian here).
-    const buttons = screen.getAllByRole('button', { name: /a sign-in link/ });
+    const buttons = screen.getAllByRole('button', { name: /Email .* a sign-in link/ });
     expect(buttons).toHaveLength(1);
     await userEvent.click(buttons[0]!);
     expect(await screen.findByText('Sent to b***@example.com')).toBeInTheDocument();
@@ -234,5 +256,29 @@ describe('roster sign-in links', () => {
     renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
     await userEvent.click(await screen.findByText('Show spots and handicaps'));
     expect(screen.queryByRole('button', { name: /a sign-in link/ })).toBeNull();
+  });
+
+  it('site admins text a player a sign-in link from their own phone', async () => {
+    const posts: string[] = [];
+    mockApi(handlers({ ...me, user: { ...me.user, isSiteAdmin: true } }, posts));
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    await userEvent.click(await screen.findByText('Show spots and handicaps'));
+    await userEvent.click(screen.getByRole('button', { name: /Text Brian a sign-in link/ }));
+    const send = await screen.findByRole('link', { name: 'Send Brian the text' });
+    const href = send.getAttribute('href')!;
+    expect(href).toMatch(/^sms:\+18605551234[?&]body=/);
+    expect(decodeURIComponent(href)).toContain(
+      "Hi Brian, here's your TeeMate sign-in link. Set your password and you're in: https://teemate.test/set-password#token=abc",
+    );
+    expect(posts).toEqual(['text']);
+  });
+
+  it('league admins can open a group text to the roster', async () => {
+    mockApi(handlers(me));
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const link = await screen.findByRole('link', { name: /Text everyone/ });
+    // Brian is the only roster player with an account (and a phone) here.
+    expect(link.getAttribute('href')).toMatch(/^sms:\+18605551234[?&]body=TeeMate/);
+    expect(screen.getByText('1 of 4 have a phone number.')).toBeInTheDocument();
   });
 });

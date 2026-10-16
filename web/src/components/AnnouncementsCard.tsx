@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check, Megaphone, Pencil, Pin, Plus, Trash2 } from 'lucide-react';
+import { Check, Megaphone, MessageSquare, Pencil, Pin, Plus, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
+import { useMe } from '@/auth/session';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
 import { api, type Announcement } from '@/lib/api';
+import { smsHref } from '@/lib/sms';
 import { timeAgo } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +16,8 @@ const key = (leagueId: string) => ['announcements', leagueId];
 
 /**
  * League notices. `compact` (Home) shows the latest few with a link to the rest;
- * the full card (League page) lets admins post, edit and delete. Nothing is emailed.
+ * the full card (League page) lets admins post, edit and delete, and text a notice to the
+ * league from their own phone. Nothing is emailed.
  */
 export function AnnouncementsCard({
   leagueId,
@@ -31,9 +34,20 @@ export function AnnouncementsCard({
       api<Announcement[]>(`/leagues/${leagueId}/announcements?limit=${compact ? 3 : 20}`),
   });
   const [posting, setPosting] = useState(false);
+  const canEdit = isAdmin && !compact;
+  const me = useMe().data;
+  const members = useQuery({
+    queryKey: ['league', leagueId, 'members'],
+    queryFn: () =>
+      api<{ members: { userId: string; phone: string | null }[] }>(`/leagues/${leagueId}/members`),
+    enabled: canEdit,
+  });
+  // Everyone else in the league with a phone number.
+  const phones = (members.data?.members ?? [])
+    .filter((m) => m.phone && m.userId !== me?.user.id)
+    .map((m) => m.phone!);
   const items = list.data ?? [];
   if (compact && items.length === 0) return null;
-  const canEdit = isAdmin && !compact;
 
   return (
     <Card>
@@ -42,7 +56,12 @@ export function AnnouncementsCard({
           <CardTitle className="flex items-center gap-2">
             <Megaphone className="size-5 text-primary" aria-hidden /> Announcements
           </CardTitle>
-          {canEdit && <CardDescription>Shown in the app only. Nobody is emailed.</CardDescription>}
+          {canEdit && (
+            <CardDescription>
+              Shown in the app. Nobody is emailed; the message button texts one to the league from
+              your phone.
+            </CardDescription>
+          )}
         </div>
         {canEdit && !posting && (
           <Button size="sm" onClick={() => setPosting(true)}>
@@ -71,6 +90,7 @@ export function AnnouncementsCard({
               a={a}
               canEdit={canEdit}
               clamp={compact}
+              phones={phones}
             />
           ))}
         </ul>
@@ -84,11 +104,14 @@ function AnnouncementItem({
   a,
   canEdit,
   clamp,
+  phones,
 }: {
   leagueId: string;
   a: Announcement;
   canEdit: boolean;
   clamp: boolean;
+  /** Who a text of this notice goes to; empty hides the button. */
+  phones: string[];
 }) {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
@@ -126,6 +149,17 @@ function AnnouncementItem({
       </div>
       {canEdit && (
         <div className="flex shrink-0 gap-1">
+          {phones.length > 0 && (
+            <Button asChild variant="ghost" size="icon" className="size-8">
+              <a
+                href={smsHref(phones, a.body ? `${a.title}\n\n${a.body}` : a.title)}
+                aria-label={`Text ${a.title} to the league`}
+                title={`Text it to ${phones.length} league members from your phone`}
+              >
+                <MessageSquare />
+              </a>
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"

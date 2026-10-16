@@ -107,6 +107,15 @@ export class UsersController {
     return this.users.emailPasswordLink(actor, userId);
   }
 
+  /** Site admins: a password link and phone number, to text from their own phone. */
+  @Post('users/:userId/password-link/text')
+  textPasswordLink(
+    @CurrentUser() actor: SessionUser,
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+  ) {
+    return this.users.textPasswordLink(actor, userId);
+  }
+
   @Post('users/:userId/unlock')
   @HttpCode(204)
   unlock(@CurrentUser() actor: SessionUser, @Param('userId', new ParseUUIDPipe()) userId: string) {

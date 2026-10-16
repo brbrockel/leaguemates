@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowDown, ArrowUp, Check, Mail, Plus, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, Mail, MessageSquare, Plus, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useMe } from '@/auth/session';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Select } from '@/components/ui/input';
 import { api, type RosterPlayer, type SeasonSchedule } from '@/lib/api';
+import { smsHref } from '@/lib/sms';
 import { cn } from '@/lib/utils';
 
 type Player = RosterPlayer & { handicap: number | null };
@@ -34,8 +35,11 @@ export function RosterCard({
   const editable = isAdmin && season.status === 'draft';
   const directory = useQuery({
     queryKey: ['league', leagueId, 'members'],
-    queryFn: () => api<{ players: Player[] }>(`/leagues/${leagueId}/members`),
-    enabled: editable,
+    queryFn: () =>
+      api<{ players: Player[]; members: { userId: string; phone: string | null }[] }>(
+        `/leagues/${leagueId}/members`,
+      ),
+    enabled: editable || isAdmin,
   });
   const [ids, setIds] = useState(roster.map((r) => r.playerId));
   useEffect(() => setIds(roster.map((r) => r.playerId)), [roster]);
@@ -65,6 +69,10 @@ export function RosterCard({
     all.set(p.id, { nickname: p.nickname, handicap: p.handicap });
   const userOf = new Map<string, string | null>(roster.map((r) => [r.playerId, r.userId]));
   for (const p of directory.data?.players ?? []) userOf.set(p.id, p.userId);
+  const phoneOf = new Map((directory.data?.members ?? []).map((m) => [m.userId, m.phone] as const));
+  const rosterPhones = roster
+    .map((r) => (r.userId ? phoneOf.get(r.userId) : null))
+    .filter((x): x is string => Boolean(x));
   const changed = ids.join() !== roster.map((r) => r.playerId).join();
   const available = (directory.data?.players ?? []).filter((p) => !ids.includes(p.id));
   const move = (i: number, by: number) => {
@@ -85,6 +93,7 @@ export function RosterCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
+        {isAdmin && !editable && <TextEveryone phones={rosterPhones} count={roster.length} />}
         {editable ? (
           <ol className="divide-y">
             {ids.map((id, i) => {
@@ -101,7 +110,10 @@ export function RosterCard({
                     {p?.nickname ?? '?'}
                   </Link>
                   {isSiteAdmin && userOf.get(id) && (
-                    <EmailLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                    <>
+                      <EmailLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                      <TextLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                    </>
                   )}
                   {editable ? (
                     <>
@@ -179,7 +191,10 @@ export function RosterCard({
                       {p?.nickname ?? '?'}
                     </Link>
                     {isSiteAdmin && userOf.get(id) && (
-                      <EmailLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                      <>
+                        <EmailLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                        <TextLinkButton userId={userOf.get(id)!} nickname={p?.nickname ?? ''} />
+                      </>
                     )}
                     {editable ? (
                       <>
@@ -334,6 +349,70 @@ function EmailLinkButton({ userId, nickname }: { userId: string; nickname: strin
         }}
       >
         {send.data?.sent ? <Check /> : <Mail />}
+      </Button>
+    </>
+  );
+}
+
+/** League admins: a group text to everyone on the roster with a phone number. */
+function TextEveryone({ phones, count }: { phones: string[]; count: number }) {
+  if (!phones.length) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-sm">
+      <Button asChild size="sm" variant="outline">
+        <a href={smsHref(phones, 'TeeMate: ')}>
+          <MessageSquare /> Text everyone
+        </a>
+      </Button>
+      <span className="text-xs text-muted-foreground">
+        {phones.length === count
+          ? 'Opens a group text on your phone.'
+          : `${phones.length} of ${count} have a phone number.`}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Site admins: makes a sign-in link for the player, then "Send text" opens a text to their
+ * phone with it filled in, to send from your own phone.
+ */
+function TextLinkButton({ userId, nickname }: { userId: string; nickname: string }) {
+  const make = useMutation({
+    mutationFn: () =>
+      api<{ link: string; phone: string; hours: number; greeting: string | null }>(
+        `/users/${userId}/password-link/text`,
+        { method: 'POST' },
+      ),
+  });
+  if (make.data) {
+    const d = make.data;
+    const body = `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your TeeMate sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`;
+    return (
+      <Button asChild size="sm" variant="secondary" className="h-8">
+        <a href={smsHref([d.phone], body)} aria-label={`Send ${nickname} the text`}>
+          <MessageSquare /> Send text
+        </a>
+      </Button>
+    );
+  }
+  return (
+    <>
+      {make.isError && (
+        <span role="status" className="max-w-[45%] truncate text-xs text-destructive">
+          {make.error.message}
+        </span>
+      )}
+      <Button
+        size="icon"
+        variant="ghost"
+        className="size-8"
+        aria-label={`Text ${nickname} a sign-in link`}
+        title={`Text ${nickname} a link to set their password and sign in`}
+        disabled={make.isPending}
+        onClick={() => make.mutate()}
+      >
+        <MessageSquare />
       </Button>
     </>
   );
