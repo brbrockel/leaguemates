@@ -699,7 +699,23 @@ function GroupCard({
                       )}
                     </span>
                     {side === 'B' && r?.outcome === 'T' && (
-                      <span className="ml-1 text-xs text-muted-foreground">Tie</span>
+                      <span
+                        className="ml-1 text-xs text-muted-foreground"
+                        title={
+                          r.why === 'absence'
+                            ? "Recorded as a tie on the league's sheet: one player was absent (the sheet kept a stand-in score)."
+                            : r.why === 'recorded'
+                              ? "Recorded as a tie on the league's sheet."
+                              : undefined
+                        }
+                      >
+                        Tie
+                        {r.why === 'absence'
+                          ? ' · absent'
+                          : r.why === 'recorded'
+                            ? ' · as recorded'
+                            : ''}
+                      </span>
                     )}
                   </span>
                   {r ? (

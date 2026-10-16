@@ -19,9 +19,26 @@ export interface MatchRef {
 
 export type MatchResultOut = Omit<MatchResult, 'decidedBy'> & {
   decidedBy: MatchResult['decidedBy'] | 'official';
+  /**
+   * Why a recorded result differs from the scores: 'absence' when one player being absent
+   * explains it under the absence rule (the sheet kept a stand-in score for them), else
+   * 'recorded' (the league's record, unexplained by the scores).
+   */
+  why?: 'absence' | 'recorded';
 };
 
 const hasHoles = (r: RoundData) => r.holeScores.length > 0;
+
+const toPlayer = (r: RoundData) => ({
+  id: r.playerId,
+  handicap: r.handicap,
+  attendance: r.attendance,
+  ...(r.attendance === 'played'
+    ? hasHoles(r)
+      ? { holeScores: r.holeScores as number[] }
+      : { gross: r.gross! }
+    : {}),
+});
 
 /** A round is complete when the player was absent, has a total, or has every hole. */
 export const isComplete = (r: RoundData) =>
@@ -47,24 +64,30 @@ export function matchResults(matches: MatchRef[], rounds: RoundData[], layout: L
     const b = byPlayer.get(m.playerB);
     let result: MatchResultOut | null = null;
     if (a && b && isComplete(a) && isComplete(b)) {
-      const toPlayer = (r: RoundData) => ({
-        id: r.playerId,
-        handicap: r.handicap,
-        attendance: r.attendance,
-        ...(r.attendance === 'played'
-          ? hasHoles(r)
-            ? { holeScores: r.holeScores as number[] }
-            : { gross: r.gross! }
-          : {}),
-      });
       result = scoreMatch(toPlayer(a), toPlayer(b), layout);
     }
     if (m.recordedOutcome) {
       const base = result ?? { strokes: { A: 0, B: 0 }, net: { A: null, B: null } };
+      const agrees = result !== null && result.outcome === m.recordedOutcome;
+      let why: MatchResultOut['why'];
+      if (result && !agrees && a && b) {
+        // Would the league's absence rule give this result if one of them had been absent?
+        const asIfAbsent = (side: 'A' | 'B') =>
+          scoreMatch(
+            { ...toPlayer(a), ...(side === 'A' ? { attendance: 'absent' as const } : {}) },
+            { ...toPlayer(b), ...(side === 'B' ? { attendance: 'absent' as const } : {}) },
+            layout,
+          ).outcome;
+        why =
+          asIfAbsent('A') === m.recordedOutcome || asIfAbsent('B') === m.recordedOutcome
+            ? 'absence'
+            : 'recorded';
+      }
       result = {
         ...base,
         outcome: m.recordedOutcome,
-        decidedBy: result && result.outcome === m.recordedOutcome ? result.decidedBy : 'official',
+        decidedBy: agrees ? result!.decidedBy : 'official',
+        ...(why ? { why } : {}),
       };
     }
     return { id: m.id, playerA: m.playerA, playerB: m.playerB, result };

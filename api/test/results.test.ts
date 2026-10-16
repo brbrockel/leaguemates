@@ -65,3 +65,34 @@ describe('imported (total-only) rounds', () => {
     expect(m!.result!.decidedBy).toBe('net');
   });
 });
+
+describe('why a recorded result differs from the scores', () => {
+  const recordedTie = (a: ReturnType<typeof round>, b: ReturnType<typeof round>) =>
+    matchResults([{ id: 'm', playerA: 'a', playerB: 'b', recordedOutcome: 'T' }], [a, b], PAR36)[0]!
+      .result!;
+
+  it('an absence explains it: e.g. Jarrod (5) 44 v Doc (8) 51, recorded a tie', () => {
+    // If Jarrod was absent (the sheet kept a stand-in 44), Doc's net 48 doesn't beat
+    // par + Jarrod's handicap (36 + 5 = 41): a tie under the absence rule.
+    expect(recordedTie(round('a', 5, 44), round('b', 8, 51))).toMatchObject({
+      outcome: 'T',
+      decidedBy: 'official',
+      why: 'absence',
+    });
+  });
+
+  it("no absence explains it: it's the league's record", () => {
+    // Either player, present, would have beaten the other's baseline (36 + 10 = 46).
+    expect(recordedTie(round('a', 10, 38), round('b', 10, 39))).toMatchObject({
+      outcome: 'T',
+      decidedBy: 'official',
+      why: 'recorded',
+    });
+  });
+
+  it('no explanation is needed when the record and the scores agree', () => {
+    const r = recordedTie(round('a', 10, 40), round('b', 10, 40));
+    expect(r.decidedBy).toBe('net');
+    expect(r).not.toHaveProperty('why');
+  });
+});

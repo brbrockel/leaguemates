@@ -626,7 +626,10 @@ function MatchLine({
         Net · {strokesNote}
         {result.decidedBy === 'absence' && ` · absence rule (must beat ${result.baseline})`}
         {result.decidedBy === 'both_absent' && ' · both absent'}
-        {result.decidedBy === 'official' && ' · official result from the league sheet'}
+        {result.decidedBy === 'official' &&
+          (result.why === 'absence'
+            ? " · recorded on the league's sheet: one player was absent (stand-in score)"
+            : " · as recorded on the league's sheet")}
       </span>
     </Card>
   );

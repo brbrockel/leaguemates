@@ -366,7 +366,9 @@ describe('imported history card', () => {
     renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
     expect(await screen.findByText('Round 1 result')).toBeInTheDocument();
     expect(screen.getByText('Absent')).toBeInTheDocument();
-    expect(screen.getByText(/official result from the league sheet/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/as recorded on the league's sheet|one player was absent/),
+    ).toBeInTheDocument();
     expect(screen.queryByLabelText('Jerry hole 1')).not.toBeInTheDocument();
   });
 });

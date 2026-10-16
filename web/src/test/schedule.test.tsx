@@ -326,3 +326,58 @@ describe('notice shortcuts', () => {
     });
   });
 });
+
+describe('recorded ties', () => {
+  it('say why when the scores alone would not give a tie', async () => {
+    const sched = generated('scheduled');
+    const w = sched.weeks[0]!;
+    const g = w.groups[0]!;
+    const m = g.matches[0]!;
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({ status: 200, body: sched }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/results`]: () => ({
+        status: 200,
+        body: [
+          {
+            groupId: g.id,
+            weekId: w.id,
+            round: 1,
+            playoffRound: null,
+            status: 'final',
+            layout: 'Front 9',
+            rounds: [
+              { playerId: m.playerA, attendance: 'played', handicap: 5, gross: 44 },
+              { playerId: m.playerB, attendance: 'played', handicap: 8, gross: 51 },
+            ],
+            matches: [
+              {
+                id: m.id,
+                playerA: m.playerA,
+                playerB: m.playerB,
+                result: {
+                  outcome: 'T',
+                  decidedBy: 'official',
+                  why: 'absence',
+                  strokes: { A: 0, B: 3 },
+                  net: { A: 44, B: 48 },
+                },
+              },
+            ],
+          },
+        ],
+      }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/playoffs`]: () => ({
+        status: 200,
+        body: { format: 'none', canStart: false, regularRoundsLeft: 2, champion: null, rounds: [] },
+      }),
+      [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+        status: 200,
+        body: { players: [], members: [] },
+      }),
+    });
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const tie = await screen.findByText('Tie · absent');
+    expect(tie).toHaveAttribute('title', expect.stringMatching(/one player was absent/));
+  });
+});

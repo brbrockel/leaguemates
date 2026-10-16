@@ -228,6 +228,8 @@ export interface MatchResultView {
   strokes: { A: number; B: number };
   net: { A: number | null; B: number | null };
   baseline?: number;
+  /** A recorded result the scores don't give: an absence explains it, or it's just the league's record. */
+  why?: 'absence' | 'recorded';
 }
 
 export type CardStatus = 'draft' | 'submitted' | 'disputed' | 'final';
