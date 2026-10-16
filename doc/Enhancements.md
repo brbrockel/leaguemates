@@ -42,7 +42,7 @@ Use one section per enhancement with a stable ID (`EH-###`) and these fields:
 
 Reference commits to the spec they implement, for example `EH-004: round-robin generator`.
 
-## Status Snapshot (2026-10-15, updated)
+## Status Snapshot (2026-10-16)
 
 | ID | Title | Phase | Status |
 |---|---|---|---|
@@ -58,11 +58,13 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-010 | Audit Log | MVP | Done (league Activity for admins, site-wide Activity for site admins) |
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |
 | EH-012 | Historical Import from Gmail | Phase 2 | Done (2018–2026 merged into Wednesday League, foursomes in tee order; see [HistoricalImport.md](HistoricalImport.md)) |
-| EH-013 | Notifications | Phase 2 | In Progress (in-app announcements done; email and push wait for the owner's go-ahead) |
+| EH-013 | Notifications | Phase 2 | In Progress (in-app announcements done; email set up in Site settings → Email, and site admins email sign-in links from the season roster; push to do) |
 | EH-014 | Stats | Phase 2 | In Progress (scoring average, best round, net average and head-to-head done; per-hole difficulty and trends to do) |
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
-| EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address; self-edit on Account, admin edit on People, call/text/map links for league members) |
+| EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address + optional nickname; self-edit on Account, admin edit on People, call/text/map links for league members; 2026 players loaded from the roster sheet) |
+
+Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
 
 ---
 

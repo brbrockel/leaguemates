@@ -92,4 +92,4 @@ docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-pe
 
 Nothing is emailed. It only fills in blanks, keeps a player's existing account, and can be run again safely. Site admins then send each person a sign-in link from the season roster.
 
-2026: all 16 players matched (the matches are in `people-nicknames.json`; Dickie was matched by elimination). Jerry's email is typed `…@yahoo,com` on the sheet; `people-2026.json` has it corrected to `yahoo.com`.
+2026: all 16 players matched (the matches are in `people-nicknames.json`; Dickie confirmed by the league). Jerry's email is typed `…@yahoo,com` on the sheet; `people-2026.json` has it corrected to `yahoo.com`.
