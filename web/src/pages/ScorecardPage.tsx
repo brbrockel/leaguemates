@@ -27,6 +27,7 @@ import { aboutTeeTime, formatDay } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import { DECIDED_BY } from '@/components/PlayoffsCard';
 import { NotFoundPage } from './NotFoundPage';
+import { winnerRow, winnerTint } from '@/lib/winner';
 
 interface Entry {
   playerId: string;
@@ -603,13 +604,13 @@ function MatchLine({
     <Card className="flex flex-col gap-0.5 px-4 py-3 text-sm">
       <div className="flex items-center justify-between gap-2">
         <span>
-          <span className={cn(result.outcome === 'A' && 'font-semibold text-primary')}>{a}</span>{' '}
-          <span className="tabular-nums text-muted-foreground">{net(result.net.A)}</span>
+          <span className={cn('inline-block', result.outcome === 'A' && winnerRow)}>
+            {a} <span className="tabular-nums">{net(result.net.A)}</span>
+          </span>
           <span className="text-muted-foreground"> vs </span>
-          <span className={cn(result.outcome === 'B' && 'font-semibold text-primary')}>
-            {b}
-          </span>{' '}
-          <span className="tabular-nums text-muted-foreground">{net(result.net.B)}</span>
+          <span className={cn('inline-block', result.outcome === 'B' && winnerRow)}>
+            {b} <span className="tabular-nums">{net(result.net.B)}</span>
+          </span>
         </span>
         <span className="flex items-center gap-1 font-medium">
           {winner ? (
@@ -764,7 +765,7 @@ function PlayoffResults({ view, nick }: { view: ScorecardView; nick: (id: string
                 key={s.id}
                 className={cn(
                   'flex justify-between px-4 py-2.5 text-sm',
-                  s.id === p.finals?.winner && 'font-semibold text-primary',
+                  s.id === p.finals?.winner && winnerTint,
                 )}
               >
                 <span>
@@ -798,7 +799,11 @@ function PlayoffResults({ view, nick }: { view: ScorecardView; nick: (id: string
               {[m.playerA, m.playerB].map((id, i) => (
                 <span key={id}>
                   {i > 0 && <span className="text-muted-foreground"> vs </span>}
-                  <span className={cn(k?.winner === id && 'font-semibold text-primary')}>
+                  <span
+                    className={cn(
+                      k?.winner === id && 'rounded-md bg-primary/10 px-1 font-semibold',
+                    )}
+                  >
                     {seed(id)}
                     {nick(id)}
                   </span>

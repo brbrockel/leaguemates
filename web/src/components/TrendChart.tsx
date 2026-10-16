@@ -6,7 +6,8 @@ export interface TrendRound {
   date: string;
   season: string;
   gross: number;
-  handicap: number | null;
+  /** Match net, as on the league's sheets: gross less the strokes received that week. */
+  net: number | null;
 }
 
 const WINDOW = 5;
@@ -16,7 +17,7 @@ const PAD = { top: 12, right: 12, bottom: 28, left: 34 };
 
 /**
  * A player's nine-hole scores round by round, oldest first: each round as a dot and the
- * average of the last five as a line. Gross or net (gross minus that week's handicap).
+ * average of the last five as a line. Gross or net (match net, as on the league's sheets).
  */
 export function TrendChart({ rounds }: { rounds: TrendRound[] }) {
   const [measure, setMeasure] = useState<'gross' | 'net'>('gross');
@@ -27,7 +28,7 @@ export function TrendChart({ rounds }: { rounds: TrendRound[] }) {
     const values = rounds
       .map((r) => ({
         ...r,
-        value: measure === 'gross' ? r.gross : r.handicap === null ? null : r.gross - r.handicap,
+        value: measure === 'gross' ? r.gross : r.net,
       }))
       .filter((r): r is TrendRound & { value: number } => r.value !== null);
     return values.map((r, i) => {

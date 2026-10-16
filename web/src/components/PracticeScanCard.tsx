@@ -130,7 +130,7 @@ export function PracticeScanCard() {
                         </th>
                       ))}
                       <th className="w-12 text-center font-medium">Total</th>
-                      <th className="w-12 text-center font-medium">Net</th>
+                      <th className="w-12 text-center font-medium">HCP</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -183,9 +183,7 @@ export function PracticeScanCard() {
                           <td className="text-center font-medium">
                             {omitted ? '' : (total ?? '–')}
                           </td>
-                          <td className="text-center">
-                            {omitted || total === null || hcp == null ? '' : total - hcp}
-                          </td>
+                          <td className="text-center">{omitted || hcp == null ? '' : hcp}</td>
                         </tr>
                       );
                     })}

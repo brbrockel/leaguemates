@@ -275,7 +275,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 function TrendCard({ h }: { h: PlayerHistory }) {
   const rounds = h.matches
     .filter((m) => !m.absent && m.gross !== null)
-    .map((m) => ({ date: m.date, season: m.season, gross: m.gross!, handicap: m.handicap }))
+    .map((m) => ({ date: m.date, season: m.season, gross: m.gross!, net: m.net }))
     .sort((a, b) => a.date.localeCompare(b.date));
   if (rounds.length < 3) return null;
   return (

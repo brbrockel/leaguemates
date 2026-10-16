@@ -11,6 +11,7 @@ import { Input, Label, Select } from '@/components/ui/input';
 import { api, type PlayoffBracket, type PlayoffDecision } from '@/lib/api';
 import { formatDay } from '@/lib/time';
 import { cn } from '@/lib/utils';
+import { winnerRow } from '@/lib/winner';
 
 export const DECIDED_BY: Record<PlayoffDecision, string> = {
   net: 'on net',
@@ -116,7 +117,7 @@ export function PlayoffsCard({
                         key={s.id}
                         className={cn(
                           'flex justify-between',
-                          s.id === r.finals?.winner && 'font-semibold text-primary',
+                          s.id === r.finals?.winner && winnerRow,
                         )}
                       >
                         <span>
@@ -157,7 +158,7 @@ export function PlayoffsCard({
                           key={p.playerId}
                           className={cn(
                             'flex justify-between',
-                            m.winner === p.playerId && 'font-semibold text-primary',
+                            m.winner === p.playerId && winnerRow,
                           )}
                         >
                           <span>

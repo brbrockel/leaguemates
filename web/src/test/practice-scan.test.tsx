@@ -66,9 +66,9 @@ describe('practice card scan (Account)', () => {
     await userEvent.clear(hole9);
     await userEvent.type(hole9, '3');
     const jerryRow = hole9.closest('tr')!;
-    // 5+4+4+5+4+4+5+4+3 = 38, net 38 - 7 = 31.
+    // 5+4+4+5+4+4+5+4+3 = 38; Jerry's handicap is 7.
     expect(within(jerryRow).getByText('38')).toBeInTheDocument();
-    expect(within(jerryRow).getByText('31')).toBeInTheDocument();
+    expect(within(jerryRow).getByText('7')).toBeInTheDocument();
     expect(screen.getByText(/2 players matched, every hole filled in/)).toBeInTheDocument();
   });
 });

@@ -34,7 +34,7 @@ Each league can configure these rules. The defaults below are the rules of the W
 | Strokes | The higher handicap receives the full difference between the two handicaps |
 | Net score | Gross score − strokes. The lower net score wins |
 | Points | Win 3, tie 1, loss 0 |
-| Standings ties | Level on points: more wins, then head-to-head points among the tied players, then the lower total net over the rounds they all played (decided 2026-10-16). The same order seeds the playoffs |
+| Standings ties | Level on points: more wins, then head-to-head points among the tied players, then the lower total of gross minus handicap over the rounds they all played (decided 2026-10-16). The same order seeds the playoffs |
 | Handicap | League average over the player's last N rounds (5 or 10). The exact formula is still to be confirmed (see EH-006) |
 | Absence: one player | A sub may play, but the sub's score never counts. The player who showed up wins only if their net score is lower than the absent player's baseline (par + handicap). Otherwise the match is a tie. The player who showed up cannot lose. |
 | Absence: both players | Tie |

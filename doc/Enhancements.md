@@ -23,6 +23,7 @@ This page tracks planned enhancements in a consistent, reviewable format. It use
 17. [EH-015: Playoffs](#eh-015-playoffs)
 18. [EH-016: Post-Season Team Scramble](#eh-016-post-season-team-scramble)
 19. [EH-017: Player Profiles and Contact Info](#eh-017-player-profiles-and-contact-info)
+20. [EH-018: One Net Score for Everyone](#eh-018-one-net-score-for-everyone)
 
 ## How To Document An Enhancement
 
@@ -63,6 +64,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
 | EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address + optional nickname; self-edit on Account, admin edit on People, call/text/map links for league members; 2026 players loaded from the roster sheet) |
+| EH-018 | One Net Score for Everyone | Later | Proposed (the app shows match net, as the spreadsheet did) |
 
 Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
 
@@ -953,4 +955,31 @@ Personal data. Mitigations:
 - [ ] A member can update their own phone and address
 - [ ] Other members of the league can see them; people outside the league can't
 - [ ] Changes appear in the audit log
+
+---
+
+## EH-018: One Net Score for Everyone
+**Status**: Proposed (2026-10-16). Until it's decided, the app shows net exactly as the league's spreadsheet did.
+**Owner**: TBD
+
+### Problem
+The spreadsheet's net is a **match net**: the higher handicap gets the difference in strokes, so a player's net depends on who they played. Jerry (7) shooting 47 against Keith (13) shooting 55 is 47 v 49. Against a different opponent the same 47 is a different net, so nets from two matches can't be compared side by side, and putting one player's match net next to another's (or next to gross minus handicap) can look like the higher net won. It never does: in every one of the 794 imported matches with two scores, no recorded win went to the higher net.
+
+### Proposal
+Show **plain net** everywhere: gross minus the player's full handicap (Jerry 40, Keith 42). The winner and the margin are always the same as with match net; the strokes would show separately ("Keith gets 6"). Every net in the app would then compare with every other.
+
+### Scope
+In:
+- Scorecard, season results, player pages, averages and the trend chart all show plain net
+- The rules (League settings → How scoring works) explain it
+Out:
+- Any change to who wins: results are identical
+
+### Related data question
+107 imported matches were recorded as ties while the two nets differ. About half fit the absence rule (the sheet kept a typical score for the absent player). The other 54 don't fit any rule (e.g. 2026-04-29, both matches of the first foursome); they look like foursomes that didn't play, with stand-in scores. The sheets don't say who was absent. Those stand-in scores are counted as real rounds in averages, best rounds, trends and handicap suggestions. Decide whether to leave them (current) or mark those rounds as not counted while keeping the recorded ties.
+
+### Acceptance Criteria
+- [ ] The league chooses match net or plain net
+- [ ] If plain net: every page shows the same net for the same round, and results don't change
+- [ ] The stand-in scores question is decided
 

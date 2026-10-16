@@ -41,6 +41,7 @@ import { RosterCard } from '@/components/RosterCard';
 import { RoundScanButton } from '@/components/ScanCardButton';
 import { ScrambleCard } from '@/components/ScrambleCard';
 import { NotFoundPage } from './NotFoundPage';
+import { winnerRow } from '@/lib/winner';
 
 const STATUS_LABEL = { draft: 'Draft', scheduled: 'Locked', complete: 'Complete' } as const;
 
@@ -677,7 +678,10 @@ function GroupCard({
               return (
                 <div
                   key={side}
-                  className="grid grid-cols-[1fr_2.75rem_2.75rem] items-center text-sm"
+                  className={cn(
+                    'grid grid-cols-[1fr_2.75rem_2.75rem] items-center text-sm',
+                    won && winnerRow,
+                  )}
                 >
                   <span className="min-w-0 truncate">
                     <span className={cn('relative pr-4', won && 'font-semibold')}>

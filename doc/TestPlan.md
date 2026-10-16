@@ -50,6 +50,8 @@ Site: https://teemate.bhbslp.org
 - [ ] Invalid values (e.g. tee time 25:00) are refused.
 - [ ] **Playoffs:** switch the tie-break between "Last 6/3/1" and "Par 5s first".
 
+- [ ] **How scoring works** (League → Settings or Rules) explains gross, strokes, match net, points, absences, standings ties, playoffs and past seasons, with the league's own points.
+
 ## 5. Season setup (Admin)
 
 - [ ] **League → Seasons → New season:** name "Test", first round next Wednesday. It starts with last season's roster (current players only).
@@ -78,7 +80,7 @@ Site: https://teemate.bhbslp.org
 - [ ] **Scan the foursome’s card:** the same from inside one scorecard, or from Home's This week. The scores fill in, with doubtful ones outlined in amber. Check them, Save, then Submit. The photo appears under the season's **Scorecards**.
 - [ ] **Names that don't match** (a nickname, a sub, someone from another group): use **Match the names on the card** to pick the player, **Sub for …** (marks them absent with the sub's name), or **Ignore this row**. Matching two rows to one player shows a warning.
 - [ ] **Texting (on a phone):** as a site admin, the roster's message button next to a player makes a sign-in link, then **Send text** opens Messages with it filled in. As an admin, **Text everyone** on the roster and the message button on an announcement open a group text. Check on both an iPhone and an Android phone that every recipient and the message appear.
-- [ ] **Practice a card scan (Account, anyone):** scan any card photo or screenshot. The reader's rows show with each name matched to a league player; change a match, choose **Leave out** for rows that aren't players, and fix misread scores (doubtful ones are amber, changed ones bold). Totals and net update, and two rows on one player are flagged. Nothing is saved, and it allows 10 a day.
+- [ ] **Practice a card scan (Account, anyone):** scan any card photo or screenshot. The reader's rows show with each name matched to a league player; change a match, choose **Leave out** for rows that aren't players, and fix misread scores (doubtful ones are amber, changed ones bold). Totals update (with each player's handicap), and two rows on one player are flagged. Nothing is saved, and it allows 10 a day.
 
 ## 7. Standings
 

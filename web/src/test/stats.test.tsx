@@ -71,7 +71,8 @@ describe('player trend and hole by hole', () => {
     handicap,
     absent: false,
     gross,
-    net: null,
+    // Match net: as if the opponent always had the lower handicap by 4.
+    net: gross - 4,
     result: 'W',
     points: 3,
     official: false,
@@ -126,10 +127,10 @@ describe('player trend and hole by hole', () => {
     expect(within(rows[0]!).getByText('45.0')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'net' }));
     expect(screen.getByRole('img', { name: 'Net scores over 4 rounds' })).toBeInTheDocument();
-    // 42 - 8 = 34 net for the latest round.
+    // Match net 42 - 4 = 38 for the latest round.
     expect(
       within(screen.getAllByRole('row').filter((r) => within(r).queryByText(/2027/))[0]!).getByText(
-        '34',
+        '38',
       ),
     ).toBeInTheDocument();
 

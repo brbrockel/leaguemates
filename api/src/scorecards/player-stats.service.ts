@@ -369,9 +369,8 @@ export class PlayerStatsService {
       stats: {
         rounds: played.length,
         scoringAverage: avg(played.map((m) => m.gross!)),
-        netAverage: avg(
-          played.filter((m) => m.handicap !== null).map((m) => m.gross! - m.handicap!),
-        ),
+        // Match net, as on the league's sheets: gross less the strokes received in that match.
+        netAverage: avg(played.filter((m) => m.net !== null).map((m) => m.net!)),
         best: best ? { gross: best.gross, date: best.date, season: best.season } : null,
         winPct: decided ? Math.round((total.W / decided) * 100) : null,
         record: total,
@@ -384,17 +383,26 @@ export class PlayerStatsService {
     };
   }
 
-  /** Scoring table for a season: rounds, scoring average, best round and net average (gross less the player's own handicap). */
+  /**
+   * Scoring table for a season: rounds, scoring average, best round and net average (match
+   * net, as on the league's sheets: gross less the strokes received in each match).
+   */
   async seasonStats(leagueId: string, seasonId: string) {
     const { groups: gs } = await this.cards.seasonResults(leagueId, seasonId);
     const per = new Map<string, { gross: number[]; net: number[] }>();
     for (const g of gs) {
       if (g.status === 'draft' || g.playoffRound !== null) continue;
+      const matchNet = new Map<string, number>();
+      for (const m of g.matches) {
+        if (m.result?.net.A != null) matchNet.set(m.playerA, m.result.net.A);
+        if (m.result?.net.B != null) matchNet.set(m.playerB, m.result.net.B);
+      }
       for (const r of g.rounds) {
         if (r.gross === null) continue;
         const e = per.get(r.playerId) ?? { gross: [], net: [] };
         e.gross.push(r.gross);
-        e.net.push(r.gross - r.handicap);
+        const net = matchNet.get(r.playerId);
+        if (net !== undefined) e.net.push(net);
         per.set(r.playerId, e);
       }
     }

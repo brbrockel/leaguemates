@@ -228,6 +228,8 @@ export function LeagueSettingsPage() {
           </CardContent>
         </Card>
 
+        <HowScoringWorks points={s.points} />
+
         <Card>
           <CardHeader>
             <CardTitle>Handicaps</CardTitle>
@@ -512,5 +514,62 @@ export function LeagueSettingsPage() {
         </div>
       )}
     </form>
+  );
+}
+
+/** The league's scoring rules in plain words, as the spreadsheet always worked. */
+function HowScoringWorks({ points }: { points: { win: number; tie: number; loss: number } }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>How scoring works</CardTitle>
+        <CardDescription>The same way the league's spreadsheet always worked.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <dl className="grid gap-3 text-sm">
+          <Rule term="Gross">Every stroke you take, before any handicap.</Rule>
+          <Rule term="Strokes">
+            In each match the higher handicap gets the difference between the two handicaps as
+            strokes; the lower handicap gets none. Handicaps 7 and 13: the 13 gets 6.
+          </Rule>
+          <Rule term="Net">
+            Gross minus the strokes you get in that match. The lower net wins the match; the same
+            net is a tie. Example: Jerry (7) shoots 47 and Keith (13) shoots 55, so Keith's net is
+            55 − 6 = 49 and Jerry wins, 47 to 49.
+          </Rule>
+          <Rule term="Points">
+            Win {points.win}, tie {points.tie}, loss {points.loss}.
+          </Rule>
+          <Rule term="One player absent">
+            A sub may play, but the sub's score never counts. The player who showed up wins only
+            with a net lower than the absent player's par + handicap (36 + 13 = 49 on a par-36
+            nine); otherwise it's a tie. The player who showed up can't lose.
+          </Rule>
+          <Rule term="Both absent">A tie.</Rule>
+          <Rule term="Standings">
+            Points first. Level on points: more wins, then head-to-head points between the tied
+            players, then the lower total of gross minus handicap over the rounds they all played.
+            The same order seeds the playoffs.
+          </Rule>
+          <Rule term="Playoffs">
+            A tied playoff match is decided on the cards (matching the last holes); an absent player
+            loses.
+          </Rule>
+          <Rule term="Past seasons">
+            Imported seasons keep the results and standings the league recorded on its sheets, even
+            where a recorded tie and the scores don't agree (usually an absence).
+          </Rule>
+        </dl>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Rule({ term, children }: { term: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-0.5 sm:grid-cols-[9rem_1fr] sm:gap-3">
+      <dt className="font-medium">{term}</dt>
+      <dd className="text-muted-foreground">{children}</dd>
+    </div>
   );
 }
