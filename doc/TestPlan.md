@@ -151,6 +151,9 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] **Head-to-head:** tap an opponent to open their page.
 - [ ] **Standings → Scoring:** rounds, average, best and net average for the season.
 
+- [ ] **League → Stats:** each nine shows hole by hole: average, over par (with a bar), rank (1 = hardest), and the birdie/par/bogey/double mix on wider screens. The season filter changes the numbers.
+- [ ] **A player's page:** the Trend chart shows each round and the average of the last five; switch Gross/Net; tap a point for its date and score; **Show as a table** lists them. Below it, **Hole by hole** compares their average with the field's.
+
 ## 15. History and the 2027 demo
 
 - [ ] **Wednesday League → Standings:** pick each season 2018–2026. "Final standings as published", with a place number on every row.

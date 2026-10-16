@@ -59,7 +59,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |
 | EH-012 | Historical Import from Gmail | Phase 2 | Done (2018–2026 merged into Wednesday League, foursomes in tee order; see [HistoricalImport.md](HistoricalImport.md)) |
 | EH-013 | Notifications | Phase 2 | In Progress (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; Home shows one line only while something is new; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; push to do) |
-| EH-014 | Stats | Phase 2 | In Progress (scoring average, best round, net average and head-to-head done; per-hole difficulty and trends to do) |
+| EH-014 | Stats | Phase 2 | Done (scoring average, best round, net average, head-to-head; League → Stats: how each hole plays, with difficulty rank and the mix of results; each player's trend over time and their holes against the field) |
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
 | EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address + optional nickname; self-edit on Account, admin edit on People, call/text/map links for league members; 2026 players loaded from the roster sheet) |
@@ -740,7 +740,7 @@ Phase 2.
 ---
 
 ## EH-014: Stats
-**Status**: In Progress. Done: scoring table on Standings, and scoring average, best round and head-to-head on each player's page. To do: per-hole averages and difficulty, trends.
+**Status**: Done. Scoring table on Standings; scoring average, best round and head-to-head on each player's page; League → Stats shows each nine hole by hole (average, over par, difficulty rank, birdie/par/bogey/double mix), filterable by season; each player's page has a trend chart (gross or net, with the average of the last five) and their average on each hole against the field. Hole stats use cards entered hole by hole; imported history (totals only) shows in trends but not hole stats.
 **Owner**: TBD
 
 ### Problem
@@ -776,7 +776,7 @@ Little data early in a season.
 Phase 2.
 
 ### Acceptance Criteria
-- [ ] Each stat matches a hand calculation on the test data
+- [x] Each stat matches a hand calculation on the test data (`api/test/hole-stats.test.ts`)
 
 ---
 

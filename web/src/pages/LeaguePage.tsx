@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  BarChart3,
   Calculator,
   Camera,
   Check,
@@ -99,6 +100,11 @@ export function LeaguePage() {
           <Button asChild variant="outline" size="sm">
             <Link to={`/leagues/${leagueId}/handicaps`}>
               <Calculator /> Handicaps
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to={`/leagues/${leagueId}/stats`}>
+              <BarChart3 /> Stats
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">

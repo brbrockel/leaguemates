@@ -2,12 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
+import { HoleTable } from '@/components/HoleTable';
+import { TrendChart } from '@/components/TrendChart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select } from '@/components/ui/input';
 import { api, ApiError, type MatchResultLetter, type PlayerHistory } from '@/lib/api';
 import { formatDay } from '@/lib/time';
 import { cn } from '@/lib/utils';
 import { NotFoundPage } from './NotFoundPage';
+import type { HoleStatsView } from './StatsPage';
 
 const RESULT_STYLE: Record<MatchResultLetter, string> = {
   W: 'bg-primary/15 text-primary',
@@ -24,6 +27,10 @@ export function PlayerPage() {
     queryFn: () => api<PlayerHistory>(`/leagues/${leagueId}/players/${playerId}/history`),
   });
   const [season, setSeason] = useState<string | null>(null);
+  const holes = useQuery({
+    queryKey: ['hole-stats', leagueId, '', playerId],
+    queryFn: () => api<HoleStatsView>(`/leagues/${leagueId}/stats/holes?playerId=${playerId}`),
+  });
 
   if (history.error instanceof ApiError && history.error.status === 404) return <NotFoundPage />;
   const h = history.data;
@@ -68,6 +75,26 @@ export function PlayerPage() {
           hint={s.best ? formatDay(s.best.date, true) : undefined}
         />
       </div>
+
+      <TrendCard h={h} />
+      {holes.data?.nines
+        .filter((n) => (n.mine ?? 0) > 0)
+        .map((nine) => (
+          <Card key={nine.layoutId}>
+            <CardHeader>
+              <CardTitle>
+                Hole by hole: {nine.course} · {nine.name}
+              </CardTitle>
+              <CardDescription>
+                {h.player.nickname}'s average on each hole over {nine.mine}{' '}
+                {nine.mine === 1 ? 'round' : 'rounds'}, against everyone's.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <HoleTable nine={nine} mine />
+            </CardContent>
+          </Card>
+        ))}
 
       {h.seasons.length > 0 && (
         <Card>
@@ -240,6 +267,28 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
       <div className="text-xs text-muted-foreground">{label}</div>
       <div className="text-xl font-semibold tabular-nums">{value}</div>
       {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
+    </Card>
+  );
+}
+
+/** Scores round by round across every season, oldest first (EH-014 trends). */
+function TrendCard({ h }: { h: PlayerHistory }) {
+  const rounds = h.matches
+    .filter((m) => !m.absent && m.gross !== null)
+    .map((m) => ({ date: m.date, season: m.season, gross: m.gross!, handicap: m.handicap }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (rounds.length < 3) return null;
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Trend</CardTitle>
+        <CardDescription>
+          Every round's score, and the average of the last five. Tap a point for the details.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <TrendChart rounds={rounds} />
+      </CardContent>
     </Card>
   );
 }

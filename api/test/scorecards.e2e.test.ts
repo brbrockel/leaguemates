@@ -401,6 +401,32 @@ describe('standings', () => {
 });
 
 describe('player history and season stats', () => {
+  it('shows how each hole plays from submitted cards, and a player against the field', async () => {
+    const { L, S, ids, week, jerryGroup } = await setup();
+    const path = cardPath(L, S, week.id, jerryGroup.id);
+    const view = (await as(site).get(path).expect(200)).body;
+    // Everyone shoots 5 on every hole except Jerry, who shoots 4s.
+    await as(site)
+      .put(path, {
+        layoutId: view.plannedLayoutId,
+        rounds: roundsFor(jerryGroup, (p) => (p === ids['Jerry'] ? 4 : 5)),
+      })
+      .expect(200);
+    // Drafts don't count.
+    expect((await as(site).get(`/leagues/${L}/stats/holes`).expect(200)).body.nines).toEqual([]);
+    await as(site).post(`${path}/submit`).expect(201);
+    const { body } = await as(site)
+      .get(`/leagues/${L}/stats/holes?playerId=${ids['Jerry']}`)
+      .expect(200);
+    expect(body.seasons).toEqual([{ id: S, name: '2027' }]);
+    const nine = body.nines[0];
+    expect(nine.rounds).toBe(4);
+    expect(nine.mine).toBe(1);
+    expect(nine.holes).toHaveLength(9);
+    // (4 + 5 + 5 + 5) / 4 = 4.75 on every hole.
+    expect(nine.holes[0]).toMatchObject({ n: 4, avg: 4.75, mine: { n: 1, avg: 4 } });
+  });
+
   it('builds a player record, head-to-head and the scoring table from submitted cards', async () => {
     const { L, S, ids, week, jerryGroup } = await setup();
     const path = cardPath(L, S, week.id, jerryGroup.id);

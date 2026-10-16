@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -230,6 +231,26 @@ export class ScorecardsController {
     @Param('groupId', Uuid) groupId: string,
   ) {
     return this.cards.approve(user, leagueId, seasonId, weekId, groupId);
+  }
+}
+
+const HoleQuery = z.object({
+  seasonId: z.uuid().optional(),
+  playerId: z.uuid().optional(),
+});
+
+/** /leagues/:leagueId/stats/holes: how each hole plays (EH-014). */
+@Controller('leagues/:leagueId/stats')
+@UseGuards(LeagueGuard)
+export class LeagueStatsController {
+  constructor(private readonly stats: PlayerStatsService) {}
+
+  @Get('holes')
+  holes(
+    @Param('leagueId') leagueId: string,
+    @Query(new ZodPipe(HoleQuery)) q: z.infer<typeof HoleQuery>,
+  ) {
+    return this.stats.holes(leagueId, q.seasonId, q.playerId);
   }
 }
 

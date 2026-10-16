@@ -6,10 +6,11 @@ import {
   type LeagueSettings,
   type Outcome,
 } from '@teemate/shared';
-import { and, eq, inArray, or } from 'drizzle-orm';
+import { and, desc, eq, inArray, ne, or } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.js';
 import {
   cardRounds,
+  courses,
   groups,
   holes,
   layouts,
@@ -20,6 +21,7 @@ import {
   weeks,
 } from '../db/schema.js';
 import { finalsResult, knockoutResult } from '../playoffs/results.js';
+import { holeStats, type HoleRound } from './hole-stats.js';
 import { grossOf, matchResults, type RoundData } from './results.js';
 import { effectiveStatus, ScorecardsService } from './scorecards.service.js';
 
@@ -69,6 +71,69 @@ export class PlayerStatsService {
         },
       ]),
     );
+  }
+
+  /**
+   * How each hole plays, per nine, from every submitted card with hole scores in the league
+   * (or one season), plus one player's averages per hole when asked (EH-014).
+   */
+  async holes(leagueId: string, seasonId?: string, playerId?: string) {
+    const rows = await this.db
+      .select({
+        layoutId: scorecards.layoutId,
+        playerId: cardRounds.playerId,
+        holeScores: cardRounds.holeScores,
+        seasonId: seasons.id,
+        seasonName: seasons.name,
+        startDate: seasons.startDate,
+      })
+      .from(cardRounds)
+      .innerJoin(scorecards, eq(scorecards.id, cardRounds.scorecardId))
+      .innerJoin(groups, eq(groups.id, scorecards.groupId))
+      .innerJoin(weeks, eq(weeks.id, groups.weekId))
+      .innerJoin(seasons, eq(seasons.id, weeks.seasonId))
+      .where(
+        and(
+          eq(seasons.leagueId, leagueId),
+          ne(scorecards.status, 'draft'),
+          eq(cardRounds.attendance, 'played'),
+        ),
+      )
+      .orderBy(desc(seasons.startDate));
+    const withHoles = rows.filter((r) => r.holeScores.some((x) => typeof x === 'number'));
+    const seasonList = [
+      ...new Map(
+        withHoles.map((r) => [r.seasonId, { id: r.seasonId, name: r.seasonName }]),
+      ).values(),
+    ];
+    const counted = seasonId ? withHoles.filter((r) => r.seasonId === seasonId) : withHoles;
+    const layoutIds = [...new Set(counted.map((r) => r.layoutId))];
+    const layoutById = await this.layoutMap(layoutIds);
+    const courseOf = new Map(
+      layoutIds.length
+        ? (
+            await this.db
+              .select({ id: layouts.id, course: courses.name })
+              .from(layouts)
+              .innerJoin(courses, eq(courses.id, layouts.courseId))
+              .where(inArray(layouts.id, layoutIds))
+          ).map((l) => [l.id, l.course])
+        : [],
+    );
+    const nines = layoutIds.map((id) => {
+      const layout = layoutById.get(id)!;
+      const rounds: HoleRound[] = counted.filter((r) => r.layoutId === id);
+      return {
+        layoutId: id,
+        name: layout.name,
+        course: courseOf.get(id) ?? '',
+        rounds: rounds.length,
+        mine: playerId ? rounds.filter((r) => r.playerId === playerId).length : null,
+        holes: holeStats(layout.holes, rounds, playerId),
+      };
+    });
+    nines.sort((a, b) => b.rounds - a.rounds);
+    return { seasons: seasonList, nines };
   }
 
   /** Everything about one player in a league: record by season, every match, scoring and head-to-head. */

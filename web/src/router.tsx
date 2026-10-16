@@ -20,6 +20,7 @@ import { SignInPage } from '@/pages/SignInPage';
 import { SiteSettingsPage } from '@/pages/SiteSettingsPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { VerifyPage } from '@/pages/VerifyPage';
+import { StatsPage } from '@/pages/StatsPage';
 
 /** Everything except the sign-in pages requires a session. */
 function RequireSession() {
@@ -52,6 +53,7 @@ export const routes = [
           { path: 'leagues/:leagueId/standings', element: <StandingsPage /> },
           { path: 'leagues/:leagueId/players/:playerId', element: <PlayerPage /> },
           { path: 'leagues/:leagueId/handicaps', element: <HandicapsPage /> },
+          { path: 'leagues/:leagueId/stats', element: <StatsPage /> },
           { path: 'leagues/:leagueId/photos', element: <PhotosPage /> },
           { path: 'courses', element: <CoursesPage /> },
           { path: 'courses/:courseId', element: <CoursePage /> },
