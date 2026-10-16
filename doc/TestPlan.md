@@ -116,6 +116,7 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] **As Admin, League → Notices → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
 - [ ] **Also email it:** recipients get it by email (the mail guard in Site settings → Email still decides). **Also text it** opens a group text on your phone.
 - [ ] The message button on an existing notice opens a text to the people it's for.
+- [ ] **Shortcuts (Admin):** on the Schedule, the small message button on a foursome opens a new notice for that foursome (the dialog says who it's for). On People, **⋯ → Send a notice** does the same for one person.
 - [ ] **Automatic notices:** submit a card (the foursome gets "Round N card submitted"), dispute it, correct it as Admin with a reason, rain out or skip a round, start or advance the playoffs. Each shows as from TeeMate, for the right people.
 - [ ] The League page's Notices section stays collapsed to one line until opened.
 

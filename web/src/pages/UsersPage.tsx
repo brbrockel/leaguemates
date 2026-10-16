@@ -9,6 +9,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  MessageSquarePlus,
   MoreHorizontal,
   Pencil,
   Share2,
@@ -34,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { NoticeDialog } from '@/components/AnnouncementsCard';
 import { ContactLinks } from '@/components/ContactLinks';
 import { smsHref } from '@/lib/sms';
 import {
@@ -61,6 +63,7 @@ export function UsersPage() {
     null,
   );
   const [editing, setEditing] = useState<Person | null>(null);
+  const [noticeFor, setNoticeFor] = useState<{ leagueId: string; person: Person } | null>(null);
 
   const shown = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -127,6 +130,9 @@ export function UsersPage() {
             viewerIsSiteAdmin={me.user.isSiteAdmin}
             onLink={(l) => setLink({ person: p, ...l })}
             onEdit={() => setEditing(p)}
+            // A notice to them in each league of theirs that you run.
+            noticeLeagues={p.leagues.filter((l) => adminLeagues.some((a) => a.id === l.leagueId))}
+            onNotice={(leagueId) => setNoticeFor({ leagueId, person: p })}
           />
         ))}
         {people.data && shown.length === 0 && (
@@ -137,6 +143,19 @@ export function UsersPage() {
       <AddPersonDialog open={adding} onOpenChange={setAdding} leagues={adminLeagues} />
       {link && <SignInLinkDialog {...link} onClose={() => setLink(null)} />}
       {editing && <EditNameDialog person={editing} onClose={() => setEditing(null)} />}
+      {noticeFor && (
+        <NoticeDialog
+          leagueId={noticeFor.leagueId}
+          preset={{
+            audience: 'person',
+            recipientUserId: noticeFor.person.id,
+            label:
+              noticeFor.person.leagues.find((l) => l.leagueId === noticeFor.leagueId)?.player
+                ?.nickname ?? displayName(noticeFor.person),
+          }}
+          onClose={() => setNoticeFor(null)}
+        />
+      )}
     </div>
   );
 }
@@ -150,11 +169,15 @@ function PersonCard({
   viewerIsSiteAdmin,
   onLink,
   onEdit,
+  noticeLeagues,
+  onNotice,
 }: {
   person: Person;
   viewerIsSiteAdmin: boolean;
   onLink: (l: { link: string; expiresAt: string }) => void;
   onEdit: () => void;
+  noticeLeagues: { leagueId: string; leagueName: string }[];
+  onNotice: (leagueId: string) => void;
 }) {
   const qc = useQueryClient();
   const refresh = () => qc.invalidateQueries({ queryKey: PEOPLE });
@@ -255,7 +278,7 @@ function PersonCard({
           </ul>
         </div>
 
-        {(managed || p.isSelf) && (
+        {(managed || p.isSelf || noticeLeagues.length > 0) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" aria-label={`Actions for ${displayName(p)}`}>
@@ -268,6 +291,16 @@ function PersonCard({
                   <KeyRound /> {p.hasPassword ? 'Get password reset link' : 'Get password link'}
                 </DropdownMenuItem>
               )}
+              {!p.isSelf &&
+                !p.disabled &&
+                noticeLeagues.map((l) => (
+                  <DropdownMenuItem key={l.leagueId} onSelect={() => onNotice(l.leagueId)}>
+                    <MessageSquarePlus /> Send a notice
+                    {noticeLeagues.length > 1 && (
+                      <span className="ml-auto text-xs text-muted-foreground">{l.leagueName}</span>
+                    )}
+                  </DropdownMenuItem>
+                ))}
               {viewerIsSiteAdmin && !p.disabled && (
                 <DropdownMenuItem
                   onSelect={() =>

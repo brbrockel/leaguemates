@@ -14,6 +14,7 @@ import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input, Label, Select } from '@/components/ui/input';
 import { noticesKey } from '@/components/NoticeStrip';
 import {
@@ -217,29 +218,59 @@ function useFoursomes(leagueId: string, enabled: boolean) {
   return schedule.data;
 }
 
+/** Who a notice from a shortcut is for (a foursome on the schedule, a person on People). */
+export interface NoticePreset {
+  audience: 'group' | 'person';
+  groupId?: string;
+  recipientUserId?: string;
+  /** e.g. "Round 3, 2nd off: Jerry, Keith, Doc, Paul" or "Jerry". */
+  label: string;
+}
+
+/** A new notice from a shortcut, already pointed at the right people. */
+export function NoticeDialog({
+  leagueId,
+  preset,
+  onClose,
+}: {
+  leagueId: string;
+  preset: NoticePreset;
+  onClose: () => void;
+}) {
+  return (
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent title="New notice" description={`For ${preset.label}`}>
+        <NoticeForm leagueId={leagueId} preset={preset} onDone={onClose} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function NoticeForm({
   leagueId,
   existing,
+  preset,
   onDone,
 }: {
   leagueId: string;
   existing?: Announcement;
+  preset?: NoticePreset;
   onDone: () => void;
 }) {
   const qc = useQueryClient();
   const [title, setTitle] = useState(existing?.title ?? '');
   const [body, setBody] = useState(existing?.body ?? '');
   const [pinned, setPinned] = useState(existing?.pinned ?? false);
-  const [audience, setAudience] = useState<NoticeAudience>('league');
+  const [audience, setAudience] = useState<NoticeAudience>(preset?.audience ?? 'league');
   const [weekId, setWeekId] = useState('');
-  const [groupId, setGroupId] = useState('');
-  const [personId, setPersonId] = useState('');
+  const [groupId, setGroupId] = useState(preset?.groupId ?? '');
+  const [personId, setPersonId] = useState(preset?.recipientUserId ?? '');
   const [email, setEmail] = useState(false);
   const [sent, setSent] = useState<{ phones: string[]; emailed: number; held: number } | null>(
     null,
   );
 
-  const schedule = useFoursomes(leagueId, audience === 'group');
+  const schedule = useFoursomes(leagueId, audience === 'group' && !preset);
   const members = useQuery({
     queryKey: ['league', leagueId, 'members'],
     queryFn: () =>
@@ -247,7 +278,7 @@ function NoticeForm({
         members: { userId: string; name: string | null; email: string }[];
         players: { nickname: string; userId: string | null }[];
       }>(`/leagues/${leagueId}/members`),
-    enabled: audience === 'person',
+    enabled: audience === 'person' && !preset,
   });
   const names = new Map((schedule?.roster ?? []).map((r) => [r.playerId, r.nickname]));
   const upcoming = schedule?.weeks.find((w) => w.status === 'scheduled');
@@ -329,7 +360,7 @@ function NoticeForm({
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-2">
-      {!existing && (
+      {!existing && !preset && (
         <>
           <Label htmlFor="a-audience">For</Label>
           <Select

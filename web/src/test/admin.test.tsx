@@ -100,6 +100,28 @@ describe('people page', () => {
     expect(send.getAttribute('href')).toMatch(/^sms:\+18605551234[?&]body=/);
   });
 
+  it('admins send a notice to one person from their menu', async () => {
+    const posts: unknown[] = [];
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      'GET /api/users': () => ({ status: 200, body: [person({})] }),
+      [`POST /api/leagues/${LEAGUE.id}/announcements`]: (init) => {
+        posts.push(JSON.parse(String(init?.body)));
+        return { status: 201, body: { phones: [], emailed: 0, held: 0 } };
+      },
+      [`GET /api/leagues/${LEAGUE.id}/announcements?limit=50`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE.id}/announcements?limit=20`]: () => ({ status: 200, body: [] }),
+    });
+    renderAt('/people');
+    await userEvent.click(await screen.findByRole('button', { name: 'Actions for Jerry' }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: /Send a notice/ }));
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('For Jerry')).toBeInTheDocument();
+    await userEvent.type(within(dialog).getByLabelText('Title'), 'Please pay your fee');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Post' }));
+    expect(posts[0]).toMatchObject({ audience: 'person', recipientUserId: 'u2' });
+  });
+
   it('site admins add a person, optionally to a league as an existing player', async () => {
     const siteAdmin = { ...me, user: { ...me.user, isSiteAdmin: true } };
     const calls = mockApi({

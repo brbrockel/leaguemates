@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   CloudRain,
   Lock,
+  MessageSquarePlus,
   Shuffle,
   SkipForward,
   Trash2,
@@ -33,6 +34,7 @@ import { Select } from '@/components/ui/input';
 import { api, ApiError, type SeasonResultGroup, type SeasonSchedule } from '@/lib/api';
 import { aboutTeeTime, formatDay, todayIso } from '@/lib/time';
 import { cn } from '@/lib/utils';
+import { NoticeDialog, type NoticePreset } from '@/components/AnnouncementsCard';
 import { PhotosCard, SeasonBanner } from '@/components/Photos';
 import { PlayoffsCard } from '@/components/PlayoffsCard';
 import { RosterCard } from '@/components/RosterCard';
@@ -76,6 +78,7 @@ export function SeasonPage() {
 
   const navigate = useNavigate();
   const [swapping, setSwapping] = useState<SeasonSchedule['weeks'][number] | null>(null);
+  const [noticeFor, setNoticeFor] = useState<NoticePreset | null>(null);
   const swap = useMutation({
     mutationFn: ({
       weekId,
@@ -437,6 +440,19 @@ export function SeasonPage() {
                               handicaps={handicaps}
                               me={myPlayerId}
                               mine={mine}
+                              onNotice={
+                                isAdmin && season.status !== 'draft'
+                                  ? () =>
+                                      setNoticeFor({
+                                        audience: 'group',
+                                        groupId: g.id,
+                                        label: `round ${w.round}, ${ordinal(g.slot + 1)} off: ${g.matches
+                                          .flatMap((m) => [m.playerA, m.playerB])
+                                          .map((p) => names.get(p) ?? '?')
+                                          .join(', ')}`,
+                                      })
+                                  : undefined
+                              }
                             />
                           </li>
                         );
@@ -448,6 +464,9 @@ export function SeasonPage() {
             })}
           </ol>
         </>
+      )}
+      {noticeFor && (
+        <NoticeDialog leagueId={leagueId} preset={noticeFor} onClose={() => setNoticeFor(null)} />
       )}
       {swapping && (
         <SwapDialog
@@ -581,6 +600,7 @@ function GroupCard({
   handicaps,
   me,
   mine,
+  onNotice,
 }: {
   leagueId: string;
   to: string;
@@ -594,6 +614,8 @@ function GroupCard({
   handicaps: Map<string, number | null>;
   me?: string | undefined;
   mine: boolean;
+  /** Admins: a notice to this foursome. */
+  onNotice?: (() => void) | undefined;
 }) {
   const navigate = useNavigate();
   // The whole card opens the scorecard (names inside link to players, so it can't be a link itself).
@@ -610,11 +632,27 @@ function GroupCard({
           <span className="font-semibold text-foreground">{ordinal(order)} off</span>
           {teeTime && ` · ${aboutTeeTime(teeTime)}`}
         </Link>
-        {result && (
-          <span className={cn(result.status === 'disputed' && 'text-amber-600')}>
-            {CARD_BADGE[result.status]}
-          </span>
-        )}
+        <span className="flex items-center gap-2">
+          {result && (
+            <span className={cn(result.status === 'disputed' && 'text-amber-600')}>
+              {CARD_BADGE[result.status]}
+            </span>
+          )}
+          {onNotice && (
+            <button
+              type="button"
+              aria-label={`Notice to the ${ordinal(order)} off foursome`}
+              title="Send this foursome a notice"
+              className="rounded p-0.5 hover:bg-accent hover:text-foreground"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNotice();
+              }}
+            >
+              <MessageSquarePlus className="size-3.5" />
+            </button>
+          )}
+        </span>
       </div>
       {result && result.status !== 'draft' && (
         <div className="mt-1 grid grid-cols-[1fr_2.75rem_2.75rem] text-[0.65rem] uppercase tracking-wide text-muted-foreground">

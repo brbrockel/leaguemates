@@ -282,3 +282,47 @@ describe('roster sign-in links', () => {
     expect(screen.getByText('1 of 4 have a phone number.')).toBeInTheDocument();
   });
 });
+
+describe('notice shortcuts', () => {
+  it('admins send a notice straight to a foursome from the schedule', async () => {
+    const posts: unknown[] = [];
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({
+        status: 200,
+        body: generated('scheduled'),
+      }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/results`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/playoffs`]: () => ({
+        status: 200,
+        body: { format: 'none', canStart: false, regularRoundsLeft: 2, champion: null, rounds: [] },
+      }),
+      [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+        status: 200,
+        body: { players: [], members: [] },
+      }),
+      [`POST /api/leagues/${LEAGUE}/announcements`]: (init) => {
+        posts.push(JSON.parse(String(init?.body)));
+        return { status: 201, body: { phones: [], emailed: 0, held: 0 } };
+      },
+      [`GET /api/leagues/${LEAGUE}/announcements?limit=50`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/announcements?limit=20`]: () => ({ status: 200, body: [] }),
+    });
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const buttons = await screen.findAllByRole('button', {
+      name: /Notice to the 1st off foursome/,
+    });
+    await userEvent.click(buttons[0]!);
+    const dialog = await screen.findByRole('dialog');
+    const label = within(dialog).getByText(/^For round 1, 1st off: /).textContent!;
+    for (const n of ['Brian', 'Doc']) expect(label).toContain(n);
+    expect(within(dialog).queryByLabelText('For')).toBeNull();
+    await userEvent.type(within(dialog).getByLabelText('Title'), 'Tee time moved to 5:20');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Post' }));
+    expect(posts[0]).toMatchObject({
+      audience: 'group',
+      groupId: generated('scheduled').weeks[0]!.groups[0]!.id,
+      title: 'Tee time moved to 5:20',
+    });
+  });
+});
