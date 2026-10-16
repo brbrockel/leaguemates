@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
-import { AnnouncementsCard } from '@/components/AnnouncementsCard';
+import { NoticeStrip } from '@/components/NoticeStrip';
 import { ThisWeek } from '@/components/ThisWeekCard';
 import { useCurrentLeague } from '@/lib/useCurrentLeague';
 import { api } from '@/lib/api';
@@ -28,9 +28,9 @@ export function HomePage() {
         <p className="text-sm text-muted-foreground">Your next round, scores and standings.</p>
       </div>
 
-      <ThisWeek />
+      {league && <NoticeStrip leagueId={league.id} />}
 
-      {league && <AnnouncementsCard leagueId={league.id} compact />}
+      <ThisWeek />
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-medium text-muted-foreground">Your leagues</h2>

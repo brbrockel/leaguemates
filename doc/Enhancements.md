@@ -58,7 +58,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-010 | Audit Log | MVP | Done (league Activity for admins, site-wide Activity for site admins) |
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |
 | EH-012 | Historical Import from Gmail | Phase 2 | Done (2018–2026 merged into Wednesday League, foursomes in tee order; see [HistoricalImport.md](HistoricalImport.md)) |
-| EH-013 | Notifications | Phase 2 | In Progress (in-app announcements done; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; push to do) |
+| EH-013 | Notifications | Phase 2 | In Progress (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; Home shows one line only while something is new; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; push to do) |
 | EH-014 | Stats | Phase 2 | In Progress (scoring average, best round, net average and head-to-head done; per-hole difficulty and trends to do) |
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |

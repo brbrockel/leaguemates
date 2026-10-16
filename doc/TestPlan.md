@@ -109,13 +109,15 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] With every card in, the winner gets the trophy, and equal nets show "on the cards".
 - [ ] Standings and handicaps don't change.
 
-## 10. Announcements
+## 10. Notices
 
-- [ ] **As Admin, League → Announcements → Post:** a title and a few lines of details. Pin one.
-- [ ] It shows on **Home** (latest three, pinned first) and on the League page, for every member.
-- [ ] Edit one (it shows "edited") and delete one.
-- [ ] **As test.user:** announcements show, with no Post, edit or delete.
-- [ ] Nobody gets an email.
+- [ ] **Home strip:** with nothing new, Home shows no notices at all. A new notice shows as one line (newest title, "+N more"). Tap it to expand (that marks them read) and tap a notice for its full text. **✕** clears the strip until something new arrives.
+- [ ] **Pinned:** a pinned notice stays in the strip after it's read, until you clear it. If an admin edits it, it comes back.
+- [ ] **As Admin, League → Notices → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
+- [ ] **Also email it:** recipients get it by email (the mail guard in Site settings → Email still decides). **Also text it** opens a group text on your phone.
+- [ ] The message button on an existing notice opens a text to the people it's for.
+- [ ] **Automatic notices:** submit a card (the foursome gets "Round N card submitted"), dispute it, correct it as Admin with a reason, rain out or skip a round, start or advance the playoffs. Each shows as from TeeMate, for the right people.
+- [ ] The League page's Notices section stays collapsed to one line until opened.
 
 ## 11. Photos
 

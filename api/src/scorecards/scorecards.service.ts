@@ -15,6 +15,7 @@ import {
   type Outcome,
 } from '@teemate/shared';
 import { and, asc, eq, inArray, ne } from 'drizzle-orm';
+import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
 import { MembershipService } from '../auth/membership.service.js';
@@ -73,9 +74,22 @@ export class ScorecardsService {
     @Inject(DB) private readonly db: Database,
     private readonly memberships: MembershipService,
     private readonly audit: AuditService,
+    private readonly notices: AnnouncementsService,
   ) {}
 
-  /** Layouts of a course with their holes, in the shape the scoring rules expect. */
+  /** Who did something, as the foursome knows them. */
+  private by(
+    user: SessionUser,
+    c: { groupPlayers: { userId: string | null; nickname: string }[] },
+  ) {
+    return (
+      c.groupPlayers.find((p) => p.userId === user.id)?.nickname ??
+      user.nickname ??
+      user.name?.split(/\s+/)[0] ??
+      'An admin'
+    );
+  }
+
   /** A course's nines with their holes, in order. */
   async courseLayouts(courseId: string) {
     const ls = await this.db
@@ -462,6 +476,14 @@ export class ScorecardsService {
         );
       }
     });
+    if (perms.needsReason)
+      await this.notices.notify(leagueId, {
+        audience: 'group',
+        groupId,
+        kind: 'card.corrected',
+        title: `Round ${c.week.round} card corrected`,
+        body: `An admin changed your foursome's card. Reason: ${input.reason?.trim()}`,
+      });
     return this.view(user, leagueId, seasonId, weekId, groupId);
   }
 
@@ -502,6 +524,13 @@ export class ScorecardsService {
       entityType: 'scorecard',
       entityId: c.card.id,
     });
+    await this.notices.notify(leagueId, {
+      audience: 'group',
+      groupId,
+      kind: 'card.submitted',
+      title: `Round ${c.week.round} card submitted`,
+      body: `${this.by(user, c)} submitted your foursome's card. If something's wrong, open it and dispute it within ${c.settings.scorecards.disputeWindowHours} hours.`,
+    });
     await this.updateWeekStatus(weekId);
     return this.view(user, leagueId, seasonId, weekId, groupId);
   }
@@ -535,6 +564,13 @@ export class ScorecardsService {
       entityType: 'scorecard',
       entityId: c.card.id,
       reason: note,
+    });
+    await this.notices.notify(leagueId, {
+      audience: 'group',
+      groupId,
+      kind: 'card.disputed',
+      title: `Round ${c.week.round} card disputed`,
+      body: `${this.by(user, c)}: ${note}`,
     });
     return this.view(user, leagueId, seasonId, weekId, groupId);
   }

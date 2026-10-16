@@ -449,14 +449,23 @@ export interface Course {
   layouts: CourseLayout[];
 }
 
+export type NoticeAudience = 'league' | 'group' | 'person';
+
 export interface Announcement {
   id: string;
   title: string;
   body: string;
   pinned: boolean;
+  audience: NoticeAudience;
+  /** Set for notices the app writes itself, e.g. 'card.submitted'. */
+  kind: string | null;
+  /** Who it's for, as the viewer sees it: "League", "Your foursome", "You", a name. */
+  to: string;
   createdAt: string;
   updatedAt: string | null;
   author: string | null;
+  read: boolean;
+  dismissed: boolean;
 }
 
 export interface HandicapSuggestions {

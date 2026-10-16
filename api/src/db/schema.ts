@@ -498,13 +498,37 @@ export const announcements = pgTable(
       .references(() => leagues.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
     body: text('body').notNull().default(''),
-    /** Pinned notices stay at the top. */
+    /** Pinned notices stay at the top, and in the Home strip until each person dismisses them. */
     pinned: boolean('pinned').notNull().default(false),
+    /** Who it's for: the whole league, one foursome (groupId) or one person (recipientUserId). */
+    audience: text('audience').$type<'league' | 'group' | 'person'>().notNull().default('league'),
+    groupId: uuid('group_id').references(() => groups.id, { onDelete: 'cascade' }),
+    recipientUserId: uuid('recipient_user_id').references(() => users.id, {
+      onDelete: 'cascade',
+    }),
+    /** Set for notices the app writes itself (e.g. 'card.submitted'); null for admins' posts. */
+    kind: text('kind'),
     authorUserId: uuid('author_user_id').references(() => users.id, { onDelete: 'set null' }),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }),
   },
   (t) => [index('announcements_league_idx').on(t.leagueId, t.createdAt)],
+);
+
+/** Per person: when they read a notice, and when they dismissed it from the Home strip. */
+export const announcementReads = pgTable(
+  'announcement_reads',
+  {
+    announcementId: uuid('announcement_id')
+      .notNull()
+      .references(() => announcements.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    readAt: timestamp('read_at', { withTimezone: true }),
+    dismissedAt: timestamp('dismissed_at', { withTimezone: true }),
+  },
+  (t) => [primaryKey({ columns: [t.announcementId, t.userId] })],
 );
 
 /** The post-season team scramble for a season: one per season. Doesn't affect standings or handicaps. */

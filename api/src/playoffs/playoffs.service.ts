@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { addDays, teeTime, withDefaults, type Layout, type LeagueSettings } from '@teemate/shared';
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
+import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
 import { DB, type Database } from '../db/db.js';
@@ -27,6 +28,7 @@ export class PlayoffsService {
     @Inject(DB) private readonly db: Database,
     private readonly cards: ScorecardsService,
     private readonly audit: AuditService,
+    private readonly notices: AnnouncementsService,
   ) {}
 
   private async season(leagueId: string, seasonId: string) {
@@ -302,6 +304,12 @@ export class PlayoffsService {
         tx,
       );
     });
+    await this.notices.notify(leagueId, {
+      audience: 'league',
+      kind: 'playoffs.start',
+      title: knockout ? 'The playoffs are set' : 'The Finals are set',
+      body: 'See the bracket on the season page for who plays whom.',
+    });
     return this.bracket(leagueId, seasonId);
   }
 
@@ -342,6 +350,12 @@ export class PlayoffsService {
         },
         tx,
       );
+    });
+    await this.notices.notify(leagueId, {
+      audience: 'league',
+      kind: 'playoffs.advance',
+      title: isFinal ? 'The Finals are set' : `Playoff round ${(last.round ?? 0) + 1} is set`,
+      body: 'See the bracket on the season page for who plays whom.',
     });
     return this.bracket(leagueId, seasonId);
   }

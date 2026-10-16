@@ -15,6 +15,7 @@ import {
 } from '@teemate/shared';
 import { and, asc, desc, eq, gte, inArray, isNull, ne, sql } from 'drizzle-orm';
 import { randomInt } from 'node:crypto';
+import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
 import { DB, type Database } from '../db/db.js';
@@ -43,6 +44,7 @@ export class SeasonsService {
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly audit: AuditService,
+    private readonly notices: AnnouncementsService,
   ) {}
 
   async list(leagueId: string) {
@@ -547,6 +549,12 @@ export class SeasonsService {
       entityId: weekId,
       before: { round: week.round, date: week.date },
     });
+    await this.notices.notify(leagueId, {
+      audience: 'league',
+      kind: 'week.skip',
+      title: `Round ${week.round} is off`,
+      body: `Round ${week.round} (${week.date}) won't be played, and no points are given for it.`,
+    });
     return this.schedule(leagueId, seasonId);
   }
 
@@ -649,6 +657,12 @@ export class SeasonsService {
         },
         tx,
       );
+    });
+    await this.notices.notify(leagueId, {
+      audience: 'league',
+      kind: 'week.rainout',
+      title: `Rained out: round ${week.round}`,
+      body: `Round ${week.round} moves to ${addDays(week.date, 7)}, and every later round moves back a week.`,
     });
     return this.schedule(leagueId, seasonId);
   }
