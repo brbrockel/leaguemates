@@ -123,7 +123,8 @@ export function StandingsPage() {
         </Card>
       )}
       <p className="text-xs text-muted-foreground">
-        Win 3 · Tie 1 · Loss 0. Ties in points are ordered by wins, then head-to-head.
+        Win 3 · Tie 1 · Loss 0. Ties in points are ordered by wins, then head-to-head, then the
+        lower total net over the rounds both played.
       </p>
       {stats.data && stats.data.length > 0 && (
         <Card>

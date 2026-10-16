@@ -148,4 +148,39 @@ describe('standings', () => {
     // y: 4 pts (W + T), x: 3 pts, z: 1 pt.
     expect(h2h.map((r) => r.playerId)).toEqual(['y', 'x', 'z']);
   });
+
+  it('then the lower total net over the rounds all the tied players played', () => {
+    const level = [
+      { a: 'a', b: 'b', outcome: 'B' as const },
+      { a: 'a', b: 'c', outcome: 'A' as const },
+      { a: 'b', b: 'c', outcome: 'B' as const },
+    ];
+    const nets = new Map([
+      [
+        'a',
+        new Map([
+          [1, 36],
+          [2, 36],
+          [3, 30],
+        ]),
+      ], // round 3 only a played: ignored
+      [
+        'b',
+        new Map([
+          [1, 34],
+          [2, 35],
+        ]),
+      ],
+      [
+        'c',
+        new Map([
+          [1, 35],
+          [2, 36],
+        ]),
+      ],
+    ]);
+    // Shared rounds 1-2: b 69, c 71, a 72.
+    const rows = computeStandings(['a', 'b', 'c'], level, undefined, nets);
+    expect(rows.map((r) => r.playerId)).toEqual(['b', 'c', 'a']);
+  });
 });

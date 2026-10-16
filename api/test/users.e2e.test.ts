@@ -445,7 +445,8 @@ describe('league visibility', () => {
     ]);
     // Names, but no contact details.
     const members = (await as(outsider).get(`/leagues/${wed.id}/members`).expect(200)).body.members;
-    expect(JSON.stringify(members)).not.toContain('860');
+    // (The phones themselves: a random id can contain "860".)
+    expect(JSON.stringify(members)).not.toMatch(/8605550(100|199)/);
     expect(JSON.stringify(members)).not.toContain('member@example.com');
     // Read-only.
     await as(outsider).post(`/leagues/${wed.id}/announcements`, { title: 'Hi' }).expect(403);

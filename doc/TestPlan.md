@@ -81,7 +81,7 @@ Site: https://teemate.bhbslp.org
 ## 7. Standings
 
 - [ ] After submitting cards, **Standings** shows W/L/T and points, with "includes cards still open for disputes".
-- [ ] Ties in points are ordered by wins, then head-to-head.
+- [ ] Ties in points are ordered by wins, then head-to-head, then the lower total net over the rounds the tied players all played (this order also sets playoff seeds).
 - [ ] Schedule shows net scores and the winner for each submitted match.
 
 ## 8. Playoffs (Admin)

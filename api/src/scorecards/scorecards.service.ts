@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import {
   computeStandings,
+  type NetsByRound,
   withDefaults,
   type Layout,
   type LeagueSettings,
@@ -715,10 +716,19 @@ export class ScorecardsService {
         .filter((m) => m.result)
         .map((m) => ({ a: m.playerA, b: m.playerB, outcome: m.result!.outcome as Outcome })),
     );
+    // Net (gross minus handicap) per player per round played, for the last tie-break.
+    const nets: NetsByRound = new Map();
+    for (const g of counted)
+      for (const r of g.rounds)
+        if (r.attendance === 'played' && r.gross !== null) {
+          if (!nets.has(r.playerId)) nets.set(r.playerId, new Map());
+          nets.get(r.playerId)!.set(g.round, r.gross - r.handicap);
+        }
     const rows = computeStandings(
       roster.map((r) => r.playerId),
       recorded,
       settings.points,
+      nets,
     );
     const info = new Map(roster.map((r) => [r.playerId, r]));
     return {
