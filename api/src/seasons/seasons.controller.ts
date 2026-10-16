@@ -26,6 +26,8 @@ const CreateSeason = z.object({
 });
 const Generate = z.object({ seed: z.number().int().positive().optional() });
 const Swap = z.object({ playerA: z.uuid(), playerB: z.uuid() });
+const TeeOrder = z.object({ groupId: z.uuid(), direction: z.enum(['up', 'down']) });
+const Regroup = z.object({ matchA: z.uuid(), matchB: z.uuid() });
 const Roster = z.object({ playerIds: z.array(z.uuid()).max(64) });
 const Cover = z.object({ photoId: z.uuid().nullable() });
 const Uuid = new ParseUUIDPipe();
@@ -131,6 +133,32 @@ export class SeasonsController {
     @Body(new ZodPipe(Swap)) body: z.infer<typeof Swap>,
   ) {
     return this.seasons.swap(user, leagueId, seasonId, weekId, body.playerA, body.playerB);
+  }
+
+  /** Game day: move a foursome up or down the tee order (admins and players in the round). */
+  @Post('leagues/:leagueId/seasons/:seasonId/weeks/:weekId/tee-order')
+  @UseGuards(LeagueGuard)
+  teeOrder(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('seasonId', Uuid) seasonId: string,
+    @Param('weekId', Uuid) weekId: string,
+    @Body(new ZodPipe(TeeOrder)) body: z.infer<typeof TeeOrder>,
+  ) {
+    return this.seasons.teeOrder(user, leagueId, seasonId, weekId, body.groupId, body.direction);
+  }
+
+  /** Game day: two matches trade foursomes (admins and players in the round). */
+  @Post('leagues/:leagueId/seasons/:seasonId/weeks/:weekId/regroup')
+  @UseGuards(LeagueGuard)
+  regroup(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('seasonId', Uuid) seasonId: string,
+    @Param('weekId', Uuid) weekId: string,
+    @Body(new ZodPipe(Regroup)) body: z.infer<typeof Regroup>,
+  ) {
+    return this.seasons.regroup(user, leagueId, seasonId, weekId, body.matchA, body.matchB);
   }
 
   @Post('leagues/:leagueId/seasons/:seasonId/weeks/:weekId/rainout')

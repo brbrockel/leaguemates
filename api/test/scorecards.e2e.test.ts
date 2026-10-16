@@ -474,3 +474,88 @@ describe('player history and season stats', () => {
     await as(site).get(`/leagues/${L}/players/${stranger.id}/history`).expect(404);
   });
 });
+
+describe('game-day changes', () => {
+  interface Sched {
+    weeks: {
+      id: string;
+      groups: {
+        id: string;
+        slot: number;
+        teeTime: string;
+        matches: { id: string; playerA: string; playerB: string }[];
+      }[];
+    }[];
+  }
+  const schedule = async (L: string, S: string) =>
+    (await as(site).get(`/leagues/${L}/seasons/${S}`).expect(200)).body as Sched;
+
+  it('players in the round move a foursome up the tee order; tee times stay in place', async () => {
+    const { L, S, week } = await setup();
+    const jerry = await signIn(t, 'jerry@example.com');
+    const before = (await schedule(L, S)).weeks[0]!.groups;
+    const second = before[1]!;
+    const { body } = await as(jerry)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/tee-order`, {
+        groupId: second.id,
+        direction: 'up',
+      })
+      .expect(201);
+    const after = (body as Sched).weeks[0]!.groups;
+    expect(after.map((g) => g.id)).toEqual([before[1]!.id, before[0]!.id]);
+    expect(after.map((g) => g.teeTime)).toEqual(before.map((g) => g.teeTime));
+    await as(jerry)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/tee-order`, {
+        groupId: second.id,
+        direction: 'up',
+      })
+      .expect(400); // already first off
+
+    // A member who isn't playing that round can't.
+    await as(site).post('/users', { email: 'fan@example.com', leagueId: L }).expect(201);
+    const fan = await signIn(t, 'fan@example.com');
+    await as(fan)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/tee-order`, {
+        groupId: second.id,
+        direction: 'down',
+      })
+      .expect(403);
+  });
+
+  it('regroups: two matches trade foursomes, but not once a card is started', async () => {
+    const { L, S, week } = await setup();
+    const [g1, g2] = (await schedule(L, S)).weeks[0]!.groups;
+    const [m1] = g1!.matches;
+    const [m2] = g2!.matches;
+    const { body } = await as(site)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/regroup`, {
+        matchA: m1!.id,
+        matchB: m2!.id,
+      })
+      .expect(201);
+    const after = (body as Sched).weeks[0]!.groups;
+    expect(after[0]!.matches.map((m) => m.id)).toContain(m2!.id);
+    expect(after[1]!.matches.map((m) => m.id)).toContain(m1!.id);
+    await as(site)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/regroup`, {
+        matchA: m1!.id,
+        matchB: after[1]!.matches.find((m) => m.id !== m1!.id)!.id,
+      })
+      .expect(400); // same foursome
+
+    // Start a card for the first foursome: no more regrouping it.
+    const first = after[0]! as unknown as Group;
+    const path = cardPath(L, S, week.id, first.id);
+    const view = (await as(site).get(path).expect(200)).body;
+    await as(site)
+      .put(path, { layoutId: view.plannedLayoutId, rounds: roundsFor(first, () => 5) })
+      .expect(200);
+    const other = after[1]!.matches[0]!.id;
+    await as(site)
+      .post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/regroup`, {
+        matchA: after[0]!.matches[0]!.id,
+        matchB: other,
+      })
+      .expect(400);
+  });
+});

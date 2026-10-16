@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -18,6 +19,7 @@ import { randomInt } from 'node:crypto';
 import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
+import { MembershipService } from '../auth/membership.service.js';
 import { DB, type Database } from '../db/db.js';
 import {
   courses,
@@ -45,6 +47,7 @@ export class SeasonsService {
     @Inject(DB) private readonly db: Database,
     private readonly audit: AuditService,
     private readonly notices: AnnouncementsService,
+    private readonly memberships: MembershipService,
   ) {}
 
   async list(leagueId: string) {
@@ -608,6 +611,144 @@ export class SeasonsService {
           entityType: 'week',
           entityId: weekId,
           after: { playerA, playerB },
+        },
+        tx,
+      );
+    });
+    return this.schedule(leagueId, seasonId);
+  }
+
+  /**
+   * Game-day changes are open to admins and to anyone playing that round (they're the ones
+   * at the course). Returns the round, which must be an unplayed round of a locked season.
+   */
+  private async gameDayRound(
+    actor: SessionUser,
+    leagueId: string,
+    seasonId: string,
+    weekId: string,
+  ) {
+    const season = await this.season(leagueId, seasonId);
+    if (season.status !== 'scheduled')
+      throw new BadRequestException('Only a locked schedule can be changed on game day.');
+    const [week] = await this.db
+      .select()
+      .from(weeks)
+      .where(and(eq(weeks.id, weekId), eq(weeks.seasonId, seasonId)))
+      .limit(1);
+    if (!week) throw new NotFoundException();
+    if (week.status !== 'scheduled')
+      throw new BadRequestException('This round has already been played or skipped.');
+    if ((await this.memberships.roleIn(actor, leagueId)) !== 'admin') {
+      const [plays] = await this.db
+        .select({ id: matches.id })
+        .from(matches)
+        .innerJoin(players, sql`${players.id} in (${matches.playerAId}, ${matches.playerBId})`)
+        .where(and(eq(matches.weekId, weekId), eq(players.userId, actor.id)))
+        .limit(1);
+      if (!plays)
+        throw new ForbiddenException('Only admins and the players in this round can change it.');
+    }
+    return week;
+  }
+
+  /**
+   * Tee order: moves a foursome one place earlier or later. The tee times stay in place,
+   * so the two foursomes trade times. Nothing about the matches changes.
+   */
+  async teeOrder(
+    actor: SessionUser,
+    leagueId: string,
+    seasonId: string,
+    weekId: string,
+    groupId: string,
+    direction: 'up' | 'down',
+  ) {
+    const week = await this.gameDayRound(actor, leagueId, seasonId, weekId);
+    const gs = await this.db
+      .select()
+      .from(groups)
+      .where(eq(groups.weekId, weekId))
+      .orderBy(asc(groups.slot));
+    const i = gs.findIndex((g) => g.id === groupId);
+    if (i < 0) throw new NotFoundException();
+    const j = direction === 'up' ? i - 1 : i + 1;
+    const [g, other] = [gs[i]!, gs[j]];
+    if (!other)
+      throw new BadRequestException(
+        `That foursome is already ${direction === 'up' ? 'first' : 'last'} off.`,
+      );
+    await this.db.transaction(async (tx) => {
+      // Slots are unique per round, so park one out of the way first.
+      await tx.update(groups).set({ slot: -1 }).where(eq(groups.id, g.id));
+      await tx
+        .update(groups)
+        .set({ slot: g.slot, teeTime: g.teeTime })
+        .where(eq(groups.id, other.id));
+      await tx
+        .update(groups)
+        .set({ slot: other.slot, teeTime: other.teeTime })
+        .where(eq(groups.id, g.id));
+      await this.audit.record(
+        {
+          leagueId,
+          actorUserId: actor.id,
+          action: 'week.tee_order',
+          entityType: 'week',
+          entityId: weekId,
+          before: { groupId: g.id, slot: g.slot },
+          after: { groupId: g.id, slot: other.slot, round: week.round },
+        },
+        tx,
+      );
+    });
+    return this.schedule(leagueId, seasonId);
+  }
+
+  /**
+   * Regroup: two matches trade foursomes (each match keeps its two players), e.g. so a late
+   * player's match goes off later. Only while neither foursome has a card started, so no
+   * scores ever move.
+   */
+  async regroup(
+    actor: SessionUser,
+    leagueId: string,
+    seasonId: string,
+    weekId: string,
+    matchA: string,
+    matchB: string,
+  ) {
+    const week = await this.gameDayRound(actor, leagueId, seasonId, weekId);
+    const ms = await this.db
+      .select()
+      .from(matches)
+      .where(and(eq(matches.weekId, weekId), inArray(matches.id, [matchA, matchB])));
+    const a = ms.find((m) => m.id === matchA);
+    const b = ms.find((m) => m.id === matchB);
+    if (!a || !b) throw new NotFoundException();
+    if (a.groupId === b.groupId)
+      throw new BadRequestException('Those two matches are already in the same foursome.');
+    const started = await this.db
+      .select({ id: scorecards.id })
+      .from(scorecards)
+      .where(inArray(scorecards.groupId, [a.groupId, b.groupId]))
+      .limit(1);
+    if (started.length)
+      throw new BadRequestException(
+        "A card has already been started for one of these foursomes, so they can't be regrouped.",
+      );
+    await this.db.transaction(async (tx) => {
+      await tx.update(matches).set({ groupId: b.groupId }).where(eq(matches.id, a.id));
+      await tx.update(matches).set({ groupId: a.groupId }).where(eq(matches.id, b.id));
+      await this.audit.record(
+        {
+          leagueId,
+          actorUserId: actor.id,
+          action: 'week.regroup',
+          entityType: 'week',
+          entityId: weekId,
+          before: { [a.id]: a.groupId, [b.id]: b.groupId },
+          after: { [a.id]: b.groupId, [b.id]: a.groupId, round: week.round },
         },
         tx,
       );

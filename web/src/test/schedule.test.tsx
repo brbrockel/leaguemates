@@ -381,3 +381,44 @@ describe('recorded ties', () => {
     expect(tie).toHaveAttribute('title', expect.stringMatching(/one player was absent/));
   });
 });
+
+describe('game-day rearranging', () => {
+  it('a player in the round moves a foursome earlier and swaps two matches', async () => {
+    const posts: { key: string; body: unknown }[] = [];
+    const sched = generated('scheduled');
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}`]: () => ({ status: 200, body: sched }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/results`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/seasons/${SEASON}/playoffs`]: () => ({
+        status: 200,
+        body: { format: 'none', canStart: false, regularRoundsLeft: 2, champion: null, rounds: [] },
+      }),
+      [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+        status: 200,
+        body: { players: [], members: [] },
+      }),
+      [`POST /api/leagues/${LEAGUE}/seasons/${SEASON}/weeks/w1/tee-order`]: (init) => {
+        posts.push({ key: 'tee-order', body: JSON.parse(String(init?.body)) });
+        return { status: 201, body: sched };
+      },
+      [`POST /api/leagues/${LEAGUE}/seasons/${SEASON}/weeks/w1/regroup`]: (init) => {
+        posts.push({ key: 'regroup', body: JSON.parse(String(init?.body)) });
+        return { status: 201, body: sched };
+      },
+    });
+    renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
+    const buttons = await screen.findAllByRole('button', { name: /Rearrange/ });
+    await userEvent.click(buttons[0]!);
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Move 2nd off earlier' }));
+    const [first, second] = within(dialog).getAllByRole('button', { name: / v / });
+    await userEvent.click(first!);
+    expect(within(dialog).getByText(/Now tap a match in another foursome/)).toBeInTheDocument();
+    await userEvent.click(second!);
+    expect(posts).toEqual([
+      { key: 'tee-order', body: { groupId: 'g1b', direction: 'up' } },
+      { key: 'regroup', body: { matchA: 'm1a', matchB: 'm1b' } },
+    ]);
+  });
+});

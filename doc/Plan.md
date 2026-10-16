@@ -41,6 +41,7 @@ Each league can configure these rules. The defaults below are the rules of the W
 | Subs | Sub scores never count towards results, standings or handicaps |
 | Season | 16 players and 15 regular-season games, so everyone plays everyone exactly once. This has been the format every year since 2021 (see `HistoryReview.md` in the private `teemate-data` repository). Each league can change it |
 | Nine played | Front and back nine alternate each week. The starter can change the nine on game day, so the nine actually played is recorded on each scorecard |
+| Game-day changes | Players in a round (or an admin) can change the tee order (tee times stay in place) and swap matches between foursomes until a card is started. Opponents only change in a draft schedule |
 | Rainouts | The rained-out week's pairings are played the following week, and the rest of the schedule moves back one week. This is what the league has done historically. The commissioner can also skip a week, which happens rarely |
 | Playoffs | The standard format is a 16-player seeded knockout (1 v 16, …) whose 4 winners play a Finals foursome. A tied playoff match is decided by matching cards. An absent player loses (EH-015). From 2018 to 2024 the league used a final foursome only |
 | Team scramble | A team scramble is played after the playoffs (EH-016) |

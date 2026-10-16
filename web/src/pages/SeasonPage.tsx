@@ -80,6 +80,7 @@ export function SeasonPage() {
   const navigate = useNavigate();
   const [swapping, setSwapping] = useState<SeasonSchedule['weeks'][number] | null>(null);
   const [noticeFor, setNoticeFor] = useState<NoticePreset | null>(null);
+  const [rearranging, setRearranging] = useState<string | null>(null);
   const swap = useMutation({
     mutationFn: ({
       weekId,
@@ -398,6 +399,23 @@ export function SeasonPage() {
                           <ArrowLeftRight /> Swap
                         </Button>
                       )}
+                      {season.status === 'scheduled' &&
+                        w.status === 'scheduled' &&
+                        (isAdmin ||
+                          w.groups.some((g) =>
+                            g.matches.some(
+                              (m) => m.playerA === myPlayerId || m.playerB === myPlayerId,
+                            ),
+                          )) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="ml-auto"
+                            onClick={() => setRearranging(w.id)}
+                          >
+                            <Shuffle /> Rearrange
+                          </Button>
+                        )}
                     </div>
                     {season.status === 'scheduled' &&
                       w.status !== 'skipped' &&
@@ -465,6 +483,17 @@ export function SeasonPage() {
             })}
           </ol>
         </>
+      )}
+      {rearranging && schedule.data && (
+        <RearrangeDialog
+          leagueId={leagueId}
+          seasonId={seasonId}
+          week={schedule.data.weeks.find((x) => x.id === rearranging)!}
+          names={names}
+          started={(groupId) => Boolean(resultFor(groupId))}
+          onChanged={(data) => qc.setQueryData(key, data)}
+          onClose={() => setRearranging(null)}
+        />
       )}
       {noticeFor && (
         <NoticeDialog leagueId={leagueId} preset={noticeFor} onClose={() => setNoticeFor(null)} />
@@ -743,5 +772,128 @@ function GroupCard({
         );
       })}
     </div>
+  );
+}
+
+/**
+ * Game day: change the tee order (a foursome up or down; the tee times stay put) or swap two
+ * matches between foursomes. A foursome whose card is started can't be regrouped.
+ */
+function RearrangeDialog({
+  leagueId,
+  seasonId,
+  week,
+  names,
+  started,
+  onChanged,
+  onClose,
+}: {
+  leagueId: string;
+  seasonId: string;
+  week: SeasonSchedule['weeks'][number];
+  names: Map<string, string>;
+  started: (groupId: string) => boolean;
+  onChanged: (s: SeasonSchedule) => void;
+  onClose: () => void;
+}) {
+  const [picked, setPicked] = useState<{ matchId: string; groupId: string } | null>(null);
+  const base = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${week.id}`;
+  const change = useMutation({
+    mutationFn: ({ path, body }: { path: string; body: object }) =>
+      api<SeasonSchedule>(`${base}/${path}`, { method: 'POST', body }),
+    onSuccess: (data) => {
+      setPicked(null);
+      onChanged(data);
+    },
+  });
+  const pick = (matchId: string, groupId: string) => {
+    if (!picked || picked.groupId === groupId) {
+      setPicked(picked?.matchId === matchId ? null : { matchId, groupId });
+      return;
+    }
+    change.mutate({ path: 'regroup', body: { matchA: picked.matchId, matchB: matchId } });
+  };
+  const groups = [...week.groups].sort((a, b) => a.slot - b.slot);
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent
+        title={`Rearrange round ${week.round}`}
+        description="Move a foursome up or down the tee order (tee times stay put), or tap a match, then a match in another foursome, to swap them. Opponents never change."
+      >
+        <ol className="flex flex-col gap-2">
+          {groups.map((g, i) => {
+            const locked = started(g.id);
+            return (
+              <li key={g.id} className="rounded-lg border p-2">
+                <div className="mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                  <span className="font-semibold text-foreground">{ordinal(i + 1)} off</span>
+                  {g.teeTime && ` · ${aboutTeeTime(g.teeTime)}`}
+                  {locked && ' · card started'}
+                  <span className="ml-auto flex gap-1">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="size-7"
+                      aria-label={`Move ${ordinal(i + 1)} off earlier`}
+                      disabled={i === 0 || change.isPending}
+                      onClick={() =>
+                        change.mutate({
+                          path: 'tee-order',
+                          body: { groupId: g.id, direction: 'up' },
+                        })
+                      }
+                    >
+                      <ArrowUp />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="size-7"
+                      aria-label={`Move ${ordinal(i + 1)} off later`}
+                      disabled={i === groups.length - 1 || change.isPending}
+                      onClick={() =>
+                        change.mutate({
+                          path: 'tee-order',
+                          body: { groupId: g.id, direction: 'down' },
+                        })
+                      }
+                    >
+                      <ArrowDown />
+                    </Button>
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  {g.matches.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      disabled={locked || change.isPending}
+                      aria-pressed={picked?.matchId === m.id}
+                      onClick={() => pick(m.id, g.id)}
+                      className={cn(
+                        'rounded-md border px-2 py-1 text-left text-sm disabled:opacity-50',
+                        picked?.matchId === m.id && 'border-primary bg-primary/10',
+                      )}
+                    >
+                      {names.get(m.playerA)} v {names.get(m.playerB)}
+                    </button>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+        {picked && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Now tap a match in another foursome to swap with.
+          </p>
+        )}
+        {change.isError && (
+          <Alert variant="destructive" className="mt-2">
+            {change.error.message}
+          </Alert>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
