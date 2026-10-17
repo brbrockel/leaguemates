@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
+import { InstallHint } from '@/components/InstallHint';
 import { NoticeStrip } from '@/components/NoticeStrip';
 import { ThisWeek } from '@/components/ThisWeekCard';
 import { useCurrentLeague } from '@/lib/useCurrentLeague';
@@ -34,6 +35,8 @@ export function HomePage() {
       </div>
 
       {league && !guest && <NoticeStrip leagueId={league.id} />}
+
+      <InstallHint />
 
       {!guest && <ThisWeek />}
 
