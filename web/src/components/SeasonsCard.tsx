@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CalendarPlus, ChevronRight } from 'lucide-react';
+import { CalendarDays, CalendarPlus, ChevronRight } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Alert } from '@/components/ui/alert';
@@ -11,6 +11,8 @@ import { api, type Course, type SeasonSummary } from '@/lib/api';
 import { formatDay } from '@/lib/time';
 
 const STATUS = { draft: 'Draft', scheduled: 'Locked', complete: 'Complete' } as const;
+/** Seasons listed under the featured one before the rest fold away. */
+const SHOWN = 3;
 
 export function useSeasons(leagueId: string) {
   return useQuery({
@@ -68,6 +70,15 @@ export function SeasonsCard({ leagueId, isAdmin }: { leagueId: string; isAdmin: 
     create.mutate();
   };
 
+  // The season being played stands out on top (else the latest finished one); the rest
+  // follow newest first, with all but a few tucked under "Older seasons".
+  const all = seasons.data ?? [];
+  const featured =
+    all.find((x) => x.status === 'scheduled') ?? all.find((x) => x.status === 'complete');
+  const rest = all.filter((x) => x !== featured);
+  const recent = rest.slice(0, SHOWN);
+  const older = rest.slice(SHOWN);
+
   return (
     <Card>
       <CardHeader>
@@ -78,25 +89,30 @@ export function SeasonsCard({ leagueId, isAdmin }: { leagueId: string; isAdmin: 
         {seasons.data?.length === 0 && (
           <p className="text-sm text-muted-foreground">No seasons yet.</p>
         )}
-        <ul className="divide-y">
-          {seasons.data?.map((s) => (
-            <li key={s.id}>
-              <Link
-                to={`/leagues/${leagueId}/seasons/${s.id}`}
-                className="flex items-center gap-3 py-2.5 text-sm hover:text-primary"
-              >
-                <span className="font-medium">{s.name}</span>
-                <Badge>{STATUS[s.status]}</Badge>
-                <span className="text-muted-foreground">
-                  {s.weeks
-                    ? `${s.weeks} rounds from ${formatDay(s.startDate)}`
-                    : `Starts ${formatDay(s.startDate)}`}
-                </span>
-                <ChevronRight className="ml-auto size-4 text-muted-foreground" aria-hidden />
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {featured && <FeaturedSeason leagueId={leagueId} season={featured} />}
+        {recent.length > 0 && (
+          <ul className="divide-y">
+            {recent.map((s) => (
+              <SeasonRow key={s.id} leagueId={leagueId} season={s} />
+            ))}
+          </ul>
+        )}
+        {older.length > 0 && (
+          <details className="group">
+            <summary className="flex cursor-pointer list-none items-center gap-1 py-1 text-sm text-muted-foreground hover:text-foreground">
+              <ChevronRight
+                className="size-4 transition-transform group-open:rotate-90"
+                aria-hidden
+              />
+              Older seasons ({older.length})
+            </summary>
+            <ul className="divide-y">
+              {older.map((s) => (
+                <SeasonRow key={s.id} leagueId={leagueId} season={s} />
+              ))}
+            </ul>
+          </details>
+        )}
         {isAdmin &&
           (creating ? (
             <form
@@ -188,5 +204,51 @@ export function SeasonsCard({ leagueId, isAdmin }: { leagueId: string; isAdmin: 
           ))}
       </CardContent>
     </Card>
+  );
+}
+
+/** The season in play: a big tap target with where it stands. */
+function FeaturedSeason({ leagueId, season: s }: { leagueId: string; season: SeasonSummary }) {
+  const playing = s.status === 'scheduled';
+  const round = Math.min(s.weeks, (s.past ?? 0) + 1);
+  return (
+    <Link
+      to={`/leagues/${leagueId}/seasons/${s.id}`}
+      className="flex items-center gap-3 rounded-xl border border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10"
+    >
+      <CalendarDays className="size-6 shrink-0 text-primary" aria-hidden />
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="text-xs font-medium uppercase tracking-wide text-primary">
+          {playing ? 'This season' : 'Last season'}
+        </span>
+        <span className="text-lg font-semibold leading-tight">{s.name}</span>
+        <span className="text-sm text-muted-foreground">
+          {playing
+            ? s.nextDate
+              ? `Round ${round} of ${s.weeks} · next ${formatDay(s.nextDate)}`
+              : `${s.weeks} rounds · all played`
+            : `${s.weeks} rounds · complete`}
+        </span>
+      </div>
+      <ChevronRight className="ml-auto size-5 shrink-0 text-muted-foreground" aria-hidden />
+    </Link>
+  );
+}
+
+function SeasonRow({ leagueId, season: s }: { leagueId: string; season: SeasonSummary }) {
+  return (
+    <li>
+      <Link
+        to={`/leagues/${leagueId}/seasons/${s.id}`}
+        className="flex items-center gap-3 py-3 hover:text-primary"
+      >
+        <span className="font-medium">{s.name}</span>
+        <Badge>{STATUS[s.status]}</Badge>
+        <span className="truncate text-sm text-muted-foreground">
+          {s.weeks ? `${s.weeks} rounds` : `Starts ${formatDay(s.startDate)}`}
+        </span>
+        <ChevronRight className="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden />
+      </Link>
+    </li>
   );
 }

@@ -52,6 +52,7 @@ export class SeasonsService {
   ) {}
 
   async list(leagueId: string) {
+    const today = todayInLeague();
     return this.db
       .select({
         id: seasons.id,
@@ -59,6 +60,11 @@ export class SeasonsService {
         status: seasons.status,
         startDate: seasons.startDate,
         weeks: sql<number>`count(${weeks.id})::int`,
+        /** Rounds dated before today, and the next round still to play (for the season list). */
+        past: sql<number>`(count(${weeks.id}) filter (where ${weeks.date} < ${today}))::int`,
+        nextDate: sql<
+          string | null
+        >`min(${weeks.date}) filter (where ${weeks.date} >= ${today} and ${weeks.status} = 'scheduled')`,
       })
       .from(seasons)
       .leftJoin(weeks, eq(weeks.seasonId, seasons.id))

@@ -4,6 +4,7 @@ import {
   Calculator,
   Camera,
   Check,
+  ChevronDown,
   History,
   Map,
   Pencil,
@@ -19,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label, Select } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { api, ApiError, type LeagueAccess, type LeagueRole } from '@/lib/api';
 import { AnnouncementsCard } from '@/components/AnnouncementsCard';
 import { ContactLinks } from '@/components/ContactLinks';
@@ -60,6 +62,7 @@ interface Player {
 export function LeaguePage() {
   const { leagueId = '' } = useParams();
   const guest = useIsGuest();
+  const [showPlayers, setShowPlayers] = useState(false);
   const league = useQuery({
     queryKey: ['league', leagueId],
     queryFn: () => api<League>(`/leagues/${leagueId}`),
@@ -135,41 +138,61 @@ export function LeaguePage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Players</CardTitle>
+            <button
+              type="button"
+              aria-expanded={showPlayers}
+              onClick={() => setShowPlayers((o) => !o)}
+              className="flex w-full items-center gap-2 text-left"
+            >
+              <CardTitle>Players</CardTitle>
+              {members.data && (
+                <span className="text-sm text-muted-foreground">
+                  {members.data.players.filter((p) => p.active).length}
+                </span>
+              )}
+              <ChevronDown
+                className={cn(
+                  'ml-auto size-5 text-muted-foreground transition-transform',
+                  showPlayers && 'rotate-180',
+                )}
+                aria-hidden
+              />
+            </button>
             <CardDescription>
-              Everyone who plays in the league. Each season's roster and spots are set on the season
-              page.
+              Everyone who plays in the league. Tap a name for their scores and stats.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            {members.data?.players.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No players yet.{isAdmin && ' Add them by the names used on the schedule.'}
-              </p>
-            )}
-            <ul className="divide-y">
-              {members.data?.players
-                .filter((p) => p.active)
-                .map((p) => (
-                  <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
-                ))}
-            </ul>
-            {members.data?.players.some((p) => !p.active) && (
-              <details className="mt-3 text-sm">
-                <summary className="cursor-pointer text-muted-foreground">
-                  Past players ({members.data.players.filter((p) => !p.active).length})
-                </summary>
-                <ul className="divide-y">
-                  {members.data.players
-                    .filter((p) => !p.active)
-                    .map((p) => (
-                      <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
-                    ))}
-                </ul>
-              </details>
-            )}
-            {isAdmin && <AddPlayerForm leagueId={leagueId} />}
-          </CardContent>
+          {showPlayers && (
+            <CardContent>
+              {members.data?.players.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No players yet.{isAdmin && ' Add them by the names used on the schedule.'}
+                </p>
+              )}
+              <ul className="divide-y">
+                {members.data?.players
+                  .filter((p) => p.active)
+                  .map((p) => (
+                    <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
+                  ))}
+              </ul>
+              {members.data?.players.some((p) => !p.active) && (
+                <details className="mt-3 text-sm">
+                  <summary className="cursor-pointer text-muted-foreground">
+                    Past players ({members.data.players.filter((p) => !p.active).length})
+                  </summary>
+                  <ul className="divide-y">
+                    {members.data.players
+                      .filter((p) => !p.active)
+                      .map((p) => (
+                        <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
+                      ))}
+                  </ul>
+                </details>
+              )}
+              {isAdmin && <AddPlayerForm leagueId={leagueId} />}
+            </CardContent>
+          )}
         </Card>
 
         {!guest && (

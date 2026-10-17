@@ -154,6 +154,10 @@ export interface SeasonSummary {
   status: 'draft' | 'scheduled' | 'complete';
   startDate: string;
   weeks: number;
+  /** Rounds dated before today. */
+  past?: number;
+  /** The next round still to play (YYYY-MM-DD), if any. */
+  nextDate?: string | null;
 }
 
 export interface SeasonSchedule {

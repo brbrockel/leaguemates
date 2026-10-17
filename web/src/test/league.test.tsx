@@ -25,6 +25,11 @@ function leagueApi(roster: object[], onPatch?: (body: unknown) => void) {
   });
 }
 
+/** The player list starts folded away. */
+async function openPlayers() {
+  await userEvent.click(await screen.findByRole('button', { name: /^Players/ }));
+}
+
 describe('players', () => {
   it('shows nicknames with full names underneath', async () => {
     leagueApi([
@@ -38,6 +43,7 @@ describe('players', () => {
       },
     ]);
     renderAt(`/leagues/${LEAGUE}`);
+    await openPlayers();
     const row = (await screen.findByText('Sam Example')).closest('li')!;
     expect(within(row).getByText('Doc')).toBeInTheDocument();
   });
@@ -45,6 +51,7 @@ describe('players', () => {
   it('adds a player with a full name and nickname', async () => {
     const calls = leagueApi([]);
     renderAt(`/leagues/${LEAGUE}`);
+    await openPlayers();
     await userEvent.type(await screen.findByLabelText('Full name'), 'Sam Example');
     await userEvent.type(screen.getByLabelText('Nickname'), 'Doc');
     await userEvent.click(screen.getByRole('button', { name: /Add player/ }));
@@ -71,6 +78,7 @@ describe('players', () => {
       (b) => (patched = b),
     );
     renderAt(`/leagues/${LEAGUE}`);
+    await openPlayers();
     await userEvent.click(await screen.findByRole('button', { name: 'Edit Doc' }));
     const full = screen.getByRole('textbox', { name: 'Full name for Doc' });
     await userEvent.clear(full);
@@ -95,6 +103,7 @@ describe('players', () => {
       (b) => (patched = b),
     );
     renderAt(`/leagues/${LEAGUE}`);
+    await openPlayers();
     expect(await screen.findByText('Past players (1)')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Edit Doc' }));
     await userEvent.click(screen.getByRole('checkbox', { name: /Still playing/ }));
