@@ -60,8 +60,10 @@ export class SeasonsService {
         status: seasons.status,
         startDate: seasons.startDate,
         weeks: sql<number>`count(${weeks.id})::int`,
-        /** Rounds dated before today, and the next round still to play (for the season list). */
-        past: sql<number>`(count(${weeks.id}) filter (where ${weeks.date} < ${today}))::int`,
+        /** The next round still to play, as Home's "this week" picks it. */
+        nextRound: sql<
+          number | null
+        >`(array_agg(${weeks.round} order by ${weeks.date}) filter (where ${weeks.date} >= ${today} and ${weeks.status} = 'scheduled'))[1]`,
         nextDate: sql<
           string | null
         >`min(${weeks.date}) filter (where ${weeks.date} >= ${today} and ${weeks.status} = 'scheduled')`,

@@ -210,7 +210,6 @@ export function SeasonsCard({ leagueId, isAdmin }: { leagueId: string; isAdmin: 
 /** The season in play: a big tap target with where it stands. */
 function FeaturedSeason({ leagueId, season: s }: { leagueId: string; season: SeasonSummary }) {
   const playing = s.status === 'scheduled';
-  const round = Math.min(s.weeks, (s.past ?? 0) + 1);
   return (
     <Link
       to={`/leagues/${leagueId}/seasons/${s.id}`}
@@ -225,7 +224,7 @@ function FeaturedSeason({ leagueId, season: s }: { leagueId: string; season: Sea
         <span className="text-sm text-muted-foreground">
           {playing
             ? s.nextDate
-              ? `Round ${round} of ${s.weeks} · next ${formatDay(s.nextDate)}`
+              ? `Round ${s.nextRound} of ${s.weeks} · next ${formatDay(s.nextDate)}`
               : `${s.weeks} rounds · all played`
             : `${s.weeks} rounds · complete`}
         </span>
