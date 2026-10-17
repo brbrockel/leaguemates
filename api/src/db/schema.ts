@@ -498,7 +498,7 @@ export const announcements = pgTable(
       .references(() => leagues.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
     body: text('body').notNull().default(''),
-    /** Pinned notices stay at the top, and in the Home strip until each person dismisses them. */
+    /** Pinned notices stay at the top, and show as a banner until each person dismisses them. */
     pinned: boolean('pinned').notNull().default(false),
     /** Who it's for: the whole league, one foursome (groupId) or one person (recipientUserId). */
     audience: text('audience').$type<'league' | 'group' | 'person'>().notNull().default('league'),
@@ -508,11 +508,48 @@ export const announcements = pgTable(
     }),
     /** Set for notices the app writes itself (e.g. 'card.submitted'); null for admins' posts. */
     kind: text('kind'),
+    /**
+     * When it stops showing as a banner (it stays in the notices list). Null: pinned ones never
+     * stop; otherwise a week for the league, two days for a foursome or one person.
+     */
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    /** A rainout or skip: the day it's about (YYYY-MM-DD). A banner through that day. */
+    forDate: text('for_date'),
     authorUserId: uuid('author_user_id').references(() => users.id, { onDelete: 'set null' }),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }),
   },
   (t) => [index('announcements_league_idx').on(t.leagueId, t.createdAt)],
+);
+
+/** A notice from site admins to everyone using TeeMate (e.g. "Down for updates Sunday"). */
+export const siteNotices = pgTable('site_notices', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: text('title').notNull(),
+  body: text('body').notNull().default(''),
+  /** Can't be dismissed: shown to everyone until it expires. */
+  mustSee: boolean('must_see').notNull().default(false),
+  /** When it stops showing as a banner; null: until each person dismisses it. */
+  expiresAt: timestamp('expires_at', { withTimezone: true }),
+  authorUserId: uuid('author_user_id').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: createdAt(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }),
+});
+
+/** Per person: when they read a site notice, and when they dismissed its banner. */
+export const siteNoticeReads = pgTable(
+  'site_notice_reads',
+  {
+    noticeId: uuid('notice_id')
+      .notNull()
+      .references(() => siteNotices.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    readAt: timestamp('read_at', { withTimezone: true }),
+    dismissedAt: timestamp('dismissed_at', { withTimezone: true }),
+  },
+  (t) => [primaryKey({ columns: [t.noticeId, t.userId] })],
 );
 
 /**
@@ -535,7 +572,7 @@ export const roundAbsences = pgTable(
   (t) => [primaryKey({ columns: [t.weekId, t.playerId] })],
 );
 
-/** Per person: when they read a notice, and when they dismissed it from the Home strip. */
+/** Per person: when they read a notice, and when they dismissed its banner. */
 export const announcementReads = pgTable(
   'announcement_reads',
   {

@@ -309,7 +309,6 @@ describe('notice shortcuts', () => {
         return { status: 201, body: { phones: [], emailed: 0, held: 0 } };
       },
       [`GET /api/leagues/${LEAGUE}/announcements?limit=50`]: () => ({ status: 200, body: [] }),
-      [`GET /api/leagues/${LEAGUE}/announcements?limit=20`]: () => ({ status: 200, body: [] }),
     });
     renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
     const buttons = await screen.findAllByRole('button', {

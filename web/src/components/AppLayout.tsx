@@ -17,7 +17,8 @@ import { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router';
 import { useMe, useSignOut } from '@/auth/session';
 import { Logo } from '@/components/logo';
-import { UrgentNotices, useNotices } from '@/components/NoticeStrip';
+import { NoticeBanners } from '@/components/NoticeBanners';
+import { NoticesButton } from '@/components/NoticesPanel';
 import { ReportProblemDialog } from '@/components/ReportProblem';
 import { Button } from '@/components/ui/button';
 import {
@@ -39,9 +40,8 @@ export function AppLayout() {
   const current = useCurrentLeague(leagueId);
   const { pathname } = useLocation();
   const [reporting, setReporting] = useState(false);
+  const [noticesOpen, setNoticesOpen] = useState(false);
   const guest = me?.user.isGuest ?? false;
-  const notices = useNotices(guest ? undefined : current?.id);
-  const unread = (notices.data ?? []).some((n) => !n.read && !n.dismissed);
   /** A tab also counts as active on its related pages (Schedule on season pages). */
   const onAlso = (t: { also?: string[] }) => Boolean(t.also?.some((p) => pathname.startsWith(p)));
   if (!me) return null;
@@ -64,7 +64,6 @@ export function AppLayout() {
             label: 'League',
             icon: Flag,
             end: true,
-            dot: unread,
             also: [
               `/leagues/${current.id}/players/`,
               `/leagues/${current.id}/handicaps`,
@@ -99,7 +98,6 @@ export function AppLayout() {
                 }
               >
                 {t.label}
-                {t.dot && <UnreadDot />}
               </NavLink>
             ))}
           </nav>
@@ -131,6 +129,16 @@ export function AppLayout() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+            )}
+            {!guest && (
+              <NoticesButton
+                leagueId={current?.id}
+                leagueName={current?.name}
+                isLeagueAdmin={me.user.isSiteAdmin || current?.role === 'admin'}
+                isSiteAdmin={me.user.isSiteAdmin}
+                open={noticesOpen}
+                onOpenChange={setNoticesOpen}
+              />
             )}
             {me.user.isGuest ? (
               <Button
@@ -182,7 +190,7 @@ export function AppLayout() {
       <ReportProblemDialog open={reporting} onClose={() => setReporting(false)} />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-28 pt-6 md:pb-10">
-        {current && !guest && pathname !== '/' && <UrgentNotices leagueId={current.id} />}
+        <NoticeBanners leagueId={current?.id} guest={guest} onMore={() => setNoticesOpen(true)} />
         <Outlet />
       </main>
 
@@ -203,24 +211,12 @@ export function AppLayout() {
                 )
               }
             >
-              <span className="relative">
-                <t.icon className="size-5" aria-hidden />
-                {t.dot && <UnreadDot className="absolute -right-1 -top-0.5" />}
-              </span>
+              <t.icon className="size-5" aria-hidden />
               {t.label}
             </NavLink>
           ))}
         </div>
       </nav>
     </div>
-  );
-}
-
-/** Something new in the league's notices. */
-function UnreadDot({ className }: { className?: string }) {
-  return (
-    <span className={cn('inline-block size-2 rounded-full bg-primary', className)}>
-      <span className="sr-only">(new notices)</span>
-    </span>
   );
 }

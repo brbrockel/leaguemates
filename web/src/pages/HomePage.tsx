@@ -9,14 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
 import { InstallHint } from '@/components/InstallHint';
-import { NoticeStrip } from '@/components/NoticeStrip';
 import { ThisWeek } from '@/components/ThisWeekCard';
-import { useCurrentLeague } from '@/lib/useCurrentLeague';
 import { api } from '@/lib/api';
 
 export function HomePage() {
   const { data: me } = useMe();
-  const league = useCurrentLeague();
   if (!me) return null;
   const firstName = me.user.name?.split(' ')[0];
   const guest = me.user.isGuest ?? false;
@@ -33,8 +30,6 @@ export function HomePage() {
             : 'Your next round, scores and standings.'}
         </p>
       </div>
-
-      {league && !guest && <NoticeStrip leagueId={league.id} />}
 
       <InstallHint />
 

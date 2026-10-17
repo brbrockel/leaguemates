@@ -23,7 +23,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { api, ApiError, type LeagueAccess, type LeagueRole } from '@/lib/api';
-import { AnnouncementsCard } from '@/components/AnnouncementsCard';
 import { ContactLinks } from '@/components/ContactLinks';
 import {
   MembershipFields,
@@ -131,8 +130,6 @@ export function LeaguePage() {
           </Button>
         </div>
       </div>
-
-      {!guest && <AnnouncementsCard leagueId={leagueId} isAdmin={isAdmin} />}
 
       <SeasonsCard leagueId={leagueId} isAdmin={isAdmin} />
 

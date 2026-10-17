@@ -36,11 +36,9 @@ import {
   seasons,
   weeks,
 } from '../db/schema.js';
+import { todayInLeague } from '../common/league-time.js';
 
-/** Leagues play in Connecticut; "today" and "this week" use Eastern time. */
-const LEAGUE_TIME_ZONE = 'America/New_York';
-export const todayInLeague = (now = new Date()) =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: LEAGUE_TIME_ZONE }).format(now);
+export { todayInLeague };
 
 @Injectable()
 export class SeasonsService {
@@ -571,6 +569,7 @@ export class SeasonsService {
     await this.notices.notify(leagueId, {
       audience: 'league',
       kind: 'week.skip',
+      forDate: week.date,
       title: `Round ${week.round} is off`,
       body: `Round ${week.round} (${week.date}) won't be played, and no points are given for it.`,
     });
@@ -890,6 +889,7 @@ export class SeasonsService {
     await this.notices.notify(leagueId, {
       audience: 'league',
       kind: 'week.rainout',
+      forDate: week.date,
       title: `Rained out: round ${week.round}`,
       body: `Round ${week.round} moves to ${addDays(week.date, 7)}, and every later round moves back a week.`,
     });

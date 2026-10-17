@@ -489,6 +489,31 @@ export interface Announcement {
   author: string | null;
   read: boolean;
   dismissed: boolean;
+  /** Shows as a banner at the top of the page right now (for this person). */
+  banner: boolean;
+  /** Has a ✕: a rainout or skip on its own day doesn't. */
+  dismissible: boolean;
+  /** A rainout or skip. */
+  urgent: boolean;
+  /** When the banner stops: a time, a day (YYYY-MM-DD) for a rainout or skip, or null (pinned). */
+  bannerUntil: string | null;
+}
+
+/** A notice from site admins to everyone using TeeMate. */
+export interface SiteNotice {
+  id: string;
+  title: string;
+  body: string;
+  /** Nobody can dismiss it until it ends. */
+  mustSee: boolean;
+  createdAt: string;
+  updatedAt: string | null;
+  author: string | null;
+  read: boolean;
+  dismissed: boolean;
+  banner: boolean;
+  dismissible: boolean;
+  bannerUntil: string | null;
 }
 
 export interface HandicapSuggestions {

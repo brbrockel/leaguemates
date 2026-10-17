@@ -35,7 +35,7 @@ describe("can't make it (Home)", () => {
         status: 200,
         body: [{ leagueId: LEAGUE, leagueName: 'Wednesday League', next: next() }],
       }),
-      [`GET /api/leagues/${LEAGUE}/announcements?limit=20`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/announcements?limit=50`]: () => ({ status: 200, body: [] }),
       [`PUT /api/leagues/${LEAGUE}/seasons/s1/weeks/w1/absences/p1`]: (init) => {
         const body = JSON.parse(String(init?.body));
         bodies.push(body);

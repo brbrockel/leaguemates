@@ -253,6 +253,13 @@
       "when": 1792169585813,
       "tag": "0035_round_absences",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1792280382304,
+      "tag": "0036_banners",
+      "breakpoints": true
     }
   ]
 }

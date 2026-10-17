@@ -34,7 +34,7 @@ import { Input, Select } from '@/components/ui/input';
 import { api, ApiError, type SeasonResultGroup, type SeasonSchedule } from '@/lib/api';
 import { aboutTeeTime, formatDay, todayIso } from '@/lib/time';
 import { cn, ordinal } from '@/lib/utils';
-import { NoticeDialog, type NoticePreset } from '@/components/AnnouncementsCard';
+import { NoticeDialog, type NoticePreset } from '@/components/NoticesPanel';
 import { PhotosCard, SeasonBanner } from '@/components/Photos';
 import { PlayoffsCard } from '@/components/PlayoffsCard';
 import { RosterCard } from '@/components/RosterCard';

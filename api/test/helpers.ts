@@ -48,7 +48,7 @@ export async function createTestApp(
 
 export async function resetDb(db: Database): Promise<void> {
   await db.execute(sql`truncate table
-    bug_reports, photos, scramble_team_members, scramble_teams, scrambles, announcements, card_rounds, scorecards, matches, groups, weeks, season_players, seasons, site_settings, audit_log, auth_attempts, invites, league_memberships, players, leagues,
+    bug_reports, photos, scramble_team_members, scramble_teams, scrambles, announcements, site_notices, card_rounds, scorecards, matches, groups, weeks, season_players, seasons, site_settings, audit_log, auth_attempts, invites, league_memberships, players, leagues,
     sessions, magic_link_tokens, users restart identity cascade`);
   // Timberlin is seeded by a migration; anything else is from a test.
   await db.execute(sql`delete from courses where name <> 'Timberlin Golf Club'`);

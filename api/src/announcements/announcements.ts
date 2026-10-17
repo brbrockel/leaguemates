@@ -27,6 +27,7 @@ import { MembershipService } from '../auth/membership.service.js';
 import { ZodPipe } from '../common/validation.js';
 import { CONFIG, type Config } from '../config.js';
 import { DB, type Database } from '../db/db.js';
+import { todayInLeague } from '../common/league-time.js';
 import {
   announcementReads,
   announcements,
@@ -40,6 +41,8 @@ import {
 } from '../db/schema.js';
 import { LeagueGuard, RequireLeagueRole } from '../leagues/league.guard.js';
 import { MAILER, MailSettingsService, type Mailer } from '../mail/mailer.js';
+import { BannerDays, bannerFields, bannerState } from './banners.js';
+import { SiteNoticesController, SiteNoticesService } from './site-notices.js';
 
 type Audience = 'league' | 'group' | 'person';
 
@@ -48,6 +51,7 @@ const Notice = z
     title: z.string().trim().min(1).max(120),
     body: z.string().trim().max(4000).default(''),
     pinned: z.boolean().default(false),
+    bannerDays: BannerDays.optional(),
     audience: z.enum(['league', 'group', 'person']).default('league'),
     groupId: z.uuid().optional(),
     recipientUserId: z.uuid().optional(),
@@ -61,6 +65,7 @@ const Edit = z
     title: z.string().trim().min(1).max(120),
     body: z.string().trim().max(4000),
     pinned: z.boolean(),
+    bannerDays: BannerDays,
   })
   .partial();
 const ListQuery = z.object({ limit: z.coerce.number().int().min(1).max(50).default(20) });
@@ -75,7 +80,8 @@ const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 
  * League notices: to the whole league, one foursome or one person, posted by admins or
  * written by the app itself (cards submitted, disputed or corrected, rainouts, playoffs).
  * Everyone sees what's for them (admins see all), and each person's read and dismissed
- * state is kept so Home shows only what's new.
+ * state is kept: the newest show as banners at the top of every page until they expire or
+ * are dismissed.
  */
 @Injectable()
 export class AnnouncementsService {
@@ -145,8 +151,11 @@ export class AnnouncementsService {
       .where(this.visible(user, leagueId, isAdmin))
       .orderBy(desc(announcements.pinned), desc(announcements.createdAt))
       .limit(limit);
+    const now = new Date();
+    const today = todayInLeague(now);
     return rows.map((r) => {
       const changed = r.a.updatedAt ?? r.a.createdAt;
+      const dismissed = Boolean(r.dismissedAt && r.dismissedAt >= changed);
       const to =
         r.a.audience === 'league'
           ? 'League'
@@ -169,12 +178,13 @@ export class AnnouncementsService {
         updatedAt: r.a.updatedAt,
         author: r.a.kind ? 'TeeMate' : r.author,
         read: Boolean(r.readAt && r.readAt >= changed),
-        dismissed: Boolean(r.dismissedAt && r.dismissedAt >= changed),
+        dismissed,
+        ...bannerState(r.a, dismissed, now, today),
       };
     });
   }
 
-  /** Marks notices read (opened) or dismissed (cleared from Home) for this person. */
+  /** Marks notices read (opened) or dismissed (banner cleared away) for this person. */
   async mark(user: SessionUser, leagueId: string, ids: string[], how: 'read' | 'dismissed') {
     const isAdmin = (await this.memberships.roleIn(user, leagueId)) === 'admin';
     const mine = await this.db
@@ -275,7 +285,8 @@ export class AnnouncementsService {
 
   async create(actor: SessionUser, leagueId: string, input: z.infer<typeof Notice>) {
     await this.checkAudience(leagueId, input);
-    const { email, ...fields } = input;
+    const { email, bannerDays, ...fields } = input;
+    const banner = bannerFields(bannerDays, fields.pinned);
     const [a] = await this.db
       .insert(announcements)
       .values({
@@ -284,6 +295,7 @@ export class AnnouncementsService {
         title: fields.title,
         body: fields.body,
         pinned: fields.pinned,
+        ...banner,
         audience: fields.audience,
         groupId: fields.audience === 'group' ? fields.groupId : null,
         recipientUserId: fields.audience === 'person' ? fields.recipientUserId : null,
@@ -316,7 +328,7 @@ export class AnnouncementsService {
       action: 'announcement.create',
       entityType: 'announcement',
       entityId: a!.id,
-      after: { ...fields, emailed, held },
+      after: { ...fields, ...banner, emailed, held },
     });
     return { ...a!, emailed, held, phones: people.map((p) => p.phone).filter(Boolean) };
   }
@@ -339,6 +351,8 @@ export class AnnouncementsService {
       title: string;
       body?: string;
       kind: string;
+      /** A rainout or skip: the day it's about. */
+      forDate?: string;
     },
   ) {
     try {
@@ -350,6 +364,7 @@ export class AnnouncementsService {
         title: n.title,
         body: n.body ?? '',
         kind: n.kind,
+        forDate: n.forDate ?? null,
       });
     } catch (err) {
       this.log.error(`Couldn't post an automatic notice (${n.kind}): ${String(err)}`);
@@ -368,9 +383,11 @@ export class AnnouncementsService {
 
   async update(actor: SessionUser, leagueId: string, id: string, input: z.infer<typeof Edit>) {
     const before = await this.find(leagueId, id);
+    const { bannerDays, ...fields } = input;
+    const changes = { ...fields, ...bannerFields(bannerDays, fields.pinned) };
     const [a] = await this.db
       .update(announcements)
-      .set({ ...input, updatedAt: new Date() })
+      .set({ ...changes, updatedAt: new Date() })
       .where(eq(announcements.id, id))
       .returning();
     await this.audit.record({
@@ -379,8 +396,13 @@ export class AnnouncementsService {
       action: 'announcement.update',
       entityType: 'announcement',
       entityId: id,
-      before: { title: before.title, body: before.body, pinned: before.pinned },
-      after: input,
+      before: {
+        title: before.title,
+        body: before.body,
+        pinned: before.pinned,
+        expiresAt: before.expiresAt,
+      },
+      after: changes,
     });
     return a;
   }
@@ -479,8 +501,8 @@ export class AnnouncementsController {
 /** Global so scorecards, seasons and playoffs can post automatic notices. */
 @Global()
 @Module({
-  controllers: [AnnouncementsController],
-  providers: [AnnouncementsService, LeagueGuard],
+  controllers: [AnnouncementsController, SiteNoticesController],
+  providers: [AnnouncementsService, SiteNoticesService, LeagueGuard],
   exports: [AnnouncementsService],
 })
 export class AnnouncementsModule {}

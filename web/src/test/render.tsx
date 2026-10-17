@@ -14,7 +14,10 @@ export function mockApi(handlers: Record<string, Handler>) {
     vi.fn(async (url: string, init?: RequestInit) => {
       const key = `${init?.method ?? 'GET'} ${url}`;
       calls.push({ key, init });
-      const handler = handlers[key];
+      // Most pages have no site-wide notices to show.
+      const handler =
+        handlers[key] ??
+        (key === 'GET /api/notices/site' ? () => ({ status: 200, body: [] }) : undefined);
       if (!handler) throw new Error(`Unexpected request: ${key}`);
       const { status, body } = handler(init);
       return new Response(status === 204 ? null : JSON.stringify(body ?? {}), {

@@ -116,14 +116,16 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 
 ## 10. Notices
 
-- [ ] **Home strip:** with nothing new, Home shows no notices at all. A new notice shows as one line (newest title, "+N more"). Tap it to expand (that marks them read) and tap a notice for its full text. **✕** clears the strip until something new arrives.
-- [ ] **Pinned:** a pinned notice stays in the strip after it's read, until you clear it. If an admin edits it, it comes back.
-- [ ] **As Admin, League → Notices → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
+- [ ] **Banners:** on every page, new notices show as one-line banners under the top bar, stacked: TeeMate's first, then a rainout or skip, then ones for you or your foursome, then the league's. Tap one for the full text (that marks it read); **✕** clears it for good. With more than three, the last row says "+N more notices" and opens the notices panel.
+- [ ] **How long:** an admin's league notice is a banner for a week (or what they chose under **Show as a banner**), one for a foursome or one person two days, "Until each person clears it" until you ✕ it. If an admin edits it, it comes back. Card and playoff notices never show as banners.
+- [ ] **Rainout or skip:** a banner through the round's day. On the day itself it has no ✕.
+- [ ] **The horn (📣) in the top bar:** the count is new notices not already showing as banners. Tap it: the league's notices, then TeeMate's. Opening it marks them read.
+- [ ] **As Site admin, horn → Notice for everyone:** it shows to everyone, guests too, on every page. **Everyone must see it** removes the ✕ until it ends (it needs an end).
+- [ ] **As Admin, horn → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
 - [ ] **Also email it:** recipients get it by email (the mail guard in Site settings → Email still decides). **Also text it** opens a group text on your phone.
 - [ ] The message button on an existing notice opens a text to the people it's for.
 - [ ] **Shortcuts (Admin):** on the Schedule, the small message button on a foursome opens a new notice for that foursome (the dialog says who it's for). On People, **⋯ → Send a notice** does the same for one person.
 - [ ] **Automatic notices:** submit a card (the foursome gets "Round N card submitted"), dispute it, correct it as Admin with a reason, rain out or skip a round, start or advance the playoffs. Each shows as from TeeMate, for the right people.
-- [ ] The League page's Notices section stays collapsed to one line until opened.
 
 ## 11. Photos
 

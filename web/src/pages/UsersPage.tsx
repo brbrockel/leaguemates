@@ -36,7 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { NoticeDialog } from '@/components/AnnouncementsCard';
+import { NoticeDialog } from '@/components/NoticesPanel';
 import { ContactLinks } from '@/components/ContactLinks';
 import { smsHref } from '@/lib/sms';
 import {

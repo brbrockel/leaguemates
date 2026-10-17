@@ -59,7 +59,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-010 | Audit Log | MVP | Done (league Activity for admins, site-wide Activity for site admins) |
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |
 | EH-012 | Historical Import from Gmail | Phase 2 | Done (2018–2026 merged into Wednesday League, foursomes in tee order; see [HistoricalImport.md](HistoricalImport.md)) |
-| EH-013 | Notifications | Phase 2 | In Progress (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; Home shows one line only while something is new; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; push to do) |
+| EH-013 | Notifications | Phase 2 | In Progress (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; shown as stacked one-line banners on every page that expire or are dismissed, with a horn in the top bar for the full list; site-wide notices from site admins; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; push to do) |
 | EH-014 | Stats | Phase 2 | Done (scoring average, best round, net average, head-to-head; League → Stats: how each hole plays, with difficulty rank and the mix of results; each player's trend over time and their holes against the field) |
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
@@ -702,7 +702,7 @@ After the MVP. One season at a time.
 ---
 
 ## EH-013: Notifications
-**Status**: In Progress. Done: league announcements in the app (admins post, edit, pin and delete; they show on Home and the League page; audited). Nothing is emailed. Email notices and web push wait for the owner's consent and the league mail account.
+**Status**: In Progress. Done: league announcements in the app (admins post, edit, choose how long they show as a banner, and delete; audited), shown as stacked banners on every page and in the horn panel in the top bar, plus site-wide notices from site admins (optionally "must see"). Nothing is emailed. Email notices and web push wait for the owner's consent and the league mail account.
 **Owner**: TBD
 
 ### Problem

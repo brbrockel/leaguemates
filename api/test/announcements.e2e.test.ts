@@ -1,3 +1,4 @@
+import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   createTestApp,
@@ -111,6 +112,7 @@ describe('notices for a foursome or one person, read and dismissed', () => {
       .body as {
       weeks: {
         id: string;
+        date: string;
         groups: { id: string; matches: { playerA: string; playerB: string }[] }[];
       }[];
     };
@@ -204,6 +206,39 @@ describe('notices for a foursome or one person, read and dismissed', () => {
     await as(site).get(`/leagues/${L}/announcements/${body.id}/phones`).expect(200);
   });
 
+  it('banners: a week by default, none, or until dismissed', async () => {
+    const { L, jerry } = await setup();
+    await as(site).post(`/leagues/${L}/announcements`, { title: 'Week' }).expect(201);
+    await as(site)
+      .post(`/leagues/${L}/announcements`, { title: 'Quiet', bannerDays: 0 })
+      .expect(201);
+    const { body: kept } = await as(site)
+      .post(`/leagues/${L}/announcements`, { title: 'Kept', bannerDays: null })
+      .expect(201);
+    const list = async () =>
+      (await as(jerry).get(`/leagues/${L}/announcements`).expect(200)).body as {
+        title: string;
+        banner: boolean;
+        pinned: boolean;
+        bannerUntil: string | null;
+      }[];
+    const byTitle = async () => new Map((await list()).map((a) => [a.title, a]));
+    let n = await byTitle();
+    expect(n.get('Week')).toMatchObject({ banner: true, pinned: false });
+    const days = (Date.parse(n.get('Week')!.bannerUntil!) - Date.now()) / 86_400_000;
+    expect(days).toBeGreaterThan(6.9);
+    expect(n.get('Quiet')!.banner).toBe(false);
+    expect(n.get('Kept')).toMatchObject({ banner: true, pinned: true, bannerUntil: null });
+
+    await as(jerry)
+      .post(`/leagues/${L}/announcements/dismiss`, { ids: [kept.id] })
+      .expect(200);
+    n = await byTitle();
+    expect(n.get('Kept')!.banner).toBe(false);
+    await as(site).patch(`/leagues/${L}/announcements/${kept.id}`, { bannerDays: 0 }).expect(200);
+    expect((await byTitle()).get('Kept')).toMatchObject({ pinned: false, banner: false });
+  });
+
   it('the app posts notices itself, e.g. for a rainout', async () => {
     const { L, S, week, jerry } = await setup();
     await as(site).post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/rainout`).expect(201);
@@ -213,6 +248,72 @@ describe('notices for a foursome or one person, read and dismissed', () => {
       kind: 'week.rainout',
       author: 'TeeMate',
       to: 'League',
+      urgent: true,
+      banner: true,
+      // Round 1 is in 2027, not today.
+      dismissible: true,
+      bannerUntil: week.date,
     });
+  });
+});
+
+describe('site-wide notices', () => {
+  it('site admins post them; everyone (guests too) sees the banner', async () => {
+    await createUser(t.db, 'user@example.com');
+    const user = await signIn(t, 'user@example.com');
+    const { body: n } = await as(site)
+      .post('/notices/site', { title: 'Down for updates Sunday 8pm' })
+      .expect(201);
+    await as(user).post('/notices/site', { title: 'Hi' }).expect(403);
+    await as(site)
+      .post('/notices/site', { title: 'Must', mustSee: true, bannerDays: 0 })
+      .expect(400);
+    await as(site)
+      .post('/notices/site', { title: 'Must', mustSee: true, bannerDays: null })
+      .expect(400);
+
+    const mine = (await as(user).get('/notices/site').expect(200)).body;
+    expect(mine).toEqual([
+      expect.objectContaining({
+        title: 'Down for updates Sunday 8pm',
+        banner: true,
+        dismissible: true,
+        read: false,
+      }),
+    ]);
+    await as(user)
+      .post('/notices/site/dismiss', { ids: [n.id] })
+      .expect(200);
+    expect((await as(user).get('/notices/site').expect(200)).body[0]).toMatchObject({
+      banner: false,
+      read: true,
+      dismissed: true,
+    });
+    // Someone else still sees it.
+    expect((await as(site).get('/notices/site').expect(200)).body[0].banner).toBe(true);
+
+    // Must see: back for everyone, and no ✕.
+    await as(site).patch(`/notices/site/${n.id}`, { mustSee: true }).expect(200);
+    expect((await as(user).get('/notices/site').expect(200)).body[0]).toMatchObject({
+      banner: true,
+      dismissible: false,
+    });
+    await as(site).patch(`/notices/site/${n.id}`, { bannerDays: null }).expect(400);
+
+    const { body: league } = await as(site).post('/leagues', { name: 'Open' }).expect(201);
+    await as(site).patch(`/leagues/${league.id}`, { visibility: 'public' }).expect(200);
+    const anon = request.agent(t.app.getHttpServer());
+    await anon.post('/api/auth/guest').expect(200);
+    expect((await anon.get('/api/notices/site').expect(200)).body[0]).toMatchObject({
+      title: 'Down for updates Sunday 8pm',
+      banner: true,
+    });
+
+    await as(site).delete(`/notices/site/${n.id}`).expect(200);
+    expect((await as(user).get('/notices/site').expect(200)).body).toEqual([]);
+    const log = (await as(site).get('/audit').expect(200)).body.entries;
+    expect(log.map((e: { action: string }) => e.action)).toEqual(
+      expect.arrayContaining(['site_notice.create', 'site_notice.update', 'site_notice.delete']),
+    );
   });
 });

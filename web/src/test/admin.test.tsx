@@ -110,7 +110,6 @@ describe('people page', () => {
         return { status: 201, body: { phones: [], emailed: 0, held: 0 } };
       },
       [`GET /api/leagues/${LEAGUE.id}/announcements?limit=50`]: () => ({ status: 200, body: [] }),
-      [`GET /api/leagues/${LEAGUE.id}/announcements?limit=20`]: () => ({ status: 200, body: [] }),
     });
     renderAt('/people');
     await userEvent.click(await screen.findByRole('button', { name: 'Actions for Jerry' }));

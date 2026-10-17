@@ -1,118 +1,219 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Megaphone,
-  MessageSquare,
-  Pencil,
-  Pin,
-  Plus,
-  Trash2,
-} from 'lucide-react';
+import { Check, Info, Megaphone, MessageSquare, Pencil, Pin, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input, Label, Select } from '@/components/ui/input';
-import { noticesKey } from '@/components/NoticeStrip';
+import {
+  noticesKey,
+  siteNoticesKey,
+  useMarkNotices,
+  useNotices,
+  useSiteNotices,
+} from '@/components/NoticeBanners';
 import {
   api,
   type Announcement,
   type NoticeAudience,
   type SeasonSchedule,
   type SeasonSummary,
+  type SiteNotice,
 } from '@/lib/api';
 import { smsHref } from '@/lib/sms';
-import { timeAgo } from '@/lib/time';
+import { formatDay, timeAgo } from '@/lib/time';
 import { cn, ordinal } from '@/lib/utils';
 
 /**
- * League page: every notice you can see, collapsed to one line until opened. Admins post to
- * the league, one foursome or one person, optionally email it, and can text it from their
- * own phone. Notices the app writes itself (cards, rainouts, playoffs) show here too.
+ * The horn in the top bar: how many notices are unread that aren't already showing as a
+ * banner, and a panel with every notice for the league you're in plus TeeMate's own. Opening
+ * it marks them read. League admins post here; site admins post to everyone.
  */
-export function AnnouncementsCard({
+export function NoticesButton({
   leagueId,
-  isAdmin = false,
+  leagueName,
+  isLeagueAdmin,
+  isSiteAdmin,
+  open,
+  onOpenChange,
 }: {
-  leagueId: string;
-  isAdmin?: boolean;
+  leagueId: string | undefined;
+  leagueName: string | undefined;
+  isLeagueAdmin: boolean;
+  isSiteAdmin: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const list = useQuery({
-    queryKey: [...noticesKey(leagueId), 50],
-    queryFn: () => api<Announcement[]>(`/leagues/${leagueId}/announcements?limit=50`),
-  });
-  const [open, setOpen] = useState(() => window.location.hash === '#notices');
-  const [posting, setPosting] = useState(false);
-  const items = list.data ?? [];
-  const unread = items.filter((n) => !n.read).length;
-  // Opening the list counts as reading it (clears the dot on the League tab).
-  const qc = useQueryClient();
-  const markRead = useMutation({
-    mutationFn: (ids: string[]) =>
-      api(`/leagues/${leagueId}/announcements/read`, { method: 'POST', body: { ids } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: noticesKey(leagueId) }),
-  });
-  const unreadIds = open ? items.filter((n) => !n.read).map((n) => n.id) : [];
-  const toMark = unreadIds.join(',');
+  const league = useNotices(leagueId);
+  const site = useSiteNotices();
+  const mark = useMarkNotices(leagueId);
+  const leagueItems = league.data ?? [];
+  const siteItems = site.data ?? [];
+  const count = [...leagueItems, ...siteItems].filter((n) => !n.read && !n.banner).length;
+
+  // Opening the panel counts as reading everything in it.
+  const unread = (list: { id: string; read: boolean }[]) =>
+    open
+      ? list
+          .filter((n) => !n.read)
+          .map((n) => n.id)
+          .join(',')
+      : '';
+  const leagueUnread = unread(leagueItems);
+  const siteUnread = unread(siteItems);
   useEffect(() => {
-    if (toMark) markRead.mutate(toMark.split(','));
+    if (leagueUnread) mark.mutate({ site: false, ids: leagueUnread.split(','), how: 'read' });
+    if (siteUnread) mark.mutate({ site: true, ids: siteUnread.split(','), how: 'read' });
     // Once per new set of unread notices.
-  }, [toMark]);
+  }, [leagueUnread, siteUnread]);
 
   return (
-    <Card id="notices">
-      <CardHeader className="flex flex-row items-center justify-between gap-2">
-        <button
-          type="button"
-          className="flex min-w-0 flex-1 items-center gap-2 text-left"
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <CardTitle className="flex items-center gap-2">
-            <Megaphone className="size-5 text-primary" aria-hidden /> Notices
-          </CardTitle>
-          <CardDescription className="truncate">
-            {items.length === 0
-              ? 'None yet'
-              : unread
-                ? `${unread} new`
-                : `${items.length} · latest ${timeAgo(items[0]!.createdAt)}`}
-          </CardDescription>
-          {open ? (
-            <ChevronUp className="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden />
-          ) : (
-            <ChevronDown className="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden />
-          )}
-        </button>
-        {isAdmin && !posting && (
-          <Button
-            size="sm"
-            onClick={() => {
-              setOpen(true);
-              setPosting(true);
-            }}
-          >
-            <Plus /> New notice
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative"
+        aria-label={count ? `Notices (${count} new)` : 'Notices'}
+        onClick={() => onOpenChange(true)}
+      >
+        <Megaphone />
+        {count > 0 && (
+          <span className="absolute right-0.5 top-0.5 min-w-4 rounded-full bg-primary px-1 text-[10px] font-semibold leading-4 text-primary-foreground">
+            {count > 9 ? '9+' : count}
+          </span>
+        )}
+      </Button>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent title="Notices">
+          <div className="flex flex-col gap-5">
+            {leagueId && (
+              <NoticeSection
+                title={leagueName ?? 'League'}
+                empty="No notices yet."
+                canPost={isLeagueAdmin}
+                form={(done) => <NoticeForm leagueId={leagueId} onDone={done} />}
+              >
+                {leagueItems.map((a) => (
+                  <NoticeItem key={a.id} leagueId={leagueId} a={a} canEdit={isLeagueAdmin} />
+                ))}
+              </NoticeSection>
+            )}
+            {!leagueId && siteItems.length === 0 && !isSiteAdmin && (
+              <p className="text-sm text-muted-foreground">No notices yet.</p>
+            )}
+            {(siteItems.length > 0 || isSiteAdmin) && (
+              <NoticeSection
+                title="TeeMate"
+                hint="For everyone using TeeMate"
+                empty="Nothing for everyone right now."
+                canPost={isSiteAdmin}
+                form={(done) => <SiteNoticeForm onDone={done} />}
+              >
+                {siteItems.map((n) => (
+                  <SiteNoticeItem key={n.id} n={n} canEdit={isSiteAdmin} />
+                ))}
+              </NoticeSection>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function NoticeSection({
+  title,
+  hint,
+  empty,
+  canPost,
+  form,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  empty: string;
+  canPost: boolean;
+  form: (done: () => void) => React.ReactNode;
+  children: React.ReactNode[];
+}) {
+  const [posting, setPosting] = useState(false);
+  return (
+    <section aria-label={title} className="flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <h3 className="font-semibold">{title}</h3>
+          {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+        </div>
+        {canPost && !posting && (
+          <Button size="sm" variant="outline" onClick={() => setPosting(true)}>
+            <Plus /> {title === 'TeeMate' ? 'Notice for everyone' : 'New notice'}
           </Button>
         )}
-      </CardHeader>
-      {open && (
-        <CardContent className="flex flex-col gap-3">
-          {posting && <NoticeForm leagueId={leagueId} onDone={() => setPosting(false)} />}
-          {items.length === 0 && !posting && (
-            <p className="text-sm text-muted-foreground">No notices yet.</p>
-          )}
-          <ul className="divide-y">
-            {items.map((a) => (
-              <NoticeItem key={a.id} leagueId={leagueId} a={a} canEdit={isAdmin} />
-            ))}
-          </ul>
-        </CardContent>
+      </div>
+      {posting && form(() => setPosting(false))}
+      {children.length === 0 && !posting ? (
+        <p className="text-sm text-muted-foreground">{empty}</p>
+      ) : (
+        <ul className="divide-y">{children}</ul>
       )}
-    </Card>
+    </section>
+  );
+}
+
+/** For admins: how long it shows as a banner ("banner until Fri, Oct 24"), if it still does. */
+function bannerNote(bannerUntil: string | null) {
+  if (bannerUntil === null) return 'banner until cleared';
+  const isDay = bannerUntil.length === 10;
+  const ends = new Date(isDay ? `${bannerUntil}T23:59:59` : bannerUntil);
+  if (ends < new Date()) return null;
+  return `banner until ${formatDay(isDay ? bannerUntil : localDay(ends))}`;
+}
+const localDay = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+/** How long a new notice shows as a banner. */
+const BANNER_CHOICES: { value: string; label: string }[] = [
+  { value: '0', label: 'No banner (notices list only)' },
+  { value: '1', label: '1 day' },
+  { value: '2', label: '2 days' },
+  { value: '3', label: '3 days' },
+  { value: '7', label: '1 week' },
+  { value: '14', label: '2 weeks' },
+  { value: 'kept', label: 'Until each person clears it' },
+];
+const toDays = (v: string) => (v === 'kept' ? null : Number(v));
+/** The choice closest to an existing notice's banner. */
+function choiceFor(n: { pinned?: boolean; createdAt: string; bannerUntil: string | null }) {
+  if (n.pinned || n.bannerUntil === null) return 'kept';
+  const days = (Date.parse(n.bannerUntil) - Date.parse(n.createdAt)) / 86_400_000;
+  return BANNER_CHOICES.filter((c) => c.value !== 'kept').reduce((best, c) =>
+    Math.abs(Number(c.value) - days) < Math.abs(Number(best.value) - days) ? c : best,
+  ).value;
+}
+
+function BannerSelect({
+  id,
+  value,
+  onChange,
+  only,
+}: {
+  id: string;
+  value: string;
+  onChange: (v: string) => void;
+  /** Leave out choices that don't fit (e.g. must-see needs an end). */
+  only?: (v: string) => boolean;
+}) {
+  return (
+    <>
+      <Label htmlFor={id}>Show as a banner</Label>
+      <Select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
+        {BANNER_CHOICES.filter((c) => !only || only(c.value)).map((c) => (
+          <option key={c.value} value={c.value}>
+            {c.label}
+          </option>
+        ))}
+      </Select>
+    </>
   );
 }
 
@@ -154,7 +255,13 @@ function NoticeItem({
           </p>
         )}
         <div className="mt-1 text-xs text-muted-foreground">
-          {[a.to, a.author, timeAgo(a.createdAt), a.updatedAt && 'edited']
+          {[
+            a.to,
+            a.author,
+            timeAgo(a.createdAt),
+            a.updatedAt && 'edited',
+            canEdit && !a.kind && bannerNote(a.bannerUntil),
+          ]
             .filter(Boolean)
             .join(' · ')}
         </div>
@@ -271,8 +378,11 @@ function NoticeForm({
   const qc = useQueryClient();
   const [title, setTitle] = useState(existing?.title ?? '');
   const [body, setBody] = useState(existing?.body ?? '');
-  const [pinned, setPinned] = useState(existing?.pinned ?? false);
   const [audience, setAudience] = useState<NoticeAudience>(preset?.audience ?? 'league');
+  const startBanner = existing ? choiceFor(existing) : audience === 'league' ? '7' : '2';
+  const [banner, setBanner] = useState<string | null>(null);
+  // Until it's chosen, it follows the audience (a week for the league, two days otherwise).
+  const bannerChoice = banner ?? startBanner;
   const [weekId, setWeekId] = useState('');
   const [groupId, setGroupId] = useState(preset?.groupId ?? '');
   const [personId, setPersonId] = useState(preset?.recipientUserId ?? '');
@@ -307,7 +417,12 @@ function NoticeForm({
       existing
         ? api(`/leagues/${leagueId}/announcements/${existing.id}`, {
             method: 'PATCH',
-            body: { title, body, pinned },
+            body: {
+              title,
+              body,
+              // Only when changed: it counts from now.
+              ...(banner !== null && banner !== startBanner ? { bannerDays: toDays(banner) } : {}),
+            },
           })
         : api<{ phones: string[]; emailed: number; held: number }>(
             `/leagues/${leagueId}/announcements`,
@@ -316,7 +431,7 @@ function NoticeForm({
               body: {
                 title,
                 body,
-                pinned,
+                bannerDays: toDays(bannerChoice),
                 audience,
                 email,
                 ...(audience === 'group' ? { groupId } : {}),
@@ -456,10 +571,7 @@ function NoticeForm({
         onChange={(e) => setBody(e.target.value)}
         className="w-full rounded-lg border bg-card px-3 py-2 text-base shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
       />
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={pinned} onChange={(e) => setPinned(e.target.checked)} />
-        Pin it (stays on everyone's Home until they clear it)
-      </label>
+      <BannerSelect id={`a-banner-${id}`} value={bannerChoice} onChange={setBanner} />
       {!existing && (
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} />
@@ -470,6 +582,153 @@ function NoticeForm({
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={save.isPending || !ready}>
           <Check /> {existing ? 'Save' : 'Post'}
+        </Button>
+        <Button type="button" size="sm" variant="ghost" onClick={onDone}>
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function SiteNoticeItem({ n, canEdit }: { n: SiteNotice; canEdit: boolean }) {
+  const qc = useQueryClient();
+  const [editing, setEditing] = useState(false);
+  const remove = useMutation({
+    mutationFn: () => api(`/notices/site/${n.id}`, { method: 'DELETE' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: siteNoticesKey }),
+  });
+  if (editing)
+    return (
+      <li className="py-3">
+        <SiteNoticeForm existing={n} onDone={() => setEditing(false)} />
+      </li>
+    );
+  return (
+    <li className="flex gap-2 py-3 first:pt-0">
+      <div className="min-w-0 flex-1">
+        <div className={cn('flex items-center gap-1.5', !n.read ? 'font-semibold' : 'font-medium')}>
+          <Info className="size-3.5 shrink-0 text-primary" aria-hidden />
+          {n.title}
+        </div>
+        {n.body && (
+          <p className="mt-0.5 whitespace-pre-wrap break-words text-sm text-muted-foreground">
+            {n.body}
+          </p>
+        )}
+        <div className="mt-1 text-xs text-muted-foreground">
+          {[
+            timeAgo(n.createdAt),
+            n.updatedAt && 'edited',
+            canEdit && n.mustSee && 'must see',
+            canEdit && bannerNote(n.bannerUntil),
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+        </div>
+      </div>
+      {canEdit && (
+        <div className="flex shrink-0 gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            aria-label={`Edit ${n.title}`}
+            onClick={() => setEditing(true)}
+          >
+            <Pencil />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8"
+            aria-label={`Delete ${n.title}`}
+            disabled={remove.isPending}
+            onClick={() => window.confirm(`Delete "${n.title}"?`) && remove.mutate()}
+          >
+            <Trash2 />
+          </Button>
+        </div>
+      )}
+    </li>
+  );
+}
+
+/** Site admins: a notice for everyone using TeeMate, guests included. */
+function SiteNoticeForm({ existing, onDone }: { existing?: SiteNotice; onDone: () => void }) {
+  const qc = useQueryClient();
+  const [title, setTitle] = useState(existing?.title ?? '');
+  const [body, setBody] = useState(existing?.body ?? '');
+  const [mustSee, setMustSee] = useState(existing?.mustSee ?? false);
+  const startBanner = existing ? choiceFor(existing) : '7';
+  const [banner, setBanner] = useState(startBanner);
+  // Nobody can clear a must-see notice, so it has to end by itself.
+  const ends = (v: string) => v !== 'kept' && v !== '0';
+  const save = useMutation({
+    mutationFn: () => {
+      const fields = {
+        title,
+        body,
+        mustSee,
+        ...(!existing || banner !== startBanner ? { bannerDays: toDays(banner) } : {}),
+      };
+      return existing
+        ? api(`/notices/site/${existing.id}`, { method: 'PATCH', body: fields })
+        : api('/notices/site', { method: 'POST', body: fields });
+    },
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: siteNoticesKey });
+      onDone();
+    },
+  });
+  const id = existing?.id ?? 'new-site';
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        save.mutate();
+      }}
+      className="flex flex-col gap-2"
+    >
+      <Label htmlFor={`s-title-${id}`}>Title</Label>
+      <Input
+        id={`s-title-${id}`}
+        required
+        maxLength={120}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Down for updates Sunday 8–9pm"
+      />
+      <Label htmlFor={`s-body-${id}`}>Details</Label>
+      <textarea
+        id={`s-body-${id}`}
+        rows={3}
+        maxLength={4000}
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        className="w-full rounded-lg border bg-card px-3 py-2 text-base shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
+      />
+      <BannerSelect
+        id={`s-banner-${id}`}
+        value={banner}
+        onChange={setBanner}
+        only={mustSee ? ends : undefined}
+      />
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={mustSee}
+          onChange={(e) => {
+            setMustSee(e.target.checked);
+            if (e.target.checked && !ends(banner)) setBanner('7');
+          }}
+        />
+        Everyone must see it (no ✕ until it ends)
+      </label>
+      {save.isError && <Alert variant="destructive">{save.error.message}</Alert>}
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={save.isPending || !title.trim()}>
+          <Check /> {existing ? 'Save' : 'Post to everyone'}
         </Button>
         <Button type="button" size="sm" variant="ghost" onClick={onDone}>
           Cancel
