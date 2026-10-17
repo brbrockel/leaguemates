@@ -36,13 +36,24 @@ export function ThisWeek() {
             >
               <Card className="overflow-hidden border-primary/30 transition-colors group-hover:border-primary/60">
                 <div className="bg-primary px-5 py-4 text-primary-foreground">
-                  <div className="text-xs uppercase tracking-wide opacity-80">
-                    {e.leagueName} {n.seasonName} ·{' '}
-                    {n.isFinal
-                      ? 'Finals'
-                      : n.playoffRound
-                        ? `Playoffs · Round ${n.playoffRound}`
-                        : `Round ${n.round} of ${n.rounds}`}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-xs uppercase tracking-wide opacity-80">
+                      {e.leagueName} {n.seasonName} ·{' '}
+                      {n.isFinal
+                        ? 'Finals'
+                        : n.playoffRound
+                          ? `Playoffs · Round ${n.playoffRound}`
+                          : `Round ${n.round} of ${n.rounds}`}
+                    </div>
+                    {n.teeOrder && (
+                      <span
+                        className="shrink-0 rounded-full bg-primary-foreground/15 px-2.5 py-0.5 text-sm font-semibold"
+                        title={`${ordinal(n.teeOrder)} group off of ${n.groupsOff}`}
+                        aria-label={`${ordinal(n.teeOrder)} group off`}
+                      >
+                        {ordinal(n.teeOrder)}
+                      </span>
+                    )}
                   </div>
                   <div className="mt-1 flex items-baseline gap-3">
                     {n.teeTime && <span className="text-sm opacity-90">about</span>}
@@ -51,11 +62,6 @@ export function ThisWeek() {
                     </span>
                     <span className="text-sm opacity-90">{when}</span>
                   </div>
-                  {n.teeOrder && (
-                    <div className="text-sm font-medium">
-                      {ordinal(n.teeOrder)} group off of {n.groupsOff}
-                    </div>
-                  )}
                   {n.teeTime && (
                     <div className="text-xs opacity-80">
                       Estimated: groups go off in order, so your time can shift on the day.

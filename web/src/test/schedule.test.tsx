@@ -148,7 +148,7 @@ describe('home: this week', () => {
     expect(screen.getByText('Doc', { selector: 'span.font-semibold' })).toBeInTheDocument();
     expect(screen.getByText('Front 9')).toBeInTheDocument();
     expect(screen.getByText(/Jerry vs Paul/)).toBeInTheDocument();
-    expect(screen.getByText('2nd group off of 4')).toBeInTheDocument();
+    expect(screen.getByLabelText('2nd group off')).toHaveTextContent('2nd');
   });
 });
 
