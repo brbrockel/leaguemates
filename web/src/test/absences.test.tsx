@@ -23,6 +23,8 @@ describe("can't make it (Home)", () => {
       teeTime: '17:00',
       opponent: 'Keith',
       foursome: [['Brian', 'Keith']],
+      teeOrder: 1,
+      groupsOff: 4,
       bye: false,
       playerId: 'p1',
       out,

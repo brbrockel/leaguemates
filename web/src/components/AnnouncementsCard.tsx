@@ -26,9 +26,7 @@ import {
 } from '@/lib/api';
 import { smsHref } from '@/lib/sms';
 import { timeAgo } from '@/lib/time';
-import { cn } from '@/lib/utils';
-
-const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'}`;
+import { cn, ordinal } from '@/lib/utils';
 
 /**
  * League page: every notice you can see, collapsed to one line until opened. Admins post to

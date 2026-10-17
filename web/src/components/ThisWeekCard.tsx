@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { api, type ThisWeekEntry } from '@/lib/api';
 import { formatDay, formatTeeTime, todayIso } from '@/lib/time';
+import { ordinal } from '@/lib/utils';
 
 export function ThisWeek() {
   const entries = useQuery({
@@ -50,6 +51,11 @@ export function ThisWeek() {
                     </span>
                     <span className="text-sm opacity-90">{when}</span>
                   </div>
+                  {n.teeOrder && (
+                    <div className="text-sm font-medium">
+                      {ordinal(n.teeOrder)} group off of {n.groupsOff}
+                    </div>
+                  )}
                   {n.teeTime && (
                     <div className="text-xs opacity-80">
                       Estimated: groups go off in order, so your time can shift on the day.

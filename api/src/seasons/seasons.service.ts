@@ -943,7 +943,11 @@ export class SeasonsService {
         out.push({ leagueId: m.leagueId, leagueName: m.leagueName, next: null });
         continue;
       }
-      const gs = await this.db.select().from(groups).where(eq(groups.weekId, next.weekId));
+      const gs = await this.db
+        .select()
+        .from(groups)
+        .where(eq(groups.weekId, next.weekId))
+        .orderBy(asc(groups.slot));
       const ms = await this.db.select().from(matches).where(eq(matches.weekId, next.weekId));
       const myMatch = ms.find((x) => x.playerAId === m.playerId || x.playerBId === m.playerId);
       const group = gs.find((g) => g.id === myMatch?.groupId);
@@ -977,6 +981,9 @@ export class SeasonsService {
               ) ?? null)
             : null,
           foursome: groupMatches.map((x) => [names.get(x.playerAId), names.get(x.playerBId)]),
+          /** Where your group goes off (1 = first) of how many groups. */
+          teeOrder: group ? gs.findIndex((g) => g.id === group.id) + 1 : null,
+          groupsOff: gs.length,
           bye: !myMatch,
           playerId: m.playerId,
           /** Set when you've said you can't make it. */

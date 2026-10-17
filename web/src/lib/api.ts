@@ -221,6 +221,9 @@ export interface ThisWeekEntry {
     teeTime: string | null;
     opponent: string | null;
     foursome: [string, string][];
+    /** Where your group goes off (1 = first) of how many groups. */
+    teeOrder: number | null;
+    groupsOff: number;
     bye: boolean;
     playerId: string;
     /** Set when you've said you can't make it. */

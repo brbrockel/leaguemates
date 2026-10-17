@@ -33,7 +33,7 @@ import {
 import { Input, Select } from '@/components/ui/input';
 import { api, ApiError, type SeasonResultGroup, type SeasonSchedule } from '@/lib/api';
 import { aboutTeeTime, formatDay, todayIso } from '@/lib/time';
-import { cn } from '@/lib/utils';
+import { cn, ordinal } from '@/lib/utils';
 import { NoticeDialog, type NoticePreset } from '@/components/AnnouncementsCard';
 import { PhotosCard, SeasonBanner } from '@/components/Photos';
 import { PlayoffsCard } from '@/components/PlayoffsCard';
@@ -618,8 +618,6 @@ function JumpToRound({ round }: { round: number }) {
     </Button>
   );
 }
-
-const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'}`;
 
 function GroupCard({
   leagueId,
