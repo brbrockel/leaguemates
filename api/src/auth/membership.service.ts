@@ -5,7 +5,7 @@ import { leagueMemberships, leagues } from '../db/schema.js';
 import type { SessionUser } from './decorators.js';
 
 export type LeagueRole = 'admin' | 'user';
-/** A member's role, or 'viewer' for someone outside a public league (read-only). */
+/** A member's role, or 'viewer' for someone outside a public league, or a guest (read-only). */
 export type LeagueAccess = LeagueRole | 'viewer';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class MembershipService {
 
   /**
    * The user's role in a league; 'viewer' if they aren't a member but the league is public;
-   * null if they can't see it. Site admins act as admin.
+   * null if they can't see it. Site admins act as admin. Guests see public leagues only.
    */
   async roleIn(user: SessionUser, leagueId: string): Promise<LeagueAccess | null> {
     const [m] = await this.db
@@ -31,6 +31,16 @@ export class MembershipService {
     if (!league) return null;
     if (user.isSiteAdmin) return 'admin';
     return league.visibility === 'public' ? 'viewer' : null;
+  }
+
+  /** Whether any league is public, so a guest has something to see (sign-in offers it only then). */
+  async guestsWelcome(): Promise<boolean> {
+    const [row] = await this.db
+      .select({ id: leagues.id })
+      .from(leagues)
+      .where(eq(leagues.visibility, 'public'))
+      .limit(1);
+    return Boolean(row);
   }
 
   /** Leagues the user belongs to (all leagues for a site admin). */

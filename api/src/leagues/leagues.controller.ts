@@ -12,7 +12,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { CurrentUser, SiteAdminOnly, type SessionUser } from '../auth/decorators.js';
+import {
+  CurrentUser,
+  forGuest,
+  GuestOk,
+  SiteAdminOnly,
+  type SessionUser,
+} from '../auth/decorators.js';
 import { MembershipService } from '../auth/membership.service.js';
 import { EmailInput } from '../common/email.js';
 import { ZodPipe } from '../common/validation.js';
@@ -58,6 +64,7 @@ export class LeaguesController {
   ) {}
 
   @Get()
+  @GuestOk()
   mine(@CurrentUser() user: SessionUser) {
     return this.memberships.leaguesFor(user);
   }
@@ -72,6 +79,7 @@ export class LeaguesController {
   }
 
   @Get(':leagueId')
+  @GuestOk()
   @UseGuards(LeagueGuard)
   async get(@Param('leagueId') leagueId: string, @Req() req: LeagueRequest) {
     return { ...(await this.leagues.get(leagueId)), role: req.leagueRole };
@@ -89,9 +97,16 @@ export class LeaguesController {
   }
 
   @Get(':leagueId/members')
+  @GuestOk()
   @UseGuards(LeagueGuard)
-  members(@Param('leagueId') leagueId: string, @Req() req: LeagueRequest) {
-    return this.leagues.members(leagueId, req.leagueRole === 'viewer');
+  async members(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Req() req: LeagueRequest,
+  ) {
+    const r = await this.leagues.members(leagueId, req.leagueRole === 'viewer');
+    // Guests see the players by nickname, and no accounts at all.
+    return user.isGuest ? { members: [], players: r.players.map((p) => forGuest(user, p)) } : r;
   }
 
   @Post(':leagueId/players')

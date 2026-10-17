@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FlaskConical, MailCheck, X, Zap } from 'lucide-react';
+import { Eye, FlaskConical, MailCheck, X, Zap } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 import { ME_KEY, useMe } from '@/auth/session';
@@ -8,7 +8,7 @@ import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
-import { api, ApiError, setCsrfToken, type AuthOptions, type User } from '@/lib/api';
+import { api, ApiError, setCsrfToken, type AuthOptions, type Me, type User } from '@/lib/api';
 import { forgetEmail, recentEmails, rememberEmail, saveCode, savedCode } from '@/lib/testLogin';
 
 export function SignInPage() {
@@ -21,7 +21,7 @@ export function SignInPage() {
 
   if (me.data) return <Navigate to="/" replace />;
   if (!options.data) return <AuthShell>{null}</AuthShell>;
-  const { testLogin, emailSignIn } = options.data;
+  const { testLogin, emailSignIn, guests } = options.data;
 
   return (
     <AuthShell>
@@ -29,8 +29,34 @@ export function SignInPage() {
         <PasswordSignInCard />
         {testLogin && <TestSignInCard />}
         {emailSignIn && <EmailLinkCard compact />}
+        {guests && <GuestButton />}
       </div>
     </AuthShell>
+  );
+}
+
+/** No account: look around read-only (schedules, scores and stats by nickname). */
+function GuestButton() {
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const look = useMutation({
+    mutationFn: () => api<Me>('/auth/guest', { method: 'POST' }),
+    onSuccess: (me) => {
+      setCsrfToken(me.csrfToken);
+      qc.setQueryData(ME_KEY, me);
+      navigate('/', { replace: true });
+    },
+  });
+  return (
+    <div className="flex flex-col items-center gap-1 text-center">
+      <Button variant="outline" disabled={look.isPending} onClick={() => look.mutate()}>
+        <Eye /> Look around as a guest
+      </Button>
+      <p className="text-xs text-muted-foreground">
+        See schedules, results and stats. Players show by nickname only, and nothing can be changed.
+      </p>
+      {look.isError && <Alert variant="destructive">{look.error.message}</Alert>}
+    </div>
   );
 }
 

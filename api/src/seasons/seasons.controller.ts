@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { CurrentUser, type SessionUser } from '../auth/decorators.js';
+import { CurrentUser, forGuest, GuestOk, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
 import { LeagueGuard, RequireLeagueRole } from '../leagues/league.guard.js';
 import { SeasonsService } from './seasons.service.js';
@@ -43,6 +43,7 @@ export class SeasonsController {
   }
 
   @Get('leagues/:leagueId/seasons')
+  @GuestOk()
   @UseGuards(LeagueGuard)
   list(@Param('leagueId') leagueId: string) {
     return this.seasons.list(leagueId);
@@ -60,9 +61,15 @@ export class SeasonsController {
   }
 
   @Get('leagues/:leagueId/seasons/:seasonId')
+  @GuestOk()
   @UseGuards(LeagueGuard)
-  get(@Param('leagueId') leagueId: string, @Param('seasonId', Uuid) seasonId: string) {
-    return this.seasons.schedule(leagueId, seasonId);
+  async get(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('seasonId', Uuid) seasonId: string,
+  ) {
+    const s = await this.seasons.schedule(leagueId, seasonId);
+    return { ...s, roster: s.roster.map((p) => forGuest(user, p)) };
   }
 
   @Post('leagues/:leagueId/seasons/:seasonId/generate')

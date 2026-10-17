@@ -46,6 +46,7 @@ describe('testing mode is off by default', () => {
       testLogin: false,
       emailSignIn: true,
       passwordSignIn: true,
+      guests: false,
     });
     await http()
       .post('/api/auth/test-login')

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
+import { useIsGuest } from '@/auth/session';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -58,6 +59,7 @@ interface Player {
 
 export function LeaguePage() {
   const { leagueId = '' } = useParams();
+  const guest = useIsGuest();
   const league = useQuery({
     queryKey: ['league', leagueId],
     queryFn: () => api<League>(`/leagues/${leagueId}`),
@@ -76,7 +78,9 @@ export function LeaguePage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{league.data.name}</h1>
-        <Badge>{league.data.role === 'viewer' ? 'Viewing' : isAdmin ? 'Admin' : 'User'}</Badge>
+        <Badge>
+          {guest ? 'Guest' : league.data.role === 'viewer' ? 'Viewing' : isAdmin ? 'Admin' : 'User'}
+        </Badge>
         <div className="ml-auto flex flex-wrap gap-2">
           {isAdmin && (
             <>
@@ -92,16 +96,20 @@ export function LeaguePage() {
               </Button>
             </>
           )}
-          <Button asChild variant="outline" size="sm">
-            <Link to={`/leagues/${leagueId}/photos`}>
-              <Camera /> Photos
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link to={`/leagues/${leagueId}/handicaps`}>
-              <Calculator /> Handicaps
-            </Link>
-          </Button>
+          {!guest && (
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/leagues/${leagueId}/photos`}>
+                  <Camera /> Photos
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/leagues/${leagueId}/handicaps`}>
+                  <Calculator /> Handicaps
+                </Link>
+              </Button>
+            </>
+          )}
           <Button asChild variant="outline" size="sm">
             <Link to={`/leagues/${leagueId}/stats`}>
               <BarChart3 /> Stats
@@ -120,7 +128,7 @@ export function LeaguePage() {
         </div>
       </div>
 
-      <AnnouncementsCard leagueId={leagueId} isAdmin={isAdmin} />
+      {!guest && <AnnouncementsCard leagueId={leagueId} isAdmin={isAdmin} />}
 
       <SeasonsCard leagueId={leagueId} isAdmin={isAdmin} />
 
@@ -164,44 +172,46 @@ export function LeaguePage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Members</CardTitle>
-            <CardDescription>
-              People in this league.{' '}
-              {league.data.role === 'viewer'
-                ? 'Contact details are for members only.'
-                : "Members can see each other's contact details."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {members.data?.members.length === 0 && (
-              <p className="text-sm text-muted-foreground">Nobody has been added yet.</p>
-            )}
-            <ul className="divide-y">
-              {members.data?.members.map((m) => (
-                <li
-                  key={m.userId}
-                  className="flex items-start justify-between gap-3 py-2.5 text-sm"
-                >
-                  <div className="min-w-0">
-                    <div className="truncate font-medium">{m.name ?? (m.email || 'Member')}</div>
-                    {m.email && (
-                      <ContactLinks email={m.email} phone={m.phone} address={m.address} />
-                    )}
-                  </div>
-                  <Badge>{m.role === 'admin' ? 'Admin' : 'User'}</Badge>
-                </li>
-              ))}
-            </ul>
-            {isAdmin && (
-              <AddMemberForm
-                leagueId={leagueId}
-                memberIds={members.data?.members.map((m) => m.userId) ?? []}
-              />
-            )}
-          </CardContent>
-        </Card>
+        {!guest && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Members</CardTitle>
+              <CardDescription>
+                People in this league.{' '}
+                {league.data.role === 'viewer'
+                  ? 'Contact details are for members only.'
+                  : "Members can see each other's contact details."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {members.data?.members.length === 0 && (
+                <p className="text-sm text-muted-foreground">Nobody has been added yet.</p>
+              )}
+              <ul className="divide-y">
+                {members.data?.members.map((m) => (
+                  <li
+                    key={m.userId}
+                    className="flex items-start justify-between gap-3 py-2.5 text-sm"
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate font-medium">{m.name ?? (m.email || 'Member')}</div>
+                      {m.email && (
+                        <ContactLinks email={m.email} phone={m.phone} address={m.address} />
+                      )}
+                    </div>
+                    <Badge>{m.role === 'admin' ? 'Admin' : 'User'}</Badge>
+                  </li>
+                ))}
+              </ul>
+              {isAdmin && (
+                <AddMemberForm
+                  leagueId={leagueId}
+                  memberIds={members.data?.members.map((m) => m.userId) ?? []}
+                />
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

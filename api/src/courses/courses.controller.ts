@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { z } from 'zod';
-import { CurrentUser, SiteAdminOnly, type SessionUser } from '../auth/decorators.js';
+import { CurrentUser, GuestOk, SiteAdminOnly, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
 import { CoursesService } from './courses.service.js';
 
@@ -51,11 +51,13 @@ export class CoursesController {
   constructor(private readonly courses: CoursesService) {}
 
   @Get()
+  @GuestOk()
   list() {
     return this.courses.list();
   }
 
   @Get(':courseId')
+  @GuestOk()
   get(@Param('courseId', Uuid) courseId: string) {
     return this.courses.get(courseId);
   }
@@ -123,6 +125,7 @@ export class CoursesController {
   }
 
   @Get(':courseId/images/:imageId')
+  @GuestOk()
   image(@Param('courseId', Uuid) courseId: string, @Param('imageId', Uuid) imageId: string) {
     return this.courses.openImage(courseId, imageId);
   }

@@ -60,6 +60,8 @@ export interface User {
   phone?: string | null;
   address?: string | null;
   isSiteAdmin: boolean;
+  /** Looking around without an account: read-only, public leagues, nicknames only. */
+  isGuest?: boolean;
 }
 
 export type LeagueRole = 'admin' | 'user';
@@ -118,6 +120,8 @@ export interface AuthOptions {
   emailSignIn: boolean;
   /** Email and password sign-in. */
   passwordSignIn?: boolean;
+  /** A league is public, so "Look around as a guest" has something to show. */
+  guests?: boolean;
 }
 
 export type MailMode = 'allowlist' | 'off' | 'all';

@@ -186,7 +186,7 @@ export function LeagueSettingsPage() {
                 hint={
                   visibility === 'private'
                     ? 'Private: only its members can see it.'
-                    : "Public: anyone with a TeeMate account can view schedules, standings and results. Only members can enter cards or post, and members' contact details stay hidden."
+                    : "Public: anyone with a TeeMate account can view schedules, standings and results, and so can guests from the sign-in page (players by nickname only, no photos or notices). Only members can enter cards or post, and members' contact details stay hidden."
                 }
               >
                 <Select
@@ -198,7 +198,7 @@ export function LeagueSettingsPage() {
                   )}
                 >
                   <option value="private">Private (members only)</option>
-                  <option value="public">Public (anyone signed in can view)</option>
+                  <option value="public">Public (anyone can view, guests too)</option>
                 </Select>
               </Field>
             </div>

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { z } from 'zod';
-import { CurrentUser, type SessionUser } from '../auth/decorators.js';
+import { CurrentUser, GuestOk, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
 import { LeagueGuard, RequireLeagueRole } from '../leagues/league.guard.js';
 import { PlayoffsService } from './playoffs.service.js';
@@ -14,6 +14,7 @@ export class PlayoffsController {
   constructor(private readonly playoffs: PlayoffsService) {}
 
   @Get()
+  @GuestOk()
   bracket(@Param('leagueId') leagueId: string, @Param('seasonId', Uuid) seasonId: string) {
     return this.playoffs.bracket(leagueId, seasonId);
   }

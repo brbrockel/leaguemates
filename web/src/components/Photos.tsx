@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useMe } from '@/auth/session';
+import { useIsGuest, useMe } from '@/auth/session';
 import { api, type PhotoView } from '@/lib/api';
 import { formatDay, timeAgo } from '@/lib/time';
 
@@ -45,9 +45,12 @@ export function PhotosCard({
     (groupId ? `?groupId=${groupId}` : seasonId ? `?seasonId=${seasonId}` : '') +
     (kind === 'card' ? `${groupId || seasonId ? '&' : '?'}kind=card` : '');
   const key = ['photos', leagueId, filter || 'all'];
+  // Photos show people, so guests don't see them.
+  const guest = me?.user.isGuest ?? false;
   const q = useQuery({
     queryKey: key,
     queryFn: () => api<PhotoView[]>(`/leagues/${leagueId}/photos${filter}`),
+    enabled: !guest,
   });
   const input = useRef<HTMLInputElement>(null);
   const [viewing, setViewing] = useState<number | null>(null);
@@ -74,6 +77,7 @@ export function PhotosCard({
 
   const items = q.data ?? [];
   const current = viewing === null ? null : items[viewing];
+  if (guest) return null;
 
   return (
     <Card>
@@ -276,9 +280,11 @@ export function SeasonBanner({
   seasonId: string;
   coverPhotoId?: string | null;
 }) {
+  const guest = useIsGuest();
   const q = useQuery({
     queryKey: ['photos', leagueId, `?seasonId=${seasonId}`],
     queryFn: () => api<PhotoView[]>(`/leagues/${leagueId}/photos?seasonId=${seasonId}`),
+    enabled: !guest,
   });
   // The chosen photo, else the newest team photo.
   const team =
@@ -290,7 +296,7 @@ export function SeasonBanner({
         height: undefined,
       })) ||
     q.data?.find((p) => p.teamPhoto);
-  if (!team) return null;
+  if (!team || guest) return null;
   return (
     <figure className="overflow-hidden rounded-xl border bg-muted">
       <img

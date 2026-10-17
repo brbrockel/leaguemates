@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { timingSafeEqual } from 'node:crypto';
-import { IS_PUBLIC, SITE_ADMIN, type AuthedRequest } from './decorators.js';
-import { SESSION_COOKIE, SessionService } from './session.service.js';
+import { GUEST_OK, GUEST_USER, IS_PUBLIC, SITE_ADMIN, type AuthedRequest } from './decorators.js';
+import { GUEST_COOKIE, SESSION_COOKIE, SessionService } from './session.service.js';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 export const CSRF_HEADER = 'x-csrf-token';
@@ -19,7 +19,8 @@ function flag(reflector: Reflector, key: string, ctx: ExecutionContext): boolean
 
 /**
  * Runs on every route (registered globally, in order):
- * 1. a valid session is required unless the route is @Public();
+ * 1. a valid session is required unless the route is @Public(); without one, a guest (the
+ *    guest cookie) gets only @GuestOk() routes, and only to read;
  * 2. state-changing requests must echo the session's CSRF token in X-CSRF-Token;
  * 3. @SiteAdminOnly() routes need a site admin.
  */
@@ -35,7 +36,18 @@ export class SessionGuard implements CanActivate {
     const req = ctx.switchToHttp().getRequest<AuthedRequest>();
     const token: unknown = req.cookies?.[SESSION_COOKIE];
     const user = typeof token === 'string' ? await this.sessions.resolve(token) : null;
-    if (!user) throw new UnauthorizedException('Sign in to continue.');
+    if (!user) {
+      if (req.cookies?.[GUEST_COOKIE] !== '1')
+        throw new UnauthorizedException('Sign in to continue.');
+      req.user = { ...GUEST_USER };
+      const ok = this.reflector.getAllAndOverride<'read' | 'post' | undefined>(GUEST_OK, [
+        ctx.getHandler(),
+        ctx.getClass(),
+      ]);
+      if (!ok || (ok === 'read' && !SAFE_METHODS.has(req.method)))
+        throw new ForbiddenException('Sign in to do that. Guests can only look.');
+      return true;
+    }
     req.user = user;
 
     if (!SAFE_METHODS.has(req.method)) {

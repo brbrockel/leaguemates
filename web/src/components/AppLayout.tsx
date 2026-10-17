@@ -5,6 +5,7 @@ import {
   ChevronDown,
   Flag,
   Home,
+  LogIn,
   LogOut,
   History,
   SlidersHorizontal,
@@ -125,40 +126,50 @@ export function AppLayout() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Account menu">
-                  <UserRound />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{me.user.email}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => navigate('/account')}>
-                  <UserRound /> Account
-                </DropdownMenuItem>
-                {me.user.isSiteAdmin && (
-                  <>
-                    <DropdownMenuItem onSelect={() => navigate('/site-settings')}>
-                      <SlidersHorizontal /> Site settings
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => navigate('/activity')}>
-                      <History /> Activity log
-                    </DropdownMenuItem>
-                  </>
-                )}
-                <DropdownMenuItem onSelect={() => setReporting(true)}>
-                  <Bug /> Report a problem
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={() =>
-                    signOut.mutate(undefined, { onSettled: () => navigate('/sign-in') })
-                  }
-                >
-                  <LogOut /> Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {me.user.isGuest ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => signOut.mutate(undefined, { onSettled: () => navigate('/sign-in') })}
+              >
+                <LogIn /> Sign in
+              </Button>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="Account menu">
+                    <UserRound />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>{me.user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => navigate('/account')}>
+                    <UserRound /> Account
+                  </DropdownMenuItem>
+                  {me.user.isSiteAdmin && (
+                    <>
+                      <DropdownMenuItem onSelect={() => navigate('/site-settings')}>
+                        <SlidersHorizontal /> Site settings
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onSelect={() => navigate('/activity')}>
+                        <History /> Activity log
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  <DropdownMenuItem onSelect={() => setReporting(true)}>
+                    <Bug /> Report a problem
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      signOut.mutate(undefined, { onSettled: () => navigate('/sign-in') })
+                    }
+                  >
+                    <LogOut /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </header>

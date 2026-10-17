@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpCode, Inject, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Inject,
+  NotFoundException,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import type { CookieOptions, Response } from 'express';
 import { z } from 'zod';
 import { clientIp } from '../common/client-ip.js';
@@ -7,10 +17,17 @@ import { ZodPipe } from '../common/validation.js';
 import { CONFIG, type Config } from '../config.js';
 import { AuditService } from '../audit/audit.js';
 import { AuthService } from './auth.service.js';
-import { CurrentUser, Public, type AuthedRequest, type SessionUser } from './decorators.js';
+import {
+  CurrentUser,
+  GUEST_USER,
+  GuestOk,
+  Public,
+  type AuthedRequest,
+  type SessionUser,
+} from './decorators.js';
 import { SiteSettingsService } from '../site/site-settings.js';
 import { MembershipService } from './membership.service.js';
-import { SESSION_COOKIE, SessionService } from './session.service.js';
+import { GUEST_COOKIE, SESSION_COOKIE, SessionService } from './session.service.js';
 
 const MagicLinkBody = z.object({ email: EmailInput });
 const VerifyBody = z.object({ token: z.string().min(20).max(100) });
@@ -53,6 +70,26 @@ export class AuthController {
     };
   }
 
+  /** Signing in for real ends being a guest. */
+  private setSession(res: Response, token: string) {
+    res.cookie(SESSION_COOKIE, token, this.cookieOptions);
+    res.clearCookie(GUEST_COOKIE, { ...this.cookieOptions, maxAge: undefined });
+  }
+
+  /**
+   * "Look around as a guest": read-only, public leagues only, nicknames and golf but no
+   * personal details. 404 when no league is public.
+   */
+  @Public()
+  @Post('guest')
+  @HttpCode(200)
+  async guest(@Res({ passthrough: true }) res: Response) {
+    if (!(await this.memberships.guestsWelcome())) throw new NotFoundException();
+    res.cookie(GUEST_COOKIE, '1', this.cookieOptions);
+    res.clearCookie(SESSION_COOKIE, { ...this.cookieOptions, maxAge: undefined });
+    return this.meFor({ ...GUEST_USER });
+  }
+
   /** Always 202, whether or not the email can sign in. */
   @Public()
   @Post('magic-link')
@@ -79,7 +116,7 @@ export class AuthController {
       clientIp(req, this.config.CLIENT_IP_HEADER),
       req.header('user-agent'),
     );
-    res.cookie(SESSION_COOKIE, token, this.cookieOptions);
+    this.setSession(res, token);
     return {
       user: {
         id: user.id,
@@ -110,7 +147,7 @@ export class AuthController {
       csrfToken: string;
     },
   ) {
-    res.cookie(SESSION_COOKIE, r.token, this.cookieOptions);
+    this.setSession(res, r.token);
     const { id, email, name, nickname, phone, address, isSiteAdmin } = r.user;
     return {
       user: { id, email, name, nickname, phone, address, isSiteAdmin },
@@ -207,6 +244,7 @@ export class AuthController {
       testLogin: await this.site.testLoginActive(),
       emailSignIn: this.config.MAIL_MODE !== 'off',
       passwordSignIn: true,
+      guests: await this.memberships.guestsWelcome(),
     };
   }
 
@@ -224,7 +262,7 @@ export class AuthController {
       clientIp(req, this.config.CLIENT_IP_HEADER),
       req.header('user-agent'),
     );
-    res.cookie(SESSION_COOKIE, token, this.cookieOptions);
+    this.setSession(res, token);
     return {
       user: {
         id: user.id,
@@ -240,7 +278,12 @@ export class AuthController {
   }
 
   @Get('me')
-  async me(@CurrentUser() user: SessionUser) {
+  @GuestOk()
+  me(@CurrentUser() user: SessionUser) {
+    return this.meFor(user);
+  }
+
+  private async meFor(user: SessionUser) {
     return {
       user: {
         id: user.id,
@@ -250,6 +293,7 @@ export class AuthController {
         phone: user.phone,
         address: user.address,
         isSiteAdmin: user.isSiteAdmin,
+        isGuest: user.isGuest ?? false,
       },
       csrfToken: user.csrfToken,
       leagues: await this.memberships.leaguesFor(user),
@@ -257,8 +301,11 @@ export class AuthController {
   }
 
   @Post('logout')
+  @GuestOk({ post: true })
   @HttpCode(204)
   async logout(@CurrentUser() user: SessionUser, @Res({ passthrough: true }) res: Response) {
+    res.clearCookie(GUEST_COOKIE, { ...this.cookieOptions, maxAge: undefined });
+    if (user.isGuest) return;
     await this.sessions.revoke(user.sessionId);
     await this.audit.record({
       actorUserId: user.id,

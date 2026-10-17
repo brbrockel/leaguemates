@@ -18,6 +18,7 @@ export function HomePage() {
   const league = useCurrentLeague();
   if (!me) return null;
   const firstName = me.user.name?.split(' ')[0];
+  const guest = me.user.isGuest ?? false;
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,15 +26,21 @@ export function HomePage() {
         <h1 className="text-2xl font-semibold tracking-tight">
           {firstName ? `Hi, ${firstName}` : 'Welcome'}
         </h1>
-        <p className="text-sm text-muted-foreground">Your next round, scores and standings.</p>
+        <p className="text-sm text-muted-foreground">
+          {guest
+            ? 'Looking around as a guest: schedules, results and stats, with players by nickname. Sign in to take part.'
+            : 'Your next round, scores and standings.'}
+        </p>
       </div>
 
-      {league && <NoticeStrip leagueId={league.id} />}
+      {league && !guest && <NoticeStrip leagueId={league.id} />}
 
-      <ThisWeek />
+      {!guest && <ThisWeek />}
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium text-muted-foreground">Your leagues</h2>
+        <h2 className="text-sm font-medium text-muted-foreground">
+          {guest ? 'Leagues' : 'Your leagues'}
+        </h2>
         {me.leagues.length === 0 ? (
           <Card>
             <CardHeader>
@@ -41,7 +48,9 @@ export function HomePage() {
               <CardDescription>
                 {me.user.isSiteAdmin
                   ? 'Create the first league below.'
-                  : "You're not in a league yet. When a league admin adds you, it shows up here."}
+                  : guest
+                    ? 'No leagues are open to guests right now.'
+                    : "You're not in a league yet. When a league admin adds you, it shows up here."}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -53,7 +62,7 @@ export function HomePage() {
                   <div className="flex flex-col gap-1">
                     <span className="font-medium">{l.name}</span>
                     <Badge className="w-fit capitalize">
-                      {l.role === 'viewer' ? 'Public · viewing' : l.role}
+                      {guest ? 'Guest' : l.role === 'viewer' ? 'Public · viewing' : l.role}
                     </Badge>
                   </div>
                   <ChevronRight className="size-5 text-muted-foreground" aria-hidden />

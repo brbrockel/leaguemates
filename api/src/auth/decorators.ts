@@ -11,7 +11,23 @@ export interface SessionUser {
   isSiteAdmin: boolean;
   sessionId: string;
   csrfToken: string;
+  /** Looking around without an account: read-only, public leagues only, no personal details. */
+  isGuest?: boolean;
 }
+
+/** The stand-in user for a guest: an id that matches nobody, so nothing is "theirs". */
+export const GUEST_USER: SessionUser = {
+  id: '00000000-0000-0000-0000-000000000000',
+  email: '',
+  name: null,
+  nickname: 'Guest',
+  phone: null,
+  address: null,
+  isSiteAdmin: false,
+  sessionId: '',
+  csrfToken: '',
+  isGuest: true,
+};
 
 export type AuthedRequest = Request & { user?: SessionUser };
 
@@ -22,6 +38,23 @@ export const Public = () => SetMetadata(IS_PUBLIC, true);
 export const SITE_ADMIN = 'teemate:site-admin';
 /** Route is limited to site admins. */
 export const SiteAdminOnly = () => SetMetadata(SITE_ADMIN, true);
+
+export const GUEST_OK = 'teemate:guest-ok';
+/**
+ * Guests may use this route. Everything else is closed to them, so a new route never shows
+ * guests anything by accident. Routes marked here must leave out personal details for guests.
+ * Guests only read; `{ post: true }` is for signing out, the one thing a guest can do.
+ */
+export const GuestOk = (opts: { post?: boolean } = {}) =>
+  SetMetadata(GUEST_OK, opts.post ? 'post' : 'read');
+
+/** A player as guests may see them: nickname and golf, no full name or account link. */
+export function forGuest<T extends { fullName?: string | null; userId?: string | null }>(
+  user: SessionUser,
+  p: T,
+): T {
+  return user.isGuest ? { ...p, fullName: null, userId: null } : p;
+}
 
 export const CurrentUser = createParamDecorator(
   (_: unknown, ctx: ExecutionContext): SessionUser => {

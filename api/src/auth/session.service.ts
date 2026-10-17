@@ -7,6 +7,8 @@ import type { SessionUser } from './decorators.js';
 import { hashToken, newToken } from './tokens.js';
 
 export const SESSION_COOKIE = 'teemate_session';
+/** Set by "Look around as a guest". Grants only what any visitor can see, so it holds no secret. */
+export const GUEST_COOKIE = 'teemate_guest';
 
 type Executor = Pick<Database, 'insert'>;
 

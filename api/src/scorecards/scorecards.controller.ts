@@ -16,7 +16,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import sharp from 'sharp';
 import { z } from 'zod';
-import { CurrentUser, type SessionUser } from '../auth/decorators.js';
+import { CurrentUser, forGuest, GuestOk, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
 import { LeagueGuard } from '../leagues/league.guard.js';
 import { PhotosService } from '../photos/photos.js';
@@ -56,29 +56,37 @@ export class ScorecardsController {
   ) {}
 
   @Get('standings')
+  @GuestOk()
   standings(@Param('leagueId') leagueId: string, @Param('seasonId', Uuid) seasonId: string) {
     return this.cards.standings(leagueId, seasonId);
   }
 
   @Get('stats')
+  @GuestOk()
   seasonStats(@Param('leagueId') leagueId: string, @Param('seasonId', Uuid) seasonId: string) {
     return this.stats.seasonStats(leagueId, seasonId);
   }
 
   @Get('results')
+  @GuestOk()
   async results(@Param('leagueId') leagueId: string, @Param('seasonId', Uuid) seasonId: string) {
     return (await this.cards.seasonResults(leagueId, seasonId)).groups;
   }
 
   @Get('weeks/:weekId/groups/:groupId/scorecard')
-  view(
+  @GuestOk()
+  async view(
     @CurrentUser() user: SessionUser,
     @Param('leagueId') leagueId: string,
     @Param('seasonId', Uuid) seasonId: string,
     @Param('weekId', Uuid) weekId: string,
     @Param('groupId', Uuid) groupId: string,
   ) {
-    return this.cards.view(user, leagueId, seasonId, weekId, groupId);
+    const v = await this.cards.view(user, leagueId, seasonId, weekId, groupId);
+    // Guests don't see who entered the card or what a dispute said.
+    return user.isGuest && v.card
+      ? { ...v, card: { ...v.card, enteredBy: null, dispute: null } }
+      : v;
   }
 
   /**
@@ -261,6 +269,7 @@ export class LeagueStatsController {
   constructor(private readonly stats: PlayerStatsService) {}
 
   @Get('holes')
+  @GuestOk()
   holes(
     @Param('leagueId') leagueId: string,
     @Query(new ZodPipe(HoleQuery)) q: z.infer<typeof HoleQuery>,
@@ -276,7 +285,13 @@ export class PlayerHistoryController {
   constructor(private readonly stats: PlayerStatsService) {}
 
   @Get(':playerId/history')
-  history(@Param('leagueId') leagueId: string, @Param('playerId', Uuid) playerId: string) {
-    return this.stats.history(leagueId, playerId);
+  @GuestOk()
+  async history(
+    @CurrentUser() user: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('playerId', Uuid) playerId: string,
+  ) {
+    const h = await this.stats.history(leagueId, playerId);
+    return { ...h, player: forGuest(user, h.player) };
   }
 }

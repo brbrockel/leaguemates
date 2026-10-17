@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { CurrentUser, type SessionUser } from '../auth/decorators.js';
+import { CurrentUser, GuestOk, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
 import { LeagueGuard, RequireLeagueRole } from '../leagues/league.guard.js';
 import { ScrambleService } from './scramble.service.js';
@@ -40,6 +40,7 @@ export class ScrambleController {
   constructor(private readonly svc: ScrambleService) {}
 
   @Get()
+  @GuestOk()
   view(
     @CurrentUser() user: SessionUser,
     @Param('leagueId') leagueId: string,

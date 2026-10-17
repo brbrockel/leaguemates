@@ -25,6 +25,11 @@ export function useMe() {
   });
 }
 
+/** Looking around without an account: read-only, nicknames only. */
+export function useIsGuest(): boolean {
+  return useMe().data?.user.isGuest ?? false;
+}
+
 export function useSignOut() {
   const qc = useQueryClient();
   return useMutation({
