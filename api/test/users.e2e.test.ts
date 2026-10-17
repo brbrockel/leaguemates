@@ -420,7 +420,7 @@ describe('people and league members', () => {
         p.userId,
       ]),
     );
-    expect(byNick['Sam']).toBe(sam.id);
+    expect(byNick['Sam E']).toBe(sam.id);
     expect(byNick['Doc']).toBe(jerry.id);
     expect(roster.members.map((m: { email: string }) => m.email)).toContain('helper@example.com');
     expect(roster.players).toHaveLength(2);

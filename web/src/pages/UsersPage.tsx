@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { defaultNickname } from '@teemate/shared';
 import {
   Ban,
   Check,
@@ -636,7 +637,7 @@ function AddPersonDialog({
               leagueId={leagueId}
               value={membership}
               onChange={setMembership}
-              suggestedNickname={name.trim().split(/\s+/)[0] ?? ''}
+              suggestedNickname={defaultNickname(name)}
             />
           )}
           {add.isError && <Alert variant="destructive">{add.error.message}</Alert>}

@@ -15,6 +15,8 @@ export interface CardReading {
     holeScores: (number | null)[];
     uncertain: number[];
     absent: boolean;
+    /** The total written on the card, if any (a check on the holes). */
+    writtenTotal?: number | null;
     /** Set when this row is a sub playing for the (absent) player. */
     subName?: string;
   }[];

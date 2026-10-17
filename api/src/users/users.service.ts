@@ -6,6 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { defaultNickname } from '@teemate/shared';
 import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
@@ -254,7 +255,7 @@ export class UsersService {
         const nickname =
           input.newPlayer.nickname?.trim() ||
           user!.nickname ||
-          fullName?.split(/\s+/)[0] ||
+          defaultNickname(fullName) ||
           email.split('@')[0]!;
         const [p] = await tx
           .insert(players)

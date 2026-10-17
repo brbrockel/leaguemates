@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { defaultNickname } from '@teemate/shared';
 import {
   BarChart3,
   Calculator,
@@ -403,12 +404,13 @@ function AddPlayerForm({ leagueId }: { leagueId: string }) {
             autoComplete="off"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            placeholder={fullName.trim().split(/\s+/)[0] || 'Doc'}
+            placeholder={defaultNickname(fullName) || 'Doc'}
           />
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
-        The nickname is what shows on schedules and standings. Leave it blank to use the first name.
+        The nickname is what shows on schedules and standings. Leave it blank for first name and
+        last initial (David S). It can be changed any time.
       </p>
       {add.isError && <Alert variant="destructive">{add.error.message}</Alert>}
       <Button
@@ -486,7 +488,7 @@ function AddMemberForm({ leagueId, memberIds }: { leagueId: string; memberIds: s
           leagueId={leagueId}
           value={membership}
           onChange={setMembership}
-          suggestedNickname={chosen?.name?.split(/\s+/)[0] ?? ''}
+          suggestedNickname={defaultNickname(chosen?.name)}
         />
       )}
       {add.isError && <Alert variant="destructive">{add.error.message}</Alert>}

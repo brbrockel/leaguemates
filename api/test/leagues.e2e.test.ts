@@ -213,10 +213,10 @@ describe('roster names', () => {
     ]);
   });
 
-  it('defaults the nickname to the first name', async () => {
+  it('defaults the nickname to first name and last initial', async () => {
     const league = await createLeague('Wednesday League');
     const { body } = await add(league.id, { fullName: '  Pat   Sample ' }).expect(201);
-    expect(body).toMatchObject({ nickname: 'Pat', fullName: 'Pat   Sample' });
+    expect(body).toMatchObject({ nickname: 'Pat S', fullName: 'Pat   Sample' });
   });
 
   it('needs a nickname or a full name', async () => {

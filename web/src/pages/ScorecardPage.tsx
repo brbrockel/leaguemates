@@ -71,6 +71,8 @@ export function ScorecardPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   /** Cells a card scan wasn't sure about: playerId -> hole positions to check. */
   const [check, setCheck] = useState<Record<string, number[]>>({});
+  /** Totals written on a scanned card, to check the holes against as they're corrected. */
+  const [written, setWritten] = useState<Record<string, number>>({});
   const [dirty, setDirty] = useState(false);
   const [reason, setReason] = useState('');
   const [disputing, setDisputing] = useState(false);
@@ -188,6 +190,12 @@ export function ScorecardPage() {
   const gross = (e: Entry) =>
     e.attendance === 'absent' ? null : e.holeScores.reduce<number>((s, x) => s + (x ?? 0), 0);
   const filled = (e: Entry) => e.holeScores.filter((x) => x !== null).length;
+  /** Every hole filled in, but not adding up to the total written on the scanned card. */
+  const offTotal = (e: Entry) =>
+    e.attendance === 'played' &&
+    written[e.playerId] !== undefined &&
+    filled(e) === layout.holes.length &&
+    gross(e) !== written[e.playerId];
 
   const update = (playerId: string, change: (e: Entry) => Entry) => {
     setEntries((list) => list.map((e) => (e.playerId === playerId ? change(e) : e)));
@@ -241,6 +249,13 @@ export function ScorecardPage() {
     );
     setCheck(
       Object.fromEntries(r.rows.flatMap((x) => (x.playerId ? [[x.playerId, x.uncertain]] : []))),
+    );
+    setWritten(
+      Object.fromEntries(
+        r.rows.flatMap((x) =>
+          x.playerId && !x.absent && x.writtenTotal != null ? [[x.playerId, x.writtenTotal]] : [],
+        ),
+      ),
     );
     setDirty(true);
   };
@@ -450,8 +465,21 @@ export function ScorecardPage() {
                     )}
                   </td>
                 ))}
-                <td className="px-1 py-1 font-semibold tabular-nums sm:px-1.5">
+                <td
+                  className={cn(
+                    'px-1 py-1 font-semibold tabular-nums sm:px-1.5',
+                    offTotal(e) && 'text-amber-700 dark:text-amber-300',
+                  )}
+                >
                   {e.attendance === 'absent' ? '—' : filled(e) ? gross(e) : ''}
+                  {offTotal(e) && (
+                    <span
+                      className="block text-[10px] font-normal"
+                      title="The total written on the card"
+                    >
+                      card {written[e.playerId]}
+                    </span>
+                  )}
                   {e.attendance === 'played' &&
                     filled(e) > 0 &&
                     filled(e) < layout.holes.length && (

@@ -11,3 +11,4 @@ export * from './schedule/season.js';
 export * from './league/settings.js';
 export * from './league/handicap.js';
 export * from './scramble/scramble.js';
+export * from './league/names.js';

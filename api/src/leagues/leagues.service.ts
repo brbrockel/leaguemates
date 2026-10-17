@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { and, asc, desc, eq, isNull } from 'drizzle-orm';
-import { withDefaults, type LeagueSettings } from '@teemate/shared';
+import { withDefaults, type LeagueSettings, defaultNickname } from '@teemate/shared';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
 import { MembershipService, type LeagueRole } from '../auth/membership.service.js';
@@ -27,10 +27,10 @@ export interface PlayerNames {
   fullName?: string | undefined;
 }
 
-/** The nickname defaults to the first word of the full name ("Sam Example" -> "Sam"). */
+/** The nickname defaults to first name and last initial ("Sam Example" -> "Sam E"). */
 export function resolveNames(input: PlayerNames): { nickname: string; fullName: string | null } {
   const fullName = input.fullName?.trim() || null;
-  const nickname = input.nickname?.trim() || fullName?.split(/\s+/)[0];
+  const nickname = input.nickname?.trim() || defaultNickname(fullName);
   if (!nickname) throw new BadRequestException('Enter a nickname or a full name.');
   return { nickname, fullName };
 }

@@ -4,7 +4,9 @@ import {
   matchPlayer,
   parseOcrText,
   readWithClaude,
+  totalNotes,
   type CardContext,
+  type CardRow,
 } from '../src/scorecards/card-reader.js';
 
 const ctx: CardContext = {
@@ -102,7 +104,10 @@ describe('Claude reading', () => {
     expect(r).toMatchObject({
       provider: 'claude',
       layoutId: 'back',
-      notes: ['Hole 13 for Jerry could be a 5.'],
+      notes: [
+        'Hole 13 for Jerry could be a 5.',
+        'No totals are written on the card. Adding them helps catch a misread score.',
+      ],
     });
     expect(r.rows[0]).toMatchObject({ playerId: 'p-jerry', uncertain: [3] });
     // An unknown id falls back to name matching; impossible scores become blanks to check.
@@ -113,5 +118,41 @@ describe('Claude reading', () => {
     expect(r.rows[1]!.uncertain).toEqual([6, 7]);
     expect(r.rows[2]).toMatchObject({ playerId: 'p-mikem', absent: true, uncertain: [] });
     expect(JSON.stringify(asked)).toContain('"name":"record_scores"');
+  });
+});
+
+describe('written totals', () => {
+  const row = (playerId: string, holeScores: (number | null)[], writtenTotal: number | null) =>
+    ({
+      playerId,
+      nameOnCard: '',
+      holeScores,
+      uncertain: [],
+      absent: false,
+      writtenTotal,
+    }) as CardRow;
+  const nine = [5, 4, 4, 3, 4, 5, 3, 4, 4]; // 36
+
+  it('says nothing when every total adds up', () => {
+    expect(totalNotes([row('p-jerry', nine, 36), row('p-doc', nine, 36)], ctx)).toEqual([]);
+  });
+
+  it("flags a total the holes don't add up to", () => {
+    expect(totalNotes([row('p-jerry', nine, 37), row('p-doc', nine, 36)], ctx)).toEqual([
+      "Jerry: the holes add up to 36, but the card's total says 37. Check the holes against the card.",
+    ]);
+  });
+
+  it('asks for totals when the card has none, and names anyone missing one', () => {
+    expect(totalNotes([row('p-jerry', nine, null)], ctx)).toEqual([
+      'No totals are written on the card. Adding them helps catch a misread score.',
+    ]);
+    expect(totalNotes([row('p-jerry', nine, 36), row('p-doc', nine, null)], ctx)).toEqual([
+      'No total written for Doc.',
+    ]);
+  });
+
+  it("doesn't compare until every hole is read", () => {
+    expect(totalNotes([row('p-jerry', [...nine.slice(0, 8), null], 40)], ctx)).toEqual([]);
   });
 });

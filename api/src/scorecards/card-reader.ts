@@ -26,6 +26,8 @@ export interface CardRow {
   /** Positions (0-based) of scores to double-check. */
   uncertain: number[];
   absent: boolean;
+  /** The total written on the card for these holes, if any: a check on the hole scores. */
+  writtenTotal: number | null;
 }
 
 export interface CardReading {
@@ -152,6 +154,11 @@ export async function readWithClaude(
                     type: 'boolean',
                     description: 'True if the row is marked absent / no show.',
                   },
+                  writtenTotal: {
+                    type: ['integer', 'null'],
+                    description:
+                      'The total the player wrote for these holes (Out, In or Tot box), exactly as written; null if none is written. Never add it up yourself.',
+                  },
                 },
                 required: ['nameOnCard', 'playerId', 'scores', 'uncertain', 'absent'],
               },
@@ -181,7 +188,8 @@ export async function readWithClaude(
               roster,
               'The nine could be one of:',
               nines,
-              "Ignore printed rows such as yardages, par, handicap and totals; only read the players' handwritten scores.",
+              "Ignore printed rows such as yardages, par and handicap; only read the players' handwritten scores.",
+              "Also read each player's handwritten total for the nine (the Out, In or Tot box) into writtenTotal, as written, even if it doesn't match the holes. It is a check on the hole scores, so read it independently.",
               'If a digit is ambiguous, give your best reading and list its position in uncertain. Never guess a score for a blank box.',
               'Answer only by calling the record_scores tool.',
             ].join('\n'),
@@ -207,6 +215,7 @@ export async function readWithClaude(
       scores?: unknown[];
       uncertain?: number[];
       absent?: boolean;
+      writtenTotal?: unknown;
     }[];
     notes?: string;
   };
@@ -228,9 +237,15 @@ export async function readWithClaude(
         ]),
       ],
       absent: Boolean(r.absent),
+      writtenTotal: writtenTotal(r.writtenTotal, holes),
     };
   });
-  return { provider: 'claude', layoutId, rows, notes: out.notes ? [out.notes] : [] };
+  return {
+    provider: 'claude',
+    layoutId,
+    rows,
+    notes: [...(out.notes ? [out.notes] : []), ...totalNotes(rows, ctx)],
+  };
 }
 
 /**
@@ -256,6 +271,7 @@ export function parseOcrText(text: string, ctx: CardContext): CardRow[] {
       holeScores,
       uncertain: holeScores.map((_, i) => i),
       absent: false,
+      writtenTotal: null,
     });
   }
   return rows;
@@ -313,4 +329,33 @@ export class CardReaderService implements OnModuleDestroy {
   async onModuleDestroy() {
     if (this.worker) await (await this.worker).terminate();
   }
+}
+
+/** A plausible total for a nine (or 18), else null. */
+function writtenTotal(v: unknown, holes: number): number | null {
+  return typeof v === 'number' && Number.isInteger(v) && v >= holes && v <= holes * 15 ? v : null;
+}
+
+/**
+ * The written totals checked against the hole scores: a total that doesn't add up means a
+ * misread (or a mistake on the card), and a card without totals has nothing to check against.
+ */
+export function totalNotes(rows: CardRow[], ctx: CardContext): string[] {
+  const name = (r: CardRow) =>
+    ctx.players.find((p) => p.playerId === r.playerId)?.nickname ?? (r.nameOnCard || 'A row');
+  const played = rows.filter((r) => !r.absent);
+  const notes: string[] = [];
+  for (const r of played) {
+    if (r.writtenTotal === null || r.holeScores.some((s) => s === null)) continue;
+    const sum = r.holeScores.reduce<number>((t, s) => t + s!, 0);
+    if (sum !== r.writtenTotal)
+      notes.push(
+        `${name(r)}: the holes add up to ${sum}, but the card's total says ${r.writtenTotal}. Check the holes against the card.`,
+      );
+  }
+  const without = played.filter((r) => r.writtenTotal === null);
+  if (played.length && without.length === played.length)
+    notes.push('No totals are written on the card. Adding them helps catch a misread score.');
+  else if (without.length) notes.push(`No total written for ${without.map(name).join(', ')}.`);
+  return notes;
 }
