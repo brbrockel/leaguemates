@@ -10,7 +10,7 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +50,19 @@ export function AnnouncementsCard({
   const [posting, setPosting] = useState(false);
   const items = list.data ?? [];
   const unread = items.filter((n) => !n.read).length;
+  // Opening the list counts as reading it (clears the dot on the League tab).
+  const qc = useQueryClient();
+  const markRead = useMutation({
+    mutationFn: (ids: string[]) =>
+      api(`/leagues/${leagueId}/announcements/read`, { method: 'POST', body: { ids } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: noticesKey(leagueId) }),
+  });
+  const unreadIds = open ? items.filter((n) => !n.read).map((n) => n.id) : [];
+  const toMark = unreadIds.join(',');
+  useEffect(() => {
+    if (toMark) markRead.mutate(toMark.split(','));
+    // Once per new set of unread notices.
+  }, [toMark]);
 
   return (
     <Card id="notices">
