@@ -36,7 +36,7 @@ export function ThisWeek() {
               <Card className="overflow-hidden border-primary/30 transition-colors group-hover:border-primary/60">
                 <div className="bg-primary px-5 py-4 text-primary-foreground">
                   <div className="text-xs uppercase tracking-wide opacity-80">
-                    {e.leagueName} ·{' '}
+                    {e.leagueName} {n.seasonName} ·{' '}
                     {n.isFinal
                       ? 'Finals'
                       : n.playoffRound
