@@ -5,7 +5,11 @@
  * follow the same rules as real use. Nobody is emailed, and the automatic notices the
  * cards would post are removed afterwards.
  *
+ * Each season ends with the team scramble: teams from the league's scramble settings and a
+ * made-up card for each team.
+ *
  *   node dist/scripts/demo-history.js [--league Demo] [--from 2023] [--to 2026] [--replace]
+ *   node dist/scripts/demo-history.js --scrambles-only   (add scrambles to seasons already built)
  *   docker exec <container> node dist/scripts/demo-history.js --replace
  */
 import 'reflect-metadata';
@@ -19,6 +23,7 @@ import { DB, type Database } from '../src/db/db.js';
 import { announcements, leagues, players, scorecards, seasons, users } from '../src/db/schema.js';
 import { PlayoffsService } from '../src/playoffs/playoffs.service.js';
 import { ScorecardsService } from '../src/scorecards/scorecards.service.js';
+import { ScrambleService } from '../src/scramble/scramble.service.js';
 import { SeasonsService } from '../src/seasons/seasons.service.js';
 
 const args = process.argv.slice(2);
@@ -46,6 +51,7 @@ try {
   const seasonsSvc = app.get(SeasonsService);
   const cards = app.get(ScorecardsService);
   const playoffs = app.get(PlayoffsService);
+  const scrambles = app.get(ScrambleService);
   const startedAt = new Date();
 
   const [admin] = await db.select().from(users).where(eq(users.isSiteAdmin, true)).limit(1);
@@ -60,6 +66,42 @@ try {
     .select()
     .from(seasons)
     .where(and(eq(seasons.leagueId, L), inArray(seasons.name, names)));
+  const rng = createRng(FROM * 31 + TO);
+
+  /** The post-season scramble: everyone on the roster, teams balanced by the league's rules. */
+  async function scramble(seasonId: string, seed: number) {
+    const v = await scrambles.view(actor, L, seasonId);
+    if (v.scramble || !('defaults' in v) || !v.defaults) return;
+    const d = v.defaults;
+    await scrambles.create(actor, L, seasonId, {
+      date: d.date,
+      layoutId: d.layouts[0]!.id,
+      teamSize: d.teamSize,
+      allowance: d.allowance,
+      playerIds: d.players.map((p) => p.playerId),
+      seed,
+    });
+    const after = await scrambles.view(actor, L, seasonId);
+    if (!after.scramble) return;
+    const pars = after.scramble.layout.holes.map((h) => h.par);
+    for (const t of after.teams) {
+      // A team plays near par: a birdie here and there, the odd bogey.
+      const holeScores = t.holeScores.map((_, i) => {
+        const par = pars[i] ?? 4;
+        const r = rng();
+        return r < 0.3 ? par - 1 : r < 0.9 ? par : par + 1;
+      });
+      await scrambles.saveScores(actor, L, seasonId, t.id, { holeScores, version: t.version });
+    }
+  }
+
+  if (args.includes('--scrambles-only')) {
+    for (const s of existing) await scramble(s.id, Number(s.name));
+    console.log(`Scrambles added to ${existing.map((s) => s.name).join(', ')}.`);
+    await app.close();
+    process.exit(0);
+  }
+
   if (existing.length) {
     if (!args.includes('--replace'))
       throw new Error(`${existing.map((s) => s.name).join(', ')} exist. Re-run with --replace.`);
@@ -70,7 +112,6 @@ try {
     .select({ id: players.id, handicap: players.handicap })
     .from(players)
     .where(and(eq(players.leagueId, L), eq(players.active, true)));
-  const rng = createRng(FROM * 31 + TO);
   // Each player's form drifts from year to year: some were better then, some worse.
   const drift = new Map(roster.map((p) => [p.id, (rng() - 0.4) * 0.12]));
 
@@ -163,6 +204,7 @@ try {
         await playoffs.advance(actor, L, season.id);
       }
     }
+    await scramble(season.id, year);
     await db.update(seasons).set({ status: 'complete' }).where(eq(seasons.id, season.id));
     console.log(`${name}: ${sched.weeks.length} rounds, finished.`);
   }
