@@ -77,6 +77,12 @@ export function PlayerPage() {
       </div>
 
       <TrendCard h={h} />
+      {holes.data && s.rounds > 0 && !holes.data.nines.some((n) => (n.mine ?? 0) > 0) && (
+        <p className="text-sm text-muted-foreground">
+          No hole-by-hole scores yet: earlier rounds came from the league's spreadsheets, which only
+          kept totals. Hole stats fill in as rounds are scored in TeeMate.
+        </p>
+      )}
       {holes.data?.nines
         .filter((n) => (n.mine ?? 0) > 0)
         .map((nine) => (

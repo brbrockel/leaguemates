@@ -136,5 +136,35 @@ describe('player trend and hole by hole', () => {
 
     expect(screen.getByText('Hole by hole: Timberlin Golf Club · Front 9')).toBeInTheDocument();
     expect(screen.getByText('+0.50 worse')).toBeInTheDocument();
+    expect(screen.queryByText(/No hole-by-hole scores yet/)).not.toBeInTheDocument();
+  });
+
+  it('explains why there is no hole by hole for imported rounds', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}/players/p1/history`]: () => ({
+        status: 200,
+        body: {
+          player: { id: 'p1', nickname: 'Jerry', fullName: null, handicap: 10 },
+          stats: {
+            rounds: 1,
+            scoringAverage: 44,
+            netAverage: 34,
+            best: null,
+            winPct: 100,
+            record: { W: 1, L: 0, T: 0 },
+          },
+          seasons: [],
+          headToHead: [],
+          matches: [match('2026-05-06', 44)],
+        },
+      }),
+      [`GET /api/leagues/${LEAGUE}/stats/holes?playerId=p1`]: () => ({
+        status: 200,
+        body: { seasons: [], nines: [] },
+      }),
+    });
+    renderAt(`/leagues/${LEAGUE}/players/p1`);
+    expect(await screen.findByText(/No hole-by-hole scores yet/)).toBeInTheDocument();
   });
 });

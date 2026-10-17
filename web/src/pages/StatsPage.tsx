@@ -39,7 +39,7 @@ export function StatsPage() {
         </h1>
         <p className="text-sm text-muted-foreground">
           How each hole plays, from every card entered hole by hole. Rank 1 plays hardest against
-          par. Imported history has totals only, so it isn't included.
+          par.
         </p>
       </div>
       {s && s.seasons.length > 1 && (
@@ -60,9 +60,16 @@ export function StatsPage() {
       {!s ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : s.nines.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          No hole-by-hole scores yet. They appear once cards are entered hole by hole and submitted.
-        </p>
+        <Card>
+          <CardHeader>
+            <CardTitle>No hole-by-hole scores yet</CardTitle>
+            <CardDescription>
+              Earlier seasons came from the league's spreadsheets, which only kept each player's
+              total for the night, so there's nothing to break down by hole. These stats fill in as
+              rounds are scored in TeeMate, typed in hole by hole or scanned from the card.
+            </CardDescription>
+          </CardHeader>
+        </Card>
       ) : (
         s.nines.map((nine) => (
           <Card key={nine.layoutId}>
