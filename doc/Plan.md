@@ -35,7 +35,7 @@ Each league can configure these rules. The defaults below are the rules of the W
 | Net score | Gross score − strokes. The lower net score wins |
 | Points | Win 3, tie 1, loss 0 |
 | Standings ties | Level on points: more wins, then head-to-head points among the tied players, then the lower total of gross minus handicap over the rounds they all played (decided 2026-10-16). The same order seeds the playoffs |
-| Handicap | League average over the player's last N rounds (5 or 10). The exact formula is still to be confirmed (see EH-006) |
+| Handicap | Suggested from the player's last 20 rounds: the average of the best 10, minus 35 (a 9-hole score of 35 is handicap 0), times 75%, rounded down, at most 18. Players with fewer than 5 rounds keep their current handicap. Admins review and apply suggestions. The formula can be changed in League settings and is still to be confirmed by the league (EH-006; see [Handicaps.md](Handicaps.md)) |
 | Absence: one player | A sub may play, but the sub's score never counts. The player who showed up wins only if their net score is lower than the absent player's baseline (par + handicap). Otherwise the match is a tie. The player who showed up cannot lose. |
 | Absence: both players | Tie |
 | Saying you're out | A player can mark themselves out of an upcoming round (with an optional sub's name) until their foursome's card is started; admins can mark anyone. The foursome is notified and the card starts with them absent |
