@@ -164,7 +164,7 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] **Wednesday League → Standings:** pick each season 2018–2026. "Final standings as published", with a place number on every row.
 - [ ] **Schedule** for a past season: each round shows four foursomes in tee order (Matches 1+2 first off, 3+4 second, and so on), with gross, net and a check on each winner.
 - [ ] **League → Players:** Joe, Rick S and Dave (stand-in for Todd) are under Past players. Doc's page runs 2018–2026, and so do Tony's (Anthony on the old sheets) and Jarrod's (Jerod in 2018).
-- [ ] **Wednesday League (Demo 2027)** (league switcher): a made-up 2027 season with 8 rounds played, to preview mid-season. Delete it when done (Season page → Delete season).
+- [ ] **Wednesday League (Demo 2027)** (league switcher): a made-up 2027 season with 8 rounds played, to preview mid-season. Delete it when done (Season page → Delete season). The league (now **Demo**, public) also has four finished made-up seasons, 2023–2026, with playoffs, from `demo-history`.
 
 ## 16. Activity (audit log)
 
