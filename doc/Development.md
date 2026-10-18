@@ -84,7 +84,7 @@ Rebuild the fixture with `pnpm history:fixture` after adding sheets to `../teema
 - **Workflow (since 1.0.0):** every change goes through a pull request.
   1. Branch from an up-to-date `main`: `eh-###-<topic>`, `fix/<topic>` or `docs/<topic>`.
   2. Run `pnpm check` before each commit, then push the branch and open a PR with `gh pr create`.
-  3. CI must pass. The owner reviews and merges, as a squash merge.
+  3. CI must pass, then the pull request is squash-merged (by the owner, or by Claude Code once CI passes).
   4. Deploy from `main` after the merge, using the steps in [Deployment.md](Deployment.md). The homelab is production, so take a backup first when a change touches data or migrations.
 - Commit messages start with the spec ID they implement where there is one (e.g. `EH-013: ...`).
 - **CI** (`.github/workflows/ci.yml`) runs on every pull request and every push to `main`: formatting, lint, typecheck, tests and the production build.
