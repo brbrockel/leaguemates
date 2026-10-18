@@ -25,7 +25,7 @@ beforeEach(async () => {
 
 describe('everything requires sign-in', () => {
   it('health is public', async () => {
-    await http().get('/api/health').expect(200, { ok: true });
+    await http().get('/api/health').expect(200, { ok: true, version: 'dev' });
   });
 
   it.each(['/api/auth/me', '/api/leagues'])('%s returns 401 without a session', async (path) => {

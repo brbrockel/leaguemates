@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { appVersion } from '@/lib/version';
 import { useCurrentLeague } from '@/lib/useCurrentLeague';
 
 export function AppLayout() {
@@ -181,6 +182,10 @@ export function AppLayout() {
                   >
                     <LogOut /> Sign out
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                    TeeMate {appVersion}
+                  </DropdownMenuLabel>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}

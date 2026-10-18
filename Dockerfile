@@ -9,6 +9,8 @@ COPY api/package.json api/
 COPY web/package.json web/
 RUN pnpm install --frozen-lockfile
 COPY . .
+# The web app shows it in the profile menu (see the runtime stage below).
+ARG APP_VERSION=dev
 RUN pnpm --filter @teemate/shared build \
  && pnpm --filter @teemate/api build \
  && pnpm --filter @teemate/web build
@@ -18,7 +20,8 @@ RUN pnpm --filter @teemate/api deploy --prod --legacy /out/api \
  && cp -r api/dist /out/api/dist
 
 FROM node:24-slim
-# The git commit, shown on problem reports: docker build --build-arg APP_VERSION=$TAG
+# The release (1.0.0) or git commit, shown on problem reports, /api/health and the profile
+# menu: docker build --build-arg APP_VERSION=$TAG
 ARG APP_VERSION=dev
 ENV NODE_ENV=production \
     APP_VERSION=$APP_VERSION \

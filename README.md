@@ -5,7 +5,7 @@ Tee times, pairings and standings for a weekly golf league.
 ## Executive Summary
 
 - Purpose: replace the weekly league spreadsheet with a web and mobile app for schedules, tee times, scorecards, handicaps, standings and photos.
-- Status: Phase 1 is deployed at https://teemate.bhbslp.org (email off). The scoring rules and schedule generator are built and tested in `packages/shared`.
+- Status: **1.0.0** released 2026-10-17 and running in production at https://teemate.bhbslp.org (email off). What's in each release: [doc/Changelog.md](doc/Changelog.md).
 
 ## Documentation Index
 
@@ -14,6 +14,7 @@ All planning, design and reference material lives in [`doc/`](doc/):
 - Plan: objective, league rules, features, phases, decisions ([doc/Plan.md](doc/Plan.md))
 - Development setup and commands ([doc/Development.md](doc/Development.md))
 - Deployment to the homelab ([doc/Deployment.md](doc/Deployment.md))
+- Releases and what changed in each ([doc/Changelog.md](doc/Changelog.md))
 - Test plan for phone and desktop review ([doc/TestPlan.md](doc/TestPlan.md))
 - Architecture and security model ([doc/Architecture.md](doc/Architecture.md))
 - Enhancement specs, EH-### ([doc/Enhancements.md](doc/Enhancements.md))

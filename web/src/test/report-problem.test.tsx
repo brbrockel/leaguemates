@@ -4,6 +4,16 @@ import { describe, expect, it } from 'vitest';
 import { me, mockApi, renderAt } from './render';
 
 describe('report a problem', () => {
+  it('the profile menu shows the version that is running', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      'GET /api/me/this-week': () => ({ status: 200, body: [] }),
+    });
+    renderAt('/');
+    await userEvent.click(await screen.findByRole('button', { name: 'Account menu' }));
+    expect(await screen.findByText('TeeMate 1.0.0 (dev)')).toBeInTheDocument();
+  });
+
   it('sends a report from the profile menu with the current page', async () => {
     const calls = mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),

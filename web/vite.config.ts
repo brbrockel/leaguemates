@@ -1,11 +1,23 @@
 /// <reference types="vitest/config" />
+import { readFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+const { version } = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
+) as {
+  version: string;
+};
+
 export default defineConfig({
+  // Shown in the profile menu: the release, and the commit when it isn't a release build.
+  define: {
+    __APP_VERSION__: JSON.stringify(version),
+    __APP_BUILD__: JSON.stringify(process.env.APP_VERSION ?? 'dev'),
+  },
   plugins: [
     react(),
     tailwindcss(),

@@ -86,6 +86,8 @@ The full specs are in [Enhancements.md](Enhancements.md).
 4. **Parallel run:** run TeeMate alongside the spreadsheet for 2–3 weeks, compare the results, then switch over.
 5. **Phase 2:** EH-008, EH-009, EH-012, EH-013, EH-014.
 
+**Where it stands (1.0.0, 2026-10-17):** phases 1–3 and 5 are done except push notifications (EH-013). The parallel run (phase 4) waits for the 2027 season, since the 2026 season is over; the league's answers to the open questions below are still needed.
+
 ## Decisions
 
 | Topic | Decision | Status |

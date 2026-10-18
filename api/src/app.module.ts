@@ -1,4 +1,4 @@
-import { Controller, Get, Global, Module, type DynamicModule } from '@nestjs/common';
+import { Controller, Get, Global, Inject, Module, type DynamicModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import type { Request } from 'express';
@@ -25,10 +25,13 @@ import { UsersModule } from './users/users.module.js';
 
 @Controller('health')
 class HealthController {
+  constructor(@Inject(CONFIG) private readonly config: Config) {}
+
+  /** Also says which version is running: the release (1.0.0) or the git commit. */
   @Public()
   @Get()
   health() {
-    return { ok: true };
+    return { ok: true, version: this.config.APP_VERSION };
   }
 }
 

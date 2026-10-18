@@ -1,6 +1,6 @@
 # Deployment
 
-How TeeMate runs in the homelab, and how to update it.
+How TeeMate runs in the homelab, and how to update it. Since 1.0.0 (2026-10-17) this is **production**: back up before any data change or risky deploy, and confirm with the owner before writing data by hand.
 
 ## Where it runs
 
@@ -23,7 +23,7 @@ How TeeMate runs in the homelab, and how to update it.
 ```bash
 cd ~/repos/teemate
 git pull && pnpm check                      # must pass
-TAG=$(git rev-parse --short HEAD)
+TAG=$(git rev-parse --short HEAD)           # a release uses its version instead, e.g. TAG=1.0.0
 docker build --build-arg APP_VERSION=$TAG -t teemate:$TAG -t teemate:latest .
 cd ~/repos/homelab-docker-linux
 TEEMATE_TAG=$TAG docker stack deploy -c teemate/teemate-stack.yml teemate
@@ -31,6 +31,8 @@ docker service logs -f teemate_teemate       # expect "Migrations applied" then 
 ```
 
 The image is built locally; this single-node Swarm runs it without a registry. Pushing to `ghcr.io/brbrockel/teemate` needs a token with `write:packages`.
+
+**A release:** bump `version` in the four `package.json` files, add it to [Changelog.md](Changelog.md), commit, tag `vX.Y.Z`, build and deploy with `TAG=X.Y.Z`, push with the tag and create a GitHub release from the tag. Take a backup first (below).
 
 **Roll back:** redeploy a previous tag (`docker image ls teemate`). Database migrations only move forward, so check the migration list before rolling back across a schema change.
 

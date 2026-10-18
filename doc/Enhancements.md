@@ -68,6 +68,8 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 
 Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
 
+**Released 1.0.0 (2026-10-17):** the homelab deployment is now production. See [Changelog.md](Changelog.md).
+
 Also done (2026-10-17): **Look around as a guest** on the sign-in page, offered while any league is public. Guests see public leagues read-only: schedules, results, standings, scorecards, stats and each player's golf history, with players by nickname only. They see no full names, accounts, contact details, photos, notices or activity, and can't change anything. The API allows guests an explicit list of read routes only (`@GuestOk()`).
 
 ---
