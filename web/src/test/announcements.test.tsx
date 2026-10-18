@@ -188,7 +188,7 @@ describe('notices panel (the horn)', () => {
       },
     });
 
-  it('counts what is new and not already a banner; opening it marks them read', async () => {
+  it('counts what is new and not already a banner; opening it leaves them unread', async () => {
     const calls = adminApi();
     renderAt('/');
     const horn = await screen.findByRole('button', { name: 'Notices (2 new)' });
@@ -196,6 +196,20 @@ describe('notices panel (the horn)', () => {
     const panel = await screen.findByRole('dialog', { name: 'Notices' });
     expect(within(panel).getByRole('region', { name: 'Wednesday League' })).toBeInTheDocument();
     expect(within(panel).getByText('Card submitted')).toBeInTheDocument();
+    expect(calls.some((c) => c.key.endsWith('/announcements/read'))).toBe(false);
+
+    // ✓ marks one read.
+    await userEvent.click(within(panel).getByRole('button', { name: 'Mark Card submitted read' }));
+    const one = calls.find((c) => c.key.endsWith('/announcements/read'));
+    expect(JSON.parse(String(one?.init?.body))).toEqual({ ids: ['a2'] });
+  });
+
+  it('Mark all read marks every unread notice', async () => {
+    const calls = adminApi();
+    renderAt('/');
+    await userEvent.click(await screen.findByRole('button', { name: 'Notices (2 new)' }));
+    const panel = await screen.findByRole('dialog', { name: 'Notices' });
+    await userEvent.click(within(panel).getByRole('button', { name: /Mark all read/ }));
     const read = calls.find((c) => c.key.endsWith('/announcements/read'));
     expect(JSON.parse(String(read?.init?.body))).toEqual({ ids: ['a1', 'a2'] });
   });
