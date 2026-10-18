@@ -245,6 +245,7 @@ export class AnnouncementsService {
         email: users.email,
         phone: users.phone,
         disabledAt: users.disabledAt,
+        noticeEmails: users.noticeEmails,
       })
       .from(users)
       .where(inArray(users.id, [...new Set(ids)]));
@@ -304,24 +305,7 @@ export class AnnouncementsService {
     const people = (await this.recipients(leagueId, a!)).filter(
       (p) => p.id !== actor.id && !p.disabledAt,
     );
-    let emailed = 0;
-    let held = 0;
-    if (email) {
-      for (const p of people) {
-        if (!(await this.mail.allows(p.email))) {
-          held++;
-          continue;
-        }
-        await this.mailer
-          .send({
-            to: p.email,
-            subject: a!.title,
-            text: [a!.body || a!.title, '', `TeeMate: ${this.config.APP_URL}`].join('\n'),
-          })
-          .then(() => emailed++)
-          .catch((err: unknown) => this.log.error(`Notice email failed: ${String(err)}`));
-      }
-    }
+    const { emailed, held } = email ? await this.email(people, a!) : { emailed: 0, held: 0 };
     await this.audit.record({
       leagueId,
       actorUserId: actor.id,
@@ -341,7 +325,44 @@ export class AnnouncementsService {
       .map((p) => p.phone!);
   }
 
-  /** A notice the app writes itself. Never emailed or texted; failures never block the action. */
+  /**
+   * Emails a notice to the people it's for who want notice emails. The mail guard still
+   * applies: anyone it won't let through is counted as held back, not sent.
+   */
+  private async email(
+    people: { email: string; disabledAt: Date | null; noticeEmails: boolean }[],
+    n: { title: string; body: string },
+  ) {
+    let emailed = 0;
+    let held = 0;
+    for (const p of people) {
+      if (p.disabledAt || !p.noticeEmails) continue;
+      if (!(await this.mail.allows(p.email))) {
+        held++;
+        continue;
+      }
+      await this.mailer
+        .send({
+          to: p.email,
+          subject: n.title,
+          text: [
+            n.body || n.title,
+            '',
+            `TeeMate: ${this.config.APP_URL}`,
+            '',
+            'To stop notice emails, turn them off on your Account page in TeeMate.',
+          ].join('\n'),
+        })
+        .then(() => emailed++)
+        .catch((err: unknown) => this.log.error(`Notice email failed: ${String(err)}`));
+    }
+    return { emailed, held };
+  }
+
+  /**
+   * A notice the app writes itself, never texted. `email` also emails it (rainouts and skips),
+   * to those who want notice emails. Failures never block the action.
+   */
   async notify(
     leagueId: string,
     n: {
@@ -353,19 +374,27 @@ export class AnnouncementsService {
       kind: string;
       /** A rainout or skip: the day it's about. */
       forDate?: string;
+      email?: boolean;
     },
   ) {
     try {
-      await this.db.insert(announcements).values({
-        leagueId,
-        audience: n.audience,
-        groupId: n.groupId ?? null,
-        recipientUserId: n.recipientUserId ?? null,
-        title: n.title,
-        body: n.body ?? '',
-        kind: n.kind,
-        forDate: n.forDate ?? null,
-      });
+      const [a] = await this.db
+        .insert(announcements)
+        .values({
+          leagueId,
+          audience: n.audience,
+          groupId: n.groupId ?? null,
+          recipientUserId: n.recipientUserId ?? null,
+          title: n.title,
+          body: n.body ?? '',
+          kind: n.kind,
+          forDate: n.forDate ?? null,
+        })
+        .returning();
+      if (n.email) {
+        const { emailed, held } = await this.email(await this.recipients(leagueId, a!), a!);
+        this.log.log(`Emailed ${n.kind}: ${emailed} sent, ${held} held back by the mail guard`);
+      }
     } catch (err) {
       this.log.error(`Couldn't post an automatic notice (${n.kind}): ${String(err)}`);
     }

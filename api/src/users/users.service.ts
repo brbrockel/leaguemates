@@ -362,6 +362,7 @@ export class UsersService {
       nickname?: string | null | undefined;
       phone?: string | null | undefined;
       address?: string | null | undefined;
+      noticeEmails?: boolean | undefined;
     },
   ) {
     const before = await this.getUser(actor.id);
@@ -370,6 +371,7 @@ export class UsersService {
       ...(input.nickname !== undefined ? { nickname: input.nickname?.trim() || null } : {}),
       ...(input.phone !== undefined ? { phone: input.phone } : {}),
       ...(input.address !== undefined ? { address: input.address } : {}),
+      ...(input.noticeEmails !== undefined ? { noticeEmails: input.noticeEmails } : {}),
     };
     const [after] = await this.db
       .update(users)
@@ -386,12 +388,14 @@ export class UsersService {
         nickname: before.nickname,
         phone: before.phone,
         address: before.address,
+        noticeEmails: before.noticeEmails,
       },
       after: {
         name: after!.name,
         nickname: after!.nickname,
         phone: after!.phone,
         address: after!.address,
+        noticeEmails: after!.noticeEmails,
       },
     });
     return {
@@ -400,6 +404,7 @@ export class UsersService {
       nickname: after!.nickname,
       phone: after!.phone,
       address: after!.address,
+      noticeEmails: after!.noticeEmails,
     };
   }
 

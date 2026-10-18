@@ -48,6 +48,7 @@ const UpdateSelf = z
     nickname: z.string().trim().max(30).nullable().optional(),
     phone: PhoneInput.optional(),
     address: AddressInput.optional(),
+    noticeEmails: z.boolean().optional(),
   })
   .refine((b) => Object.keys(b).length > 0, { message: 'Nothing to update.' });
 

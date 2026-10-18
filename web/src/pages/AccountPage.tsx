@@ -31,6 +31,10 @@ export function AccountPage() {
     }) => api('/me', { method: 'PATCH', body: d }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ME_KEY }),
   });
+  const saveEmails = useMutation({
+    mutationFn: (noticeEmails: boolean) => api('/me', { method: 'PATCH', body: { noticeEmails } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ME_KEY }),
+  });
   const navigate = useNavigate();
   if (!me) return null;
 
@@ -58,6 +62,29 @@ export function AccountPage() {
             error={saveDetails.error?.message ?? null}
             saved={saveDetails.isSuccess}
           />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Email</CardTitle>
+          <CardDescription>
+            Rainouts, skipped rounds and notices an admin chooses to email. Sign-in and password
+            emails always come.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={saveEmails.isPending ? saveEmails.variables : me.user.noticeEmails !== false}
+              disabled={saveEmails.isPending}
+              onChange={(e) => saveEmails.mutate(e.target.checked)}
+            />
+            Email me notices
+          </label>
+          {saveEmails.isError && (
+            <p className="mt-2 text-sm text-destructive">{saveEmails.error.message}</p>
+          )}
         </CardContent>
       </Card>
       <PracticeScanCard />

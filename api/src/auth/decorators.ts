@@ -8,6 +8,8 @@ export interface SessionUser {
   nickname: string | null;
   phone: string | null;
   address: string | null;
+  /** Wants notices by email (rainouts, skips, ones an admin emails). */
+  noticeEmails: boolean;
   isSiteAdmin: boolean;
   sessionId: string;
   csrfToken: string;
@@ -23,6 +25,7 @@ export const GUEST_USER: SessionUser = {
   nickname: 'Guest',
   phone: null,
   address: null,
+  noticeEmails: false,
   isSiteAdmin: false,
   sessionId: '',
   csrfToken: '',

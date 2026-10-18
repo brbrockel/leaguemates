@@ -570,6 +570,7 @@ export class SeasonsService {
       audience: 'league',
       kind: 'week.skip',
       forDate: week.date,
+      email: true,
       title: `Round ${week.round} is off`,
       body: `Round ${week.round} (${week.date}) won't be played, and no points are given for it.`,
     });
@@ -890,6 +891,7 @@ export class SeasonsService {
       audience: 'league',
       kind: 'week.rainout',
       forDate: week.date,
+      email: true,
       title: `Rained out: round ${week.round}`,
       body: `Round ${week.round} moves to ${addDays(week.date, 7)}, and every later round moves back a week.`,
     });

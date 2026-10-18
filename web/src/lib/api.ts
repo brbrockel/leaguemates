@@ -59,6 +59,8 @@ export interface User {
   nickname?: string | null;
   phone?: string | null;
   address?: string | null;
+  /** Wants notices by email (rainouts, skips, ones an admin emails). */
+  noticeEmails?: boolean;
   isSiteAdmin: boolean;
   /** Looking around without an account: read-only, public leagues, nicknames only. */
   isGuest?: boolean;
