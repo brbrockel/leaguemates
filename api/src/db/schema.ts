@@ -33,6 +33,8 @@ export const users = pgTable('users', {
   phone: text('phone'),
   address: text('address'),
   disabledAt: timestamp('disabled_at', { withTimezone: true }),
+  /** Email me notices: rainouts and skips, and ones an admin chooses to email. Account emails always go. */
+  noticeEmails: boolean('notice_emails').notNull().default(true),
   /** Argon2id hash; null until the person sets a password from a setup link. */
   passwordHash: text('password_hash'),
   passwordSetAt: timestamp('password_set_at', { withTimezone: true }),

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { formatPhone } from '@/lib/phone';
@@ -25,6 +25,28 @@ describe('account details', () => {
       phone: '860 555 1234',
       address: '1 Golf Rd, Berlin CT',
     });
+  });
+
+  it('turns notice emails off', async () => {
+    let body: unknown;
+    let noticeEmails = true;
+    mockApi({
+      'GET /api/auth/me': () => ({
+        status: 200,
+        body: { ...me, user: { ...me.user, noticeEmails } },
+      }),
+      'PATCH /api/me': (init) => {
+        body = JSON.parse(String(init?.body));
+        noticeEmails = false;
+        return { status: 200, body: {} };
+      },
+    });
+    renderAt('/account');
+    const box = await screen.findByRole('checkbox', { name: 'Email me notices' });
+    expect(box).toBeChecked();
+    await userEvent.click(box);
+    expect(body).toEqual({ noticeEmails: false });
+    await waitFor(() => expect(box).not.toBeChecked());
   });
 });
 

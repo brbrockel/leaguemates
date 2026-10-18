@@ -260,6 +260,13 @@
       "when": 1792280382304,
       "tag": "0036_banners",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1792336727018,
+      "tag": "0037_notice_emails",
+      "breakpoints": true
     }
   ]
 }

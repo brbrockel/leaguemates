@@ -206,6 +206,36 @@ describe('notices for a foursome or one person, read and dismissed', () => {
     await as(site).get(`/leagues/${L}/announcements/${body.id}/phones`).expect(200);
   });
 
+  it('rainouts and skips are emailed to those who want notice emails (the guard applies)', async () => {
+    const { L, S, week, keith } = await setup();
+    // Only Jerry and Keith may get email; the site admin is held back.
+    await as(site)
+      .put('/site-settings/mail', {
+        mode: 'allowlist',
+        allowlist: 'jerry@example.com, keith@example.com',
+        host: 'localhost',
+        port: 25,
+        secure: false,
+        user: null,
+        from: 'TeeMate <noreply@example.com>',
+      })
+      .expect(200);
+    expect((await as(keith).get('/auth/me').expect(200)).body.user.noticeEmails).toBe(true);
+    await as(keith).patch('/me', { noticeEmails: false }).expect(200);
+    expect((await as(keith).get('/auth/me').expect(200)).body.user.noticeEmails).toBe(false);
+    t.outbox.length = 0;
+
+    await as(site).post(`/leagues/${L}/seasons/${S}/weeks/${week.id}/rainout`).expect(201);
+    expect(t.outbox.map((m) => m.to)).toEqual(['jerry@example.com']);
+    expect(t.outbox[0]).toMatchObject({ subject: 'Rained out: round 1' });
+    expect(t.outbox[0]!.text).toMatch(/turn them off on your Account page/);
+
+    // Notices an admin emails skip Keith too; everyday automatic ones aren't emailed.
+    t.outbox.length = 0;
+    await as(site).post(`/leagues/${L}/announcements`, { title: 'Dues', email: true }).expect(201);
+    expect(t.outbox.map((m) => m.to)).toEqual(['jerry@example.com']);
+  });
+
   it('banners: a week by default, none, or until dismissed', async () => {
     const { L, jerry } = await setup();
     await as(site).post(`/leagues/${L}/announcements`, { title: 'Week' }).expect(201);

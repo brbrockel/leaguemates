@@ -47,6 +47,7 @@ export class SessionService {
         nickname: users.nickname,
         phone: users.phone,
         address: users.address,
+        noticeEmails: users.noticeEmails,
         isSiteAdmin: users.isSiteAdmin,
         sessionId: sessions.id,
         csrfToken: sessions.csrfToken,
