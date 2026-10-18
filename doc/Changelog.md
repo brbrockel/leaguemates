@@ -3,7 +3,7 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
-## Unreleased
+## 1.1.0 (2026-10-18)
 
 - **Notices panel:** opening it no longer marks everything read; ✓ marks one, **Mark all read** marks them all.
 - **Notice emails:** rainouts and skipped rounds are emailed to the league; each person can turn notice emails off on Account.
