@@ -684,3 +684,22 @@ export const courseImages = pgTable('course_images', {
   height: integer('height').notNull(),
   createdAt: createdAt(),
 });
+
+/** A phone or computer where someone turned push notifications on (one row per browser). */
+export const pushSubscriptions = pgTable(
+  'push_subscriptions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /** The push service's address for this browser; unique, so a device belongs to one person. */
+    endpoint: text('endpoint').notNull().unique(),
+    p256dh: text('p256dh').notNull(),
+    auth: text('auth').notNull(),
+    userAgent: text('user_agent'),
+    createdAt: createdAt(),
+    lastSentAt: timestamp('last_sent_at', { withTimezone: true }),
+  },
+  (t) => [index('push_subscriptions_user_idx').on(t.userId)],
+);

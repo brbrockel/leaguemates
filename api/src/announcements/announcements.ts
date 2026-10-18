@@ -41,6 +41,7 @@ import {
 } from '../db/schema.js';
 import { LeagueGuard, RequireLeagueRole } from '../leagues/league.guard.js';
 import { MAILER, MailSettingsService, type Mailer } from '../mail/mailer.js';
+import { PushService } from '../push/push.js';
 import { BannerDays, bannerFields, bannerState } from './banners.js';
 import { SiteNoticesController, SiteNoticesService } from './site-notices.js';
 
@@ -94,6 +95,7 @@ export class AnnouncementsService {
     private readonly mail: MailSettingsService,
     private readonly memberships: MembershipService,
     private readonly audit: AuditService,
+    private readonly push: PushService,
   ) {}
 
   /** The notices in a league this person may see. */
@@ -306,6 +308,10 @@ export class AnnouncementsService {
       (p) => p.id !== actor.id && !p.disabledAt,
     );
     const { emailed, held } = email ? await this.email(people, a!) : { emailed: 0, held: 0 };
+    await this.push.send(
+      people.filter((p) => !p.disabledAt).map((p) => p.id),
+      { title: a!.title, body: a!.body, url: '/' },
+    );
     await this.audit.record({
       leagueId,
       actorUserId: actor.id,
@@ -361,7 +367,8 @@ export class AnnouncementsService {
 
   /**
    * A notice the app writes itself, never texted. `email` also emails it (rainouts and skips),
-   * to those who want notice emails. Failures never block the action.
+   * to those who want notice emails; `push` pushes it to their devices. Failures never block
+   * the action.
    */
   async notify(
     leagueId: string,
@@ -375,6 +382,8 @@ export class AnnouncementsService {
       /** A rainout or skip: the day it's about. */
       forDate?: string;
       email?: boolean;
+      /** Also push it to the devices of those it's for, and open this page when tapped. */
+      push?: { url: string; exceptUserId?: string };
     },
   ) {
     try {
@@ -394,6 +403,13 @@ export class AnnouncementsService {
       if (n.email) {
         const { emailed, held } = await this.email(await this.recipients(leagueId, a!), a!);
         this.log.log(`Emailed ${n.kind}: ${emailed} sent, ${held} held back by the mail guard`);
+      }
+      if (n.push) {
+        const people = await this.recipients(leagueId, a!);
+        await this.push.send(
+          people.filter((p) => !p.disabledAt && p.id !== n.push!.exceptUserId).map((p) => p.id),
+          { title: a!.title, body: a!.body, url: n.push.url },
+        );
       }
     } catch (err) {
       this.log.error(`Couldn't post an automatic notice (${n.kind}): ${String(err)}`);

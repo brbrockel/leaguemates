@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useTheme, type Theme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { PracticeScanCard } from '@/components/PracticeScanCard';
+import { PushCard } from '@/components/PushCard';
 
 const THEMES: { value: Theme; label: string }[] = [
   { value: 'system', label: 'Device' },
@@ -87,6 +88,7 @@ export function AccountPage() {
           )}
         </CardContent>
       </Card>
+      <PushCard />
       <PracticeScanCard />
       <SecurityCard isAdmin={me.user.isSiteAdmin || me.leagues.some((l) => l.role === 'admin')} />
       <Card>

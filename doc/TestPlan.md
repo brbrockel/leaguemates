@@ -124,6 +124,8 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] **As Admin, horn → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
 - [ ] **Also email it:** recipients get it by email (the mail guard in Site settings → Email still decides). **Also text it** opens a group text on your phone.
 - [ ] **Rainout or skip emails:** in the Demo league, rain out or skip a round: everyone in the league who wants notice emails gets one (with email limited to your own address, only you do). Other automatic notices (cards, absences, playoffs) are never emailed.
+- [ ] **Push, on your phone:** on iPhone, Share → Add to Home Screen first and open TeeMate from there. Account → **Notifications on this device** → tick it and allow. Rain out a Demo round: a notification arrives; tapping it opens the season. Post a Demo notice from another device: it arrives. Your own actions never notify you.
+- [ ] **Push off:** untick it: nothing more arrives on that device. Card approvals and playoff updates never push.
 - [ ] **Account → Email → Email me notices:** untick it, rain out another Demo round: no email comes. Sign-in and password emails still do.
 - [ ] The message button on an existing notice opens a text to the people it's for.
 - [ ] **Shortcuts (Admin):** on the Schedule, the small message button on a foursome opens a new notice for that foursome (the dialog says who it's for). On People, **⋯ → Send a notice** does the same for one person.

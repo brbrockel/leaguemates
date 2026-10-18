@@ -10,11 +10,14 @@ import { loadConfig, type Config } from '../src/config.js';
 import { createDb, createPool, type Database } from '../src/db/db.js';
 import { users } from '../src/db/schema.js';
 import { MAILER, type Mail, type Mailer } from '../src/mail/mailer.js';
+import { PUSH_SENDER, type PushSender, type PushTarget } from '../src/push/push.js';
 
 export interface TestApp {
   app: INestApplication;
   db: Database;
   outbox: Mail[];
+  /** Push notifications sent: the device's endpoint and the message. */
+  pushed: { endpoint: string; title: string; body: string; url: string }[];
   close(): Promise<void>;
 }
 
@@ -22,13 +25,28 @@ export async function createTestApp(
   overrides: Partial<Config> = {},
   customize: (m: TestingModuleBuilder) => TestingModuleBuilder = (m) => m,
 ): Promise<TestApp> {
-  const config = { ...loadConfig(), ...overrides };
+  const config = {
+    ...loadConfig(),
+    VAPID_PUBLIC_KEY: 'BTestVapidPublicKey000000000',
+    ...overrides,
+  };
   const outbox: Mail[] = [];
   const mailer: Mailer = { send: async (m) => void outbox.push(m) };
+  const pushed: TestApp['pushed'] = [];
+  const pushSender: PushSender = {
+    async send(target: PushTarget, payload: string) {
+      // A device the push service no longer knows, for the clean-up test.
+      if (target.endpoint.includes('gone'))
+        throw Object.assign(new Error('Gone'), { statusCode: 410 });
+      pushed.push({ endpoint: target.endpoint, ...JSON.parse(payload) });
+    },
+  };
   const moduleRef = await customize(
     Test.createTestingModule({ imports: [AppModule.with(config)] })
       .overrideProvider(MAILER)
-      .useValue(mailer),
+      .useValue(mailer)
+      .overrideProvider(PUSH_SENDER)
+      .useValue(pushSender),
   ).compile();
   const app = moduleRef.createNestApplication();
   configureApp(app, config);
@@ -39,6 +57,7 @@ export async function createTestApp(
     app,
     db: createDb(pool),
     outbox,
+    pushed,
     async close() {
       await app.close();
       await pool.end();
@@ -48,7 +67,7 @@ export async function createTestApp(
 
 export async function resetDb(db: Database): Promise<void> {
   await db.execute(sql`truncate table
-    bug_reports, photos, scramble_team_members, scramble_teams, scrambles, announcements, site_notices, card_rounds, scorecards, matches, groups, weeks, season_players, seasons, site_settings, audit_log, auth_attempts, invites, league_memberships, players, leagues,
+    bug_reports, photos, scramble_team_members, scramble_teams, scrambles, announcements, site_notices, push_subscriptions, card_rounds, scorecards, matches, groups, weeks, season_players, seasons, site_settings, audit_log, auth_attempts, invites, league_memberships, players, leagues,
     sessions, magic_link_tokens, users restart identity cascade`);
   // Timberlin is seeded by a migration; anything else is from a test.
   await db.execute(sql`delete from courses where name <> 'Timberlin Golf Club'`);
