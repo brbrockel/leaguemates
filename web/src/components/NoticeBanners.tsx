@@ -134,7 +134,7 @@ export function NoticeBanners({
             role={b.urgent ? 'alert' : undefined}
             className={cn(
               'rounded-xl border px-3 py-2 text-sm shadow-xs',
-              b.urgent ? 'border-amber-500/40 bg-amber-500/10' : 'bg-card',
+              b.urgent ? 'border-amber-500/40 bg-amber-500/10' : 'border-primary/30 bg-primary/10',
             )}
           >
             <div className="flex items-center gap-2">
