@@ -116,7 +116,7 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 
 ## 10. Notices
 
-- [ ] **Banners:** on every page, new notices show as one-line banners under the top bar, stacked: TeeMate's first, then a rainout or skip, then ones for you or your foursome, then the league's. Tap one for the full text (that marks it read); **✕** clears it for good. With more than three, the last row says "+N more notices" and opens the notices panel.
+- [ ] **Banners:** on every page, new notices show as one-line banners under the top bar, most urgent first: TeeMate's, then a rainout or skip, then ones for you or your foursome, then the league's. With more than one they sit in a stack (the top one with "+N", the edges of the rest below); tap the stack to fan them out, **Show less** to fold them back. Tap one for the full text (that marks it read); **✕** clears it for good and brings up the next.
 - [ ] **How long:** an admin's league notice is a banner for a week (or what they chose under **Show as a banner**), one for a foursome or one person two days, "Until each person clears it" until you ✕ it. If an admin edits it, it comes back. Card and playoff notices never show as banners.
 - [ ] **Rainout or skip:** a banner through the round's day. On the day itself it has no ✕.
 - [ ] **The horn (📣) in the top bar:** the count is new notices not already showing as banners. Tap it: the league's notices, then TeeMate's. Opening it marks them read.

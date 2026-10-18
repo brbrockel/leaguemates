@@ -71,6 +71,11 @@ describe('notice banners', () => {
     });
     renderAt('/');
     const bar = await screen.findByRole('region', { name: 'Notices' });
+    // Stacked: only the most urgent shows, with a count of the rest.
+    expect(within(bar).getAllByRole('button', { expanded: false })).toHaveLength(1);
+    expect(within(bar).getByText('Down for updates Sunday 8pm')).toBeInTheDocument();
+    expect(within(bar).queryByText('Bring $20 for the pot')).toBeNull();
+    await userEvent.click(within(bar).getByRole('button', { name: 'Show all 3 notices' }));
     const rows = within(bar).getAllByRole('button', { expanded: false });
     expect(rows.map((r) => r.textContent)).toEqual([
       'Down for updates Sunday 8pmTeeMate',
@@ -106,19 +111,31 @@ describe('notice banners', () => {
     expect(calls.some((c) => c.key.endsWith('/announcements/dismiss'))).toBe(true);
   });
 
-  it('past three, the rest fold into "+N more", which opens the notices panel', async () => {
+  it('fan out and fold back; dismissing the top one brings up the next', async () => {
     home({
       [LIST]: () => ({
         status: 200,
-        body: [1, 2, 3, 4].map((i) => notice({ id: `a${i}`, title: `Notice ${i}` })),
+        body: [1, 2, 3, 4].map((i) =>
+          notice({
+            id: `a${i}`,
+            title: `Notice ${i}`,
+            createdAt: new Date(Date.now() - i * 60_000).toISOString(),
+          }),
+        ),
       }),
+      [`POST /api/leagues/${LEAGUE}/announcements/dismiss`]: () => ({ status: 200, body: {} }),
     });
     renderAt('/');
     const bar = await screen.findByRole('region', { name: 'Notices' });
-    expect(within(bar).getAllByRole('button', { name: /^Dismiss/ })).toHaveLength(2);
-    await userEvent.click(within(bar).getByRole('button', { name: '+2 more notices' }));
-    const panel = await screen.findByRole('dialog', { name: 'Notices' });
-    expect(within(panel).getByText('Notice 4')).toBeInTheDocument();
+    expect(within(bar).getByText('+3')).toBeInTheDocument();
+    await userEvent.click(within(bar).getByRole('button', { name: 'Dismiss Notice 1' }));
+    expect(within(bar).getByText('Notice 2')).toBeInTheDocument();
+    expect(within(bar).getByText('+2')).toBeInTheDocument();
+
+    await userEvent.click(within(bar).getByRole('button', { name: 'Show all 3 notices' }));
+    expect(within(bar).getAllByRole('button', { name: /^Dismiss/ })).toHaveLength(3);
+    await userEvent.click(within(bar).getByRole('button', { name: 'Show less' }));
+    expect(within(bar).getAllByRole('button', { name: /^Dismiss/ })).toHaveLength(1);
   });
 
   it('site-wide notices are dismissed on the server', async () => {

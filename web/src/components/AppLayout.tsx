@@ -190,7 +190,7 @@ export function AppLayout() {
       <ReportProblemDialog open={reporting} onClose={() => setReporting(false)} />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-28 pt-6 md:pb-10">
-        <NoticeBanners leagueId={current?.id} guest={guest} onMore={() => setNoticesOpen(true)} />
+        <NoticeBanners leagueId={current?.id} guest={guest} />
         <Outlet />
       </main>
 

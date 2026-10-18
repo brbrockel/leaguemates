@@ -64,29 +64,29 @@ interface Banner {
   rank: number;
 }
 
-/** At most this many rows; past it, the last row says how many more there are. */
-const MAX = 3;
+const tint = (urgent: boolean) =>
+  urgent ? 'border-amber-500/40 bg-amber-500/10' : 'border-primary/30 bg-primary/10';
 
 /**
- * Banners at the top of every page, stacked by urgency: site-wide notices, a rainout or skip,
- * notices for you or your foursome, then the league's. One line each; tap for the full text
- * (that marks it read), ✕ clears it for good where it can be cleared. Routine notices (cards,
- * playoffs) never show here, only in the notices panel.
+ * Banners at the top of every page, by urgency: site-wide notices, a rainout or skip, notices
+ * for you or your foursome, then the league's. With more than one they sit in a stack, like a
+ * phone's notifications: the most urgent on top, the edges of the rest peeking out below; tap
+ * the stack to fan them out. Each is one line; tap for the full text (that marks it read), ✕
+ * clears it for good where it can be cleared. Routine notices (cards, playoffs) never show
+ * here, only in the notices panel.
  */
 export function NoticeBanners({
   leagueId,
   guest,
-  onMore,
 }: {
   leagueId: string | undefined;
   guest: boolean;
-  /** Opens the notices panel. */
-  onMore: () => void;
 }) {
   const league = useNotices(guest ? undefined : leagueId);
   const site = useSiteNotices();
   const mark = useMarkNotices(leagueId);
   const [open, setOpen] = useState<string | null>(null);
+  const [fanned, setFanned] = useState(false);
   const [closed, setClosed] = useState<string[]>(() => (guest ? guestDismissed() : []));
 
   const banners: Banner[] = [
@@ -105,9 +105,7 @@ export function NoticeBanners({
     .filter((b) => !(b.dismissible && closed.includes(b.id)))
     .sort((a, b) => a.rank - b.rank || b.createdAt.localeCompare(a.createdAt));
   if (!banners.length) return null;
-  // Guests have no notices panel to send the rest to.
-  const shown = !guest && banners.length > MAX ? banners.slice(0, MAX - 1) : banners;
-  const more = banners.length - shown.length;
+  const stacked = banners.length > 1 && !fanned;
 
   const toggle = (b: Banner) => {
     setOpen(open === b.id ? null : b.id);
@@ -124,70 +122,112 @@ export function NoticeBanners({
     } else mark.mutate({ site: b.site, ids: [b.id], how: 'dismiss' });
   };
 
-  return (
-    <section aria-label="Notices" className="mb-4 flex flex-col gap-1.5">
-      {shown.map((b) => {
-        const Icon = b.urgent ? TriangleAlert : b.site ? Info : Megaphone;
-        return (
-          <div
-            key={b.id}
-            role={b.urgent ? 'alert' : undefined}
-            className={cn(
-              'rounded-xl border px-3 py-2 text-sm shadow-xs',
-              b.urgent ? 'border-amber-500/40 bg-amber-500/10' : 'border-primary/30 bg-primary/10',
-            )}
-          >
-            <div className="flex items-center gap-2">
+  const row = (b: Banner, extra?: React.ReactNode) => {
+    const Icon = b.urgent ? TriangleAlert : b.site ? Info : Megaphone;
+    return (
+      // Solid underneath so the stack's lower layers don't show through the tint.
+      <div key={b.id} className="relative z-10 rounded-xl bg-background shadow-xs">
+        <div
+          role={b.urgent ? 'alert' : undefined}
+          className={cn('rounded-xl border px-3 py-2 text-sm', tint(b.urgent))}
+        >
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-expanded={open === b.id}
+              onClick={() => toggle(b)}
+              className="flex min-w-0 flex-1 items-center gap-2 text-left"
+            >
+              <Icon
+                className={cn('size-4 shrink-0', b.urgent ? 'text-amber-600' : 'text-primary')}
+                aria-hidden
+              />
+              <span className={cn('truncate', b.read ? 'font-normal' : 'font-medium')}>
+                {b.title}
+              </span>
+              <span className="ml-auto shrink-0 text-xs text-muted-foreground">{b.label}</span>
+            </button>
+            {extra}
+            {b.dismissible ? (
               <button
                 type="button"
-                aria-expanded={open === b.id}
-                onClick={() => toggle(b)}
-                className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                onClick={() => dismiss(b)}
+                aria-label={`Dismiss ${b.title}`}
+                className="rounded-md p-1 text-muted-foreground hover:bg-accent"
               >
-                <Icon
-                  className={cn('size-4 shrink-0', b.urgent ? 'text-amber-600' : 'text-primary')}
-                  aria-hidden
-                />
-                <span className={cn('truncate', b.read ? 'font-normal' : 'font-medium')}>
-                  {b.title}
-                </span>
-                <span className="ml-auto shrink-0 text-xs text-muted-foreground">{b.label}</span>
+                <X className="size-4" />
               </button>
-              {b.dismissible ? (
-                <button
-                  type="button"
-                  onClick={() => dismiss(b)}
-                  aria-label={`Dismiss ${b.title}`}
-                  className="rounded-md p-1 text-muted-foreground hover:bg-accent"
-                >
-                  <X className="size-4" />
-                </button>
-              ) : (
-                <span className="size-6 shrink-0" aria-hidden />
-              )}
-            </div>
-            {open === b.id && (
-              <div className="mt-1 pl-6">
-                {b.body && (
-                  <p className="whitespace-pre-wrap break-words text-muted-foreground">{b.body}</p>
-                )}
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {timeAgo(b.createdAt)}
-                  {!b.dismissible &&
-                    (b.urgent ? ' · stays up through the day' : ' · stays up until it ends')}
-                </p>
-              </div>
+            ) : (
+              <span className="size-6 shrink-0" aria-hidden />
             )}
           </div>
-        );
-      })}
-      {more > 0 && (
+          {open === b.id && (
+            <div className="mt-1 pl-6">
+              {b.body && (
+                <p className="whitespace-pre-wrap break-words text-muted-foreground">{b.body}</p>
+              )}
+              <p className="mt-1 text-xs text-muted-foreground">
+                {timeAgo(b.createdAt)}
+                {!b.dismissible &&
+                  (b.urgent ? ' · stays up through the day' : ' · stays up until it ends')}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  if (stacked) {
+    const [top, ...rest] = banners;
+    const fan = () => setFanned(true);
+    const peeks = rest.slice(0, 2);
+    return (
+      <section
+        aria-label="Notices"
+        className={cn('relative mb-4', peeks.length > 1 ? 'pb-4' : 'pb-2')}
+      >
+        {row(
+          top!,
+          <button
+            type="button"
+            onClick={fan}
+            aria-label={`Show all ${banners.length} notices`}
+            className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground"
+          >
+            +{rest.length}
+          </button>,
+        )}
+        {/* The edges of the next ones, peeking out below; tap them to fan the stack out. */}
+        {peeks.map((b, i) => (
+          <button
+            key={b.id}
+            type="button"
+            tabIndex={-1}
+            aria-hidden
+            onClick={fan}
+            className={cn(
+              'absolute inset-x-0 rounded-xl bg-background',
+              i === 0 ? 'bottom-2 z-[5] mx-2 h-6' : 'bottom-0 z-0 mx-4 h-6',
+            )}
+          >
+            <span className={cn('block h-full rounded-xl border', tint(b.urgent))} />
+          </button>
+        ))}
+      </section>
+    );
+  }
+
+  return (
+    <section aria-label="Notices" className="mb-4 flex flex-col gap-1.5">
+      {banners.map((b) => row(b))}
+      {banners.length > 1 && (
         <button
           type="button"
-          onClick={onMore}
-          className="rounded-xl border border-dashed px-3 py-1.5 text-left text-xs text-muted-foreground hover:bg-accent"
+          onClick={() => setFanned(false)}
+          className="self-center rounded-full px-3 py-1 text-xs text-muted-foreground hover:bg-accent"
         >
-          +{more} more {more === 1 ? 'notice' : 'notices'}
+          Show less
         </button>
       )}
     </section>
