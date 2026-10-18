@@ -16,6 +16,7 @@ import { HandicapsModule } from './handicaps/handicaps.js';
 import { LeaguesModule } from './leagues/leagues.module.js';
 import { MailModule } from './mail/mailer.js';
 import { PhotosModule } from './photos/photos.js';
+import { PushModule } from './push/push.js';
 import { PlayoffsModule } from './playoffs/playoffs.module.js';
 import { ScorecardsModule } from './scorecards/scorecards.module.js';
 import { ScrambleModule } from './scramble/scramble.controller.js';
@@ -80,6 +81,7 @@ export class AppModule {
         HandicapsModule,
         ScrambleModule,
         PhotosModule,
+        PushModule,
       ],
       controllers: [HealthController],
       providers: [

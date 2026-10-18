@@ -67,6 +67,13 @@ const EnvSchema = z.object({
     .string()
     .regex(/^[\w.-]+\/[\w.-]+$/)
     .default('brbrockel/teemate'),
+  /**
+   * Push notifications (web push): the VAPID key pair, from `npx web-push generate-vapid-keys`.
+   * The private key is a Docker secret in production (VAPID_PRIVATE_KEY_FILE). Without both,
+   * push is off and the Account page says so.
+   */
+  VAPID_PUBLIC_KEY: z.string().min(20).optional(),
+  VAPID_PRIVATE_KEY: z.string().min(20).optional(),
   /** Shown on problem reports; set at image build time (the git commit). */
   APP_VERSION: z.string().default('dev'),
   /** Wrong passwords before an account cools down, and the first cooldown (doubles each time). */

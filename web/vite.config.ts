@@ -36,6 +36,8 @@ export default defineConfig({
       workbox: {
         // Cache the app shell only. API responses are never cached, and /api is never answered with index.html.
         navigateFallbackDenylist: [/^\/api\//],
+        // Push notifications: shows them and opens the right page when tapped.
+        importScripts: ['push-sw.js'],
       },
     }),
   ],

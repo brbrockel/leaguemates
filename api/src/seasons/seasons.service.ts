@@ -571,6 +571,7 @@ export class SeasonsService {
       kind: 'week.skip',
       forDate: week.date,
       email: true,
+      push: { url: `/leagues/${leagueId}/seasons/${seasonId}` },
       title: `Round ${week.round} is off`,
       body: `Round ${week.round} (${week.date}) won't be played, and no points are given for it.`,
     });
@@ -836,6 +837,10 @@ export class SeasonsService {
       audience: 'group',
       groupId: match.groupId,
       kind: out ? 'round.absent' : 'round.absent_undo',
+      push: {
+        url: `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}/groups/${match.groupId}`,
+        exceptUserId: actor.id,
+      },
       title: out
         ? `${player!.nickname} can't make round ${week.round}`
         : `${player!.nickname} is playing round ${week.round} after all`,
@@ -892,6 +897,7 @@ export class SeasonsService {
       kind: 'week.rainout',
       forDate: week.date,
       email: true,
+      push: { url: `/leagues/${leagueId}/seasons/${seasonId}` },
       title: `Rained out: round ${week.round}`,
       body: `Round ${week.round} moves to ${addDays(week.date, 7)}, and every later round moves back a week.`,
     });

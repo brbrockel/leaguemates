@@ -552,6 +552,10 @@ export class ScorecardsService {
       audience: 'group',
       groupId,
       kind: 'card.submitted',
+      push: {
+        url: `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}/groups/${groupId}`,
+        exceptUserId: user.id,
+      },
       title: `Round ${c.week.round} card submitted`,
       body: `${this.by(user, c)} submitted your foursome's card. If something's wrong, open it and dispute it within ${c.settings.scorecards.disputeWindowHours} hours.`,
     });

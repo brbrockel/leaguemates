@@ -20,6 +20,7 @@ import { CurrentUser, GuestOk, SiteAdminOnly, type SessionUser } from '../auth/d
 import { ZodPipe } from '../common/validation.js';
 import { DB, type Database } from '../db/db.js';
 import { siteNoticeReads, siteNotices, users } from '../db/schema.js';
+import { PushService } from '../push/push.js';
 import { BannerDays, DAY } from './banners.js';
 
 const Fields = z.object({
@@ -52,6 +53,7 @@ export class SiteNoticesService {
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly audit: AuditService,
+    private readonly push: PushService,
   ) {}
 
   async list(user: SessionUser) {
@@ -136,6 +138,7 @@ export class SiteNoticesService {
       entityId: n!.id,
       after: { ...fields, expiresAt: n!.expiresAt },
     });
+    await this.push.sendToEveryone({ title: n!.title, body: n!.body, url: '/' });
     return n!;
   }
 

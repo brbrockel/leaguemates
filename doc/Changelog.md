@@ -3,6 +3,12 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
+## Unreleased
+
+- **Notices panel:** opening it no longer marks everything read; ✓ marks one, **Mark all read** marks them all.
+- **Notice emails:** rainouts and skipped rounds are emailed to the league; each person can turn notice emails off on Account.
+- **Push notifications** (EH-013 done): turned on per phone or computer on Account. Rainouts and skips, admin notices, your foursome's news (who can't make it, a card to check) and TeeMate's notices. Never for your own actions.
+
 ## 1.0.0 (2026-10-17)
 
 The first release. TeeMate replaces the league spreadsheet, and the homelab deployment at
