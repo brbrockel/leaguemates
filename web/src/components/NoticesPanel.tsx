@@ -1,6 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check, Info, Megaphone, MessageSquare, Pencil, Pin, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState, type FormEvent } from 'react';
+import {
+  Check,
+  CheckCheck,
+  Info,
+  Megaphone,
+  MessageSquare,
+  Pencil,
+  Pin,
+  Plus,
+  Trash2,
+} from 'lucide-react';
+import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -27,7 +37,8 @@ import { cn, ordinal } from '@/lib/utils';
 /**
  * The horn in the top bar: how many notices are unread that aren't already showing as a
  * banner, and a panel with every notice for the league you're in plus TeeMate's own. Opening
- * it marks them read. League admins post here; site admins post to everyone.
+ * it doesn't mark anything read: ✓ marks one, "Mark all read" marks the lot. League admins
+ * post here; site admins post to everyone.
  */
 export function NoticesButton({
   leagueId,
@@ -51,21 +62,14 @@ export function NoticesButton({
   const siteItems = site.data ?? [];
   const count = [...leagueItems, ...siteItems].filter((n) => !n.read && !n.banner).length;
 
-  // Opening the panel counts as reading everything in it.
-  const unread = (list: { id: string; read: boolean }[]) =>
-    open
-      ? list
-          .filter((n) => !n.read)
-          .map((n) => n.id)
-          .join(',')
-      : '';
-  const leagueUnread = unread(leagueItems);
-  const siteUnread = unread(siteItems);
-  useEffect(() => {
-    if (leagueUnread) mark.mutate({ site: false, ids: leagueUnread.split(','), how: 'read' });
-    if (siteUnread) mark.mutate({ site: true, ids: siteUnread.split(','), how: 'read' });
-    // Once per new set of unread notices.
-  }, [leagueUnread, siteUnread]);
+  // Notices stay unread until you mark them: one at a time, or all at once.
+  const leagueUnread = leagueItems.filter((n) => !n.read).map((n) => n.id);
+  const siteUnread = siteItems.filter((n) => !n.read).map((n) => n.id);
+  const markAllRead = () => {
+    if (leagueUnread.length) mark.mutate({ site: false, ids: leagueUnread, how: 'read' });
+    if (siteUnread.length) mark.mutate({ site: true, ids: siteUnread, how: 'read' });
+  };
+  const markRead = (site: boolean, id: string) => mark.mutate({ site, ids: [id], how: 'read' });
 
   return (
     <>
@@ -86,6 +90,11 @@ export function NoticesButton({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent title="Notices">
           <div className="flex flex-col gap-5">
+            {leagueUnread.length + siteUnread.length > 0 && (
+              <Button size="sm" variant="outline" className="self-end" onClick={markAllRead}>
+                <CheckCheck /> Mark all read
+              </Button>
+            )}
             {leagueId && (
               <NoticeSection
                 title={leagueName ?? 'League'}
@@ -94,7 +103,13 @@ export function NoticesButton({
                 form={(done) => <NoticeForm leagueId={leagueId} onDone={done} />}
               >
                 {leagueItems.map((a) => (
-                  <NoticeItem key={a.id} leagueId={leagueId} a={a} canEdit={isLeagueAdmin} />
+                  <NoticeItem
+                    key={a.id}
+                    leagueId={leagueId}
+                    a={a}
+                    canEdit={isLeagueAdmin}
+                    onRead={() => markRead(false, a.id)}
+                  />
                 ))}
               </NoticeSection>
             )}
@@ -110,7 +125,12 @@ export function NoticesButton({
                 form={(done) => <SiteNoticeForm onDone={done} />}
               >
                 {siteItems.map((n) => (
-                  <SiteNoticeItem key={n.id} n={n} canEdit={isSiteAdmin} />
+                  <SiteNoticeItem
+                    key={n.id}
+                    n={n}
+                    canEdit={isSiteAdmin}
+                    onRead={() => markRead(true, n.id)}
+                  />
                 ))}
               </NoticeSection>
             )}
@@ -221,10 +241,12 @@ function NoticeItem({
   leagueId,
   a,
   canEdit,
+  onRead,
 }: {
   leagueId: string;
   a: Announcement;
   canEdit: boolean;
+  onRead: () => void;
 }) {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
@@ -278,6 +300,7 @@ function NoticeItem({
             </p>
           ))}
       </div>
+      {!a.read && <MarkReadButton title={a.title} onClick={onRead} />}
       {canEdit && (
         <div className="flex shrink-0 gap-1">
           {!a.kind && (
@@ -591,7 +614,15 @@ function NoticeForm({
   );
 }
 
-function SiteNoticeItem({ n, canEdit }: { n: SiteNotice; canEdit: boolean }) {
+function SiteNoticeItem({
+  n,
+  canEdit,
+  onRead,
+}: {
+  n: SiteNotice;
+  canEdit: boolean;
+  onRead: () => void;
+}) {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
   const remove = useMutation({
@@ -627,6 +658,7 @@ function SiteNoticeItem({ n, canEdit }: { n: SiteNotice; canEdit: boolean }) {
             .join(' · ')}
         </div>
       </div>
+      {!n.read && <MarkReadButton title={n.title} onClick={onRead} />}
       {canEdit && (
         <div className="flex shrink-0 gap-1">
           <Button
@@ -735,5 +767,21 @@ function SiteNoticeForm({ existing, onDone }: { existing?: SiteNotice; onDone: (
         </Button>
       </div>
     </form>
+  );
+}
+
+/** ✓ on an unread notice: marks just that one read. */
+function MarkReadButton({ title, onClick }: { title: string; onClick: () => void }) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="size-8 shrink-0"
+      aria-label={`Mark ${title} read`}
+      title="Mark read"
+      onClick={onClick}
+    >
+      <Check />
+    </Button>
   );
 }
