@@ -81,13 +81,13 @@ Rebuild the fixture with `pnpm history:fixture` after adding sheets to `../teema
 
 ## Conventions
 
-- **Workflow (testing phase):** build and check locally (`pnpm check`), deploy to the homelab with the steps in [Deployment.md](Deployment.md), commit locally after each step, and push to GitHub periodically rather than on every commit.
-
-- Branches: `phase1/<topic>` or `eh-###-<topic>`.
-- Commit messages start with the spec ID they implement (e.g. `EH-004: ...`).
-- **CI is currently turned off** (disabled on GitHub on 2026-10-15, to save Actions minutes while the project is in testing). The workflow file `.github/workflows/ci.yml` is still in the repo. Until it's back on, **run `pnpm check` before every commit**; it does everything CI does except the production build.
-  - Turn it back on: `gh workflow enable CI`
-  - Run it once by hand while it's off: `gh workflow enable CI && gh workflow run CI && gh workflow disable CI`
+- **Workflow (since 1.0.0):** every change goes through a pull request.
+  1. Branch from an up-to-date `main`: `eh-###-<topic>`, `fix/<topic>` or `docs/<topic>`.
+  2. Run `pnpm check` before each commit, then push the branch and open a PR with `gh pr create`.
+  3. CI must pass. The owner reviews and merges, as a squash merge.
+  4. Deploy from `main` after the merge, using the steps in [Deployment.md](Deployment.md). The homelab is production, so take a backup first when a change touches data or migrations.
+- Commit messages start with the spec ID they implement where there is one (e.g. `EH-013: ...`).
+- **CI** (`.github/workflows/ci.yml`) runs on every pull request and every push to `main`: formatting, lint, typecheck, tests and the production build.
 
 ## Production image
 
