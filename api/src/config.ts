@@ -28,6 +28,11 @@ const EnvSchema = z.object({
 
   /** Comma-separated origins allowed to call the API cross-origin. Empty: same origin only. */
   CORS_ORIGINS: z.string().default(''),
+  /**
+   * Comma-separated old addresses of the app (host names, e.g. teemate.bhbslp.org): every
+   * request to one is redirected to APP_URL.
+   */
+  MOVED_FROM: z.string().default(''),
   /** Number of proxies in front of the API (Cloudflare + Traefik + nginx in production). */
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
   /**
@@ -66,7 +71,7 @@ const EnvSchema = z.object({
   GITHUB_ISSUES_REPO: z
     .string()
     .regex(/^[\w.-]+\/[\w.-]+$/)
-    .default('brbrockel/teemate'),
+    .default('brbrockel/leaguemates'),
   /**
    * Push notifications (web push): the VAPID key pair, from `npx web-push generate-vapid-keys`.
    * The private key is a Docker secret in production (VAPID_PRIVATE_KEY_FILE). Without both,
@@ -91,6 +96,7 @@ const EnvSchema = z.object({
 export type Config = z.infer<typeof EnvSchema> & {
   cookieSecure: boolean;
   corsOrigins: string[];
+  movedFrom: string[];
 };
 
 export const CONFIG = Symbol('CONFIG');
@@ -121,6 +127,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     cookieSecure: c.NODE_ENV === 'production',
     corsOrigins: c.CORS_ORIGINS.split(',')
       .map((o) => o.trim())
+      .filter(Boolean),
+    movedFrom: c.MOVED_FROM.split(',')
+      .map((h) => h.trim().toLowerCase())
       .filter(Boolean),
   };
 }

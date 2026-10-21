@@ -2,7 +2,7 @@
 
 A hands-on checklist for reviewing LeagueMates on a **phone** and on a **desktop browser** before the league uses it. Work through each section on both. Tick items off, and write down anything that fails or feels wrong, with the device, the screen and what you expected.
 
-Site: https://teemate.bhbslp.org
+Site: https://leaguemates.bhbslp.org
 
 ## 0. Setup
 

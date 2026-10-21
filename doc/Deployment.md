@@ -6,13 +6,14 @@ How LeagueMates runs in the homelab, and how to update it. Since 1.0.0 (2026-10-
 
 | | |
 |---|---|
-| URL | https://teemate.bhbslp.org (Cloudflare tunnel wildcard, then Traefik, then the container) |
+| URL | https://leaguemates.bhbslp.org (Cloudflare tunnel wildcard, then Traefik, then the container) |
+| Old address | https://teemate.bhbslp.org (TeeMate's) still routes to the container, which redirects it to the URL above (`MOVED_FROM`) and replaces an app installed there with a service worker that moves it |
 | Stack | `teemate` on the homelab Docker Swarm; stack file `homelab-docker-linux/teemate/teemate-stack.yml` |
 | Services | `teemate_teemate` (API + web app, port 4100 on the Docker network only) and `teemate_postgres` (PostgreSQL 18, internal network only) |
 | Host ports | **None.** Nothing is published on the host. Traefik reaches the app over `traefik-public` |
 | Data | Docker volume `teemate_prod-db`. It's kept separate from the dev volume `teemate_postgres-data`; the two must never share a name |
 | Backups | Service `teemate_backup`: compressed `pg_dump` nightly at 07:00 UTC (about 3 AM Eastern), checked with `pg_restore --list`, 30 days kept in the volume `teemate_backups`. A test restore was done on 2026-10-15 and matched production exactly |
-| Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) `teemate_anthropic_api_key` (reads scorecard photos) and `teemate_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/teemate`), and `teemate_vapid_private_key` (signs push notifications; its public half is `VAPID_PUBLIC_KEY` in the stack file), created once and never stored in a file |
+| Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) `teemate_anthropic_api_key` (reads scorecard photos) and `teemate_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/leaguemates`), and `teemate_vapid_private_key` (signs push notifications; its public half is `VAPID_PUBLIC_KEY` in the stack file), created once and never stored in a file |
 | Photos | Volume `teemate_photos` at `/data/photos` (`PHOTOS_DIR`). Files are served only through the app, to league members |
 | Email | Set in the app: profile menu → **Site settings → Email** (site admins only): who gets email (off, an allowlist, or everyone), the mail server and its password (stored encrypted with `APP_SECRET`), and the From address. **Send me a test email** checks it. Until it's saved there, the stack's `MAIL_MODE=off` applies and nothing is sent. Sending to everyone is only with the owner's consent |
 | Dashboard | Heimdall tile "LeagueMates" (dashboard.bhbslp.org) |
@@ -30,7 +31,7 @@ TEEMATE_TAG=$TAG docker stack deploy -c teemate/teemate-stack.yml teemate
 docker service logs -f teemate_teemate       # expect "Migrations applied" then "listening"
 ```
 
-The image is built locally; this single-node Swarm runs it without a registry. Pushing to `ghcr.io/brbrockel/teemate` needs a token with `write:packages`.
+The image is built locally; this single-node Swarm runs it without a registry. Pushing to `ghcr.io/brbrockel/leaguemates` needs a token with `write:packages`.
 
 **A release:** bump `version` in the four `package.json` files, add it to [Changelog.md](Changelog.md), commit, tag `vX.Y.Z`, build and deploy with `TAG=X.Y.Z`, push with the tag and create a GitHub release from the tag. Take a backup first (below).
 

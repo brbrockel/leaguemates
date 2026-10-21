@@ -52,7 +52,7 @@ In production, the frontend and API run in a single container:
   - `teemate`: the combined nginx + API container
   - `postgres`
   - `minio` (omitted if Cloudflare R2 is used)
-- Images are published to `ghcr.io/brbrockel/teemate`
+- Images are published to `ghcr.io/brbrockel/leaguemates`
 - Secrets are stored as Swarm secrets or environment variables and never committed. They are:
   - `DATABASE_URL`
   - `SESSION_SECRET`

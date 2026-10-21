@@ -14,12 +14,49 @@ export function configureApp(app: INestApplication, config: Config): void {
   express.disable('x-powered-by');
   express.use(helmet());
   express.use(cookieParser());
+  if (config.movedFrom.length > 0) redirectMovedHosts(express, config);
   if (config.corsOrigins.length > 0) {
     express.enableCors({ origin: config.corsOrigins, credentials: true });
   }
   if (config.WEB_DIST) serveWebApp(express, config.WEB_DIST);
   express.enableShutdownHooks();
 }
+
+/**
+ * The app's old addresses (TeeMate's) send everything to APP_URL. Phones that installed the
+ * app there keep a service worker serving a cached copy, which a redirect can't replace, so
+ * the old address's /sw.js is one that clears that copy, removes itself and opens the new
+ * address.
+ */
+function redirectMovedHosts(app: NestExpressApplication, config: Config): void {
+  const to = new URL(config.APP_URL).origin;
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (!config.movedFrom.includes(req.hostname.toLowerCase())) return next();
+    if (req.path === '/sw.js') {
+      res.setHeader('Cache-Control', 'no-cache');
+      res.type('application/javascript').send(movedWorker(to));
+      return;
+    }
+    // 308 keeps the method and body for anything but a plain page or file load.
+    res.redirect(req.method === 'GET' || req.method === 'HEAD' ? 301 : 308, to + req.originalUrl);
+  });
+}
+
+const movedWorker = (to: string) => `// This address has moved to ${to}.
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      await Promise.all((await caches.keys()).map((k) => caches.delete(k)));
+      await self.registration.unregister();
+      for (const c of await self.clients.matchAll({ type: 'window' })) {
+        const u = new URL(c.url);
+        c.navigate(${JSON.stringify(to)} + u.pathname + u.search + u.hash);
+      }
+    })(),
+  );
+});
+`;
 
 /**
  * Serves the built web app from the same origin as the API. Hashed assets are

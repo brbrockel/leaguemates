@@ -1,6 +1,6 @@
 # Historical Import
 
-How to collect old league spreadsheets from Gmail for EH-012. The files go in `history/` of the private **teemate-data** repository (github.com/brbrockel/teemate-data), cloned next to this one as `~/repos/teemate-data`. They hold members' names, scores and contact details, so they never go in this repository.
+How to collect old league spreadsheets from Gmail for EH-012. The files go in `history/` of the private **leaguemates-data** repository (github.com/brbrockel/leaguemates-data), cloned next to this one as `~/repos/teemate-data`. They hold members' names, scores and contact details, so they never go in this repository.
 
 All three options below read only the Gmail label `Golf League`. They keep spreadsheets and PDFs (`xlsx`, `xlsm`, `xls`, `csv`, `ods`, `pdf`) and save each file only once, even if it was forwarded several times. Files are named `<email date>_<short hash>_<original name>`, and `manifest.csv` records the subject and sender of the email each file came from.
 

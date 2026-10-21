@@ -68,7 +68,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-018 | One Net Score for Everyone | Later | Proposed (the app shows match net, as the spreadsheet did) |
 | EH-019 | Virtual Scorecard | Phase 2 | Done (drawn from course data, or written on the course's own card once a site admin marks it; shared or saved as an image) |
 
-Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
+Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `leaguemates-data`.
 
 **Released 1.0.0 (2026-10-17):** the homelab deployment is now production. See [Changelog.md](Changelog.md).
 
@@ -793,7 +793,7 @@ Phase 2.
 **Owner**: TBD
 
 ### Problem
-Every season ends with a playoff, and its format has changed over the years (see `HistoryReview.md` in the private `teemate-data` repository). Today it's organised by hand in the spreadsheet.
+Every season ends with a playoff, and its format has changed over the years (see `HistoryReview.md` in the private `leaguemates-data` repository). Today it's organised by hand in the spreadsheet.
 
 ### Scope
 In:

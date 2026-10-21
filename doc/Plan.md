@@ -14,7 +14,7 @@ LeagueMates replaces the weekly spreadsheet with a web app that works on phones 
 
 ## What the 2026 spreadsheet shows
 
-Source: the league's 2026 weekly spreadsheet (in the private `teemate-data` repository).
+Source: the league's 2026 weekly spreadsheet (in the private `leaguemates-data` repository).
 
 - The sheet contains no formulas. Strokes, net scores, W/L/T and points are all typed in each week.
 - The standings add up: 16 players with 11 weeks each, 65 wins and 65 losses, points = 3W + T.
@@ -40,7 +40,7 @@ Each league can configure these rules. The defaults below are the rules of the W
 | Absence: both players | Tie |
 | Saying you're out | A player can mark themselves out of an upcoming round (with an optional sub's name) until their foursome's card is started; admins can mark anyone. The foursome is notified and the card starts with them absent |
 | Subs | Sub scores never count towards results, standings or handicaps |
-| Season | 16 players and 15 regular-season games, so everyone plays everyone exactly once. This has been the format every year since 2021 (see `HistoryReview.md` in the private `teemate-data` repository). Each league can change it |
+| Season | 16 players and 15 regular-season games, so everyone plays everyone exactly once. This has been the format every year since 2021 (see `HistoryReview.md` in the private `leaguemates-data` repository). Each league can change it |
 | Nine played | Front and back nine alternate each week. The starter can change the nine on game day, so the nine actually played is recorded on each scorecard |
 | Game-day changes | Players in a round (or an admin) can change the tee order (tee times stay in place) and swap matches between foursomes until a card is started. Opponents only change in a draft schedule |
 | Rainouts | The rained-out week's pairings are played the following week, and the rest of the schedule moves back one week. This is what the league has done historically. The commissioner can also skip a week, which happens rarely |
