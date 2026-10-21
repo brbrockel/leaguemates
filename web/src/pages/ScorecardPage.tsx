@@ -626,7 +626,6 @@ export function ScorecardPage() {
                   attendance: e.attendance,
                   subName: e.subName,
                   holeScores: e.holeScores,
-                  strokes: m?.result?.strokes[side] ?? null,
                   net: m?.result?.net[side] ?? null,
                 };
               })}
