@@ -70,6 +70,7 @@ Site: https://teemate.bhbslp.org
 - [ ] Enter hole scores on the phone. The number keypad appears, totals update, and match results show live with "X gets N".
 - [ ] Switch the nine (Front/Back) if the starter changed it.
 - [ ] **Virtual scorecard:** the button next to the nines shows the round as a paper card: course name, tee yardages, par and handicap rows, birdies circled, bogeys boxed (doubled for double bogey or worse), a dot on each hole a player gets a stroke, totals, handicaps, nets and the match results. It stays paper-colored in dark mode, scrolls sideways for 18 holes, and says when it includes unsaved changes. **Share image** on a phone opens the share sheet with a picture of the whole card (check iPhone and Android); on a computer **Save image** downloads it.
+- [ ] **Course card (site admin):** on **Courses →** Timberlin, a nine's **Set up the course card**: pick the picture with that nine, tap the boxes as asked (zoom in for accuracy; **Undo** and **Skip** work), check the sample scores sit in the boxes, **Save**. On a card for that nine, **Virtual scorecard** opens on **Course card**: names and scores written in the boxes, totals in Out/In, cropped to the score area; **Drawn card** switches back, and **Share image** shares whichever is showing.
 - [ ] Mark a player **Absent** and add a sub's name. The match uses the absence rule ("must beat …").
 - [ ] **Save**, close the app, reopen: the scores are still there.
 - [ ] **Submit** with a hole missing is refused. With every hole filled, it's submitted.

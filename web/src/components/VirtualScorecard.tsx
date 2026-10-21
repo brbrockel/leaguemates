@@ -1,6 +1,7 @@
-import { allocateStrokes, type Layout } from '@teemate/shared';
+import { allocateStrokes, gridBox, type CardGrid, type Layout } from '@teemate/shared';
 import { Download, Share2 } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { CourseCard } from '@/components/CourseCard';
 import { Button } from '@/components/ui/button';
 import type { HoleInfo, MatchResultView } from '@/lib/api';
 import { formatDay } from '@/lib/time';
@@ -34,6 +35,8 @@ export interface VirtualScorecardProps {
   rows: VirtualRow[];
   matches: VirtualMatch[];
   footer?: ReactNode;
+  /** The course's own card, when a site admin has marked where the scores go. */
+  courseCard?: { src: string; grid: CardGrid; width: number; height: number } | null;
 }
 
 /**
@@ -44,6 +47,8 @@ export interface VirtualScorecardProps {
  */
 export function VirtualScorecard(props: VirtualScorecardProps) {
   const shot = useRef<HTMLDivElement>(null);
+  const [look, setLook] = useState<'course' | 'drawn'>(props.courseCard ? 'course' : 'drawn');
+  const courseCard = look === 'course' ? props.courseCard : null;
   const [busy, setBusy] = useState(false);
   /** Made, but the phone wanted a fresh tap before sharing it. */
   const [ready, setReady] = useState<File | null>(null);
@@ -88,8 +93,39 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
 
   return (
     <div className="flex flex-col gap-3">
+      {props.courseCard && (
+        <div
+          role="radiogroup"
+          aria-label="Card"
+          className="inline-flex w-fit rounded-lg border bg-muted p-1 text-sm"
+        >
+          {(
+            [
+              ['course', 'Course card'],
+              ['drawn', 'Drawn card'],
+            ] as const
+          ).map(([k, label]) => (
+            <button
+              key={k}
+              role="radio"
+              aria-checked={look === k}
+              onClick={() => setLook(k)}
+              className={cn(
+                'rounded-md px-3 py-1 text-muted-foreground',
+                look === k && 'bg-card text-foreground shadow-xs',
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       <figure aria-label={`${props.title} card`} className="m-0">
-        <PaperCard {...props} />
+        {courseCard ? (
+          <OnCourseCard {...props} courseCard={courseCard} />
+        ) : (
+          <PaperCard {...props} />
+        )}
       </figure>
       <div className="flex flex-wrap items-center gap-2">
         {ready ? (
@@ -104,9 +140,13 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
         )}
         {error && <span className="text-sm text-destructive">{error}</span>}
       </div>
-      {/* The picture is taken from this full-width copy, so 18 holes aren't cut off. */}
+      {/* The picture is taken from this full-width copy, so nothing is cut off. */}
       <div aria-hidden className="pointer-events-none fixed -left-[10000px] top-0" inert>
-        <PaperCard {...props} wide ref={shot} />
+        {courseCard ? (
+          <OnCourseCard {...props} courseCard={courseCard} wide ref={shot} />
+        ) : (
+          <PaperCard {...props} wide ref={shot} />
+        )}
       </div>
     </div>
   );
@@ -126,6 +166,116 @@ async function shareOrSave(file: File, title: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/**
+ * The part of the card worth showing: from a few lines above the first player line (the
+ * hole numbers, tees and par) to a few below the last, leaving out the ads.
+ */
+function cropAround(grid: CardGrid, aspect: number): [top: number, bottom: number] {
+  const ys = grid.rows.map((p) => p[1]);
+  const gaps = ys.slice(1).map((y, i) => y - ys[i]!);
+  const line = Math.max(0.02 / aspect, Math.min(...gaps.filter((g) => g > 0), 0.1));
+  return [Math.max(0, Math.min(...ys) - 6 * line), Math.min(1, Math.max(...ys) + 4.5 * line)];
+}
+
+/** The round written on the course's own card, with the results underneath. */
+function OnCourseCard({
+  courseCard,
+  course,
+  title,
+  date,
+  layout,
+  rows,
+  matches,
+  footer,
+  wide = false,
+  ref,
+}: VirtualScorecardProps & {
+  courseCard: NonNullable<VirtualScorecardProps['courseCard']>;
+  wide?: boolean;
+  ref?: Ref<HTMLDivElement>;
+}) {
+  const scroller = useRef<HTMLDivElement>(null);
+  const { grid, width, height } = courseCard;
+  // Wide enough that a box is about a fingertip (22 px) on screen, a little more in the image.
+  const box = gridBox(grid, layout.holes.length, height / width);
+  const readable = (px: number, least: number) =>
+    Math.round(Math.min(2400, Math.max(least, px / box)));
+  // On a phone the card is shown at a readable size, scrolled to where the scores are.
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el || wide) return;
+    const left = Math.min(grid.rows[0]![0], grid.name?.[0] ?? 1) - 0.02;
+    el.scrollLeft = Math.max(0, left * el.scrollWidth);
+  }, [grid, wide]);
+  return (
+    <div
+      ref={ref}
+      className="overflow-hidden rounded-lg border-2 text-[color:var(--vc-ink)] shadow-sm"
+      style={{ ...PAPER, ...(wide ? { width: readable(30, 1000) } : {}) }}
+    >
+      <CardTop course={course} title={title} date={date} />
+      <div ref={scroller} className={wide ? '' : 'overflow-x-auto'}>
+        <div style={wide ? undefined : { minWidth: readable(22, 760) }}>
+          <CourseCard
+            {...courseCard}
+            crop={cropAround(grid, height / width)}
+            pars={layout.holes.map((h) => h.par)}
+            lines={rows.map((r) => ({
+              name: r.name,
+              holeScores: r.holeScores,
+              absent: r.attendance === 'absent',
+            }))}
+          />
+        </div>
+      </div>
+      <CardFooter matches={matches} footer={footer} />
+    </div>
+  );
+}
+
+function CardTop({
+  course,
+  title,
+  date,
+}: Pick<VirtualScorecardProps, 'course' | 'title' | 'date'>) {
+  const where = [course?.city, course?.state].filter(Boolean).join(', ');
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 bg-[color:var(--vc-band)] px-3 py-2 font-serif text-[color:var(--vc-paper)]">
+      <div>
+        <div className="text-base font-bold uppercase tracking-[0.18em]">
+          {course?.name ?? 'Scorecard'}
+        </div>
+        {where && <div className="text-[11px] tracking-wider opacity-80">{where}</div>}
+      </div>
+      <div className="text-xs sm:text-right">
+        <div className="font-semibold">{title}</div>
+        <div className="opacity-80">{formatDay(date, true)}</div>
+      </div>
+    </div>
+  );
+}
+
+function CardFooter({ matches, footer }: { matches: VirtualMatch[]; footer?: ReactNode }) {
+  return (
+    <div className="font-serif">
+      {matches.length > 0 && (
+        <ul className="flex flex-col gap-0.5 border-t-2 border-[color:var(--vc-rule)] px-3 py-2 text-sm">
+          {matches.map((m, i) => (
+            <li key={i}>
+              <MatchSummary match={m} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[color:var(--vc-rule)] px-3 py-1.5 text-[11px]">
+        <Legend />
+        {footer && <span className="italic">{footer}</span>}
+      </div>
+    </div>
+  );
+}
+
 function PaperCard({
   course,
   layout,
@@ -142,7 +292,6 @@ function PaperCard({
   const sum = (xs: (number | null | undefined)[]) =>
     xs.every((x) => x != null) ? xs.reduce<number>((t, x) => t + x!, 0) : null;
   const yards = sum(holes.map((h) => h.yards));
-  const where = [course?.city, course?.state].filter(Boolean).join(', ');
 
   return (
     <div
@@ -153,18 +302,7 @@ function PaperCard({
       )}
       style={PAPER}
     >
-      <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 bg-[color:var(--vc-band)] px-3 py-2 text-[color:var(--vc-paper)]">
-        <div>
-          <div className="text-base font-bold uppercase tracking-[0.18em]">
-            {course?.name ?? 'Scorecard'}
-          </div>
-          {where && <div className="text-[11px] tracking-wider opacity-80">{where}</div>}
-        </div>
-        <div className="text-xs sm:text-right">
-          <div className="font-semibold">{title}</div>
-          <div className="opacity-80">{formatDay(date, true)}</div>
-        </div>
-      </div>
+      <CardTop course={course} title={title} date={date} />
 
       <div className={wide ? '' : 'overflow-x-auto'}>
         <table className="w-full border-collapse text-center text-xs tabular-nums sm:text-sm">
@@ -220,20 +358,7 @@ function PaperCard({
         </table>
       </div>
 
-      {matches.length > 0 && (
-        <ul className="flex flex-col gap-0.5 border-t-2 border-[color:var(--vc-rule)] px-3 py-2 text-sm">
-          {matches.map((m, i) => (
-            <li key={i}>
-              <MatchSummary match={m} />
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[color:var(--vc-rule)] px-3 py-1.5 text-[11px]">
-        <Legend />
-        {footer && <span className="italic">{footer}</span>}
-      </div>
+      <CardFooter matches={matches} footer={footer} />
     </div>
   );
 }

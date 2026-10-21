@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { useMe } from '@/auth/session';
 import { PhotosCard } from '@/components/Photos';
 import { VirtualScorecard } from '@/components/VirtualScorecard';
+import { cardImageSrc } from '@/components/CourseCard';
 import type { CardReading, ScanResult } from '@/components/ScanCardButton';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -633,6 +634,14 @@ export function ScorecardPage() {
                 data.playoff
                   ? []
                   : live.map((m) => ({ a: nick(m.playerA), b: nick(m.playerB), result: m.result }))
+              }
+              courseCard={
+                layout.cardGrid && data.course
+                  ? {
+                      ...layout.cardGrid,
+                      src: cardImageSrc(data.course.id, layout.cardGrid.imageId),
+                    }
+                  : null
               }
               footer={
                 data.card?.enteredBy

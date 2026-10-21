@@ -7,6 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  type CardGrid,
   computeStandings,
   type NetsByRound,
   withDefaults,
@@ -21,7 +22,9 @@ import type { SessionUser } from '../auth/decorators.js';
 import { MembershipService } from '../auth/membership.service.js';
 import { DB, type Database } from '../db/db.js';
 import {
+  cardGrids,
   cardRounds,
+  courseImages,
   courses,
   groups,
   holes,
@@ -39,6 +42,10 @@ import { finalsResult, knockoutResult } from '../playoffs/results.js';
 import { grossOf, isComplete, matchResults, type RoundData } from './results.js';
 
 type CardStatus = 'draft' | 'submitted' | 'disputed' | 'final';
+
+const cardGridOf = (
+  g: { imageId: string; grid: CardGrid; width: number; height: number } | undefined,
+) => (g ? { imageId: g.imageId, grid: g.grid, width: g.width, height: g.height } : null);
 type Card = typeof scorecards.$inferSelect;
 
 export interface SaveCardInput {
@@ -111,6 +118,24 @@ export class ScorecardsService {
           )
           .orderBy(asc(holes.number))
       : [];
+    const grids = ls.length
+      ? await this.db
+          .select({
+            layoutId: cardGrids.layoutId,
+            imageId: cardGrids.imageId,
+            grid: cardGrids.grid,
+            width: courseImages.width,
+            height: courseImages.height,
+          })
+          .from(cardGrids)
+          .innerJoin(courseImages, eq(courseImages.id, cardGrids.imageId))
+          .where(
+            inArray(
+              cardGrids.layoutId,
+              ls.map((l) => l.id),
+            ),
+          )
+      : [];
     return ls.map((l) => ({
       id: l.id,
       name: l.name,
@@ -124,6 +149,8 @@ export class ScorecardsService {
           strokeIndex: h.strokeIndex,
           yards: h.yards,
         })),
+      /** Where the scores go on a picture of the course's card, if it's set up. */
+      cardGrid: cardGridOf(grids.find((g) => g.layoutId === l.id)),
     }));
   }
 
@@ -283,7 +310,7 @@ export class ScorecardsService {
       teeTime: c.group.teeTime,
       plannedLayoutId: c.week.layoutId,
       /** For drawing the course's paper card. */
-      course: c.course,
+      course: c.course ? { id: c.season.courseId, ...c.course } : null,
       // Retired layouts only where this card or week already uses them.
       layouts: c.courseLayouts
         .filter((l) => !l.retired || l.id === c.card?.layoutId || l.id === c.week.layoutId)

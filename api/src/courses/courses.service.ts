@@ -7,12 +7,21 @@ import {
 } from '@nestjs/common';
 import { createReadStream } from 'node:fs';
 import { StreamableFile } from '@nestjs/common';
+import type { CardGrid } from '@teemate/shared';
 import { and, asc, desc, eq, ne, sql } from 'drizzle-orm';
 import type { SessionUser } from '../auth/decorators.js';
 import { AuditService } from '../audit/audit.js';
 import { CONFIG, type Config } from '../config.js';
 import { DB, type Database } from '../db/db.js';
-import { courseImages, courses, holes, layouts, scorecards, weeks } from '../db/schema.js';
+import {
+  cardGrids,
+  courseImages,
+  courses,
+  holes,
+  layouts,
+  scorecards,
+  weeks,
+} from '../db/schema.js';
 import { courseImagePath, removeCourseImageFile, storeCourseImage } from './course-images.js';
 
 export interface HoleInput {
@@ -75,6 +84,17 @@ export class CoursesService {
       .from(scorecards)
       .groupBy(scorecards.layoutId);
     const cards = new Map(used.map((u) => [u.layoutId, u.n]));
+    const grids = new Map(
+      (
+        await this.db
+          .select({
+            layoutId: cardGrids.layoutId,
+            imageId: cardGrids.imageId,
+            grid: cardGrids.grid,
+          })
+          .from(cardGrids)
+      ).map(({ layoutId, ...g }) => [layoutId, g]),
+    );
     const images = await this.db
       .select({
         id: courseImages.id,
@@ -97,6 +117,7 @@ export class CoursesService {
             par: lh.reduce((s, h) => s + h.par, 0),
             yards: lh.every((h) => h.yards !== null) ? lh.reduce((s, h) => s + h.yards!, 0) : null,
             cards: cards.get(l.id) ?? 0,
+            cardGrid: grids.get(l.id) ?? null,
             holes: lh,
           };
         }),
@@ -224,6 +245,10 @@ export class CoursesService {
         .values(input.holes.map((h) => ({ ...h, yards: h.yards ?? null, layoutId: l!.id })));
       if (old) {
         await tx.update(layouts).set({ retiredAt: new Date() }).where(eq(layouts.id, old.id));
+        // The new version is on the same printed card.
+        const [g] = await tx.select().from(cardGrids).where(eq(cardGrids.layoutId, old.id));
+        if (g)
+          await tx.insert(cardGrids).values({ layoutId: l!.id, imageId: g.imageId, grid: g.grid });
         await tx
           .update(weeks)
           .set({ layoutId: l!.id })
@@ -304,6 +329,46 @@ export class CoursesService {
       entityType: 'layout',
       entityId: layoutId,
       before: { name: l.name, tees: l.tees },
+    });
+    return this.get(courseId);
+  }
+
+  /**
+   * Saves where a layout's scores go on one of the course's card pictures (EH-019), or with
+   * `null` removes it.
+   */
+  async setCardGrid(
+    actor: SessionUser,
+    courseId: string,
+    layoutId: string,
+    input: { imageId: string; grid: CardGrid } | null,
+  ) {
+    await this.layout(courseId, layoutId);
+    const [before] = await this.db.select().from(cardGrids).where(eq(cardGrids.layoutId, layoutId));
+    if (input) {
+      const [img] = await this.db
+        .select({ id: courseImages.id })
+        .from(courseImages)
+        .where(and(eq(courseImages.id, input.imageId), eq(courseImages.courseId, courseId)))
+        .limit(1);
+      if (!img) throw new BadRequestException("That picture isn't one of this course's.");
+      await this.db
+        .insert(cardGrids)
+        .values({ layoutId, ...input })
+        .onConflictDoUpdate({
+          target: cardGrids.layoutId,
+          set: { ...input, updatedAt: new Date() },
+        });
+    } else {
+      await this.db.delete(cardGrids).where(eq(cardGrids.layoutId, layoutId));
+    }
+    await this.audit.record({
+      actorUserId: actor.id,
+      action: input ? 'layout.card_grid' : 'layout.card_grid_delete',
+      entityType: 'layout',
+      entityId: layoutId,
+      before: before ? { imageId: before.imageId, grid: before.grid } : null,
+      after: input,
     });
     return this.get(courseId);
   }

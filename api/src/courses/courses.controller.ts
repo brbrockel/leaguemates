@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CARD_GRID_MAX_ROWS } from '@teemate/shared';
 import { z } from 'zod';
 import { CurrentUser, GuestOk, SiteAdminOnly, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';
@@ -43,6 +44,16 @@ const Layout = z.object({
 });
 const NewLayout = Layout.extend({ replaces: z.uuid().optional() });
 const ImageBody = z.object({ caption: z.string().trim().max(120).optional() });
+const Point = z.tuple([z.number().min(0).max(1), z.number().min(0).max(1)]);
+const CardGrid = z.object({
+  imageId: z.uuid(),
+  grid: z.object({
+    rows: z.array(Point).min(1).max(CARD_GRID_MAX_ROWS),
+    last: Point,
+    total: Point.nullable(),
+    name: Point.nullable(),
+  }),
+});
 const Uuid = new ParseUUIDPipe();
 
 /** Courses are shared by every league: anyone signed in can view them, site admins edit them. */
@@ -110,6 +121,27 @@ export class CoursesController {
     @Param('layoutId', Uuid) layoutId: string,
   ) {
     return this.courses.removeLayout(user, courseId, layoutId);
+  }
+
+  @Put(':courseId/layouts/:layoutId/card-grid')
+  @SiteAdminOnly()
+  setCardGrid(
+    @CurrentUser() user: SessionUser,
+    @Param('courseId', Uuid) courseId: string,
+    @Param('layoutId', Uuid) layoutId: string,
+    @Body(new ZodPipe(CardGrid)) body: z.infer<typeof CardGrid>,
+  ) {
+    return this.courses.setCardGrid(user, courseId, layoutId, body);
+  }
+
+  @Delete(':courseId/layouts/:layoutId/card-grid')
+  @SiteAdminOnly()
+  removeCardGrid(
+    @CurrentUser() user: SessionUser,
+    @Param('courseId', Uuid) courseId: string,
+    @Param('layoutId', Uuid) layoutId: string,
+  ) {
+    return this.courses.setCardGrid(user, courseId, layoutId, null);
   }
 
   @Post(':courseId/images')

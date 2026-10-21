@@ -1,4 +1,5 @@
 /** Thin fetch wrapper for the TeeMate API (same origin; nginx or the Vite dev server proxies /api). */
+import type { CardGrid } from '@teemate/shared';
 
 let csrfToken: string | null = null;
 
@@ -252,14 +253,29 @@ export interface MatchResultView {
 
 export type CardStatus = 'draft' | 'submitted' | 'disputed' | 'final';
 
+/** A picture of the course's card and where a nine's scores go on it. */
+export interface CourseCardGrid {
+  imageId: string;
+  grid: CardGrid;
+  width: number;
+  height: number;
+}
+
 export interface ScorecardView {
   round: number;
   date: string;
   teeTime: string;
   plannedLayoutId: string;
   /** For drawing the course's paper card. */
-  course?: { name: string; city: string | null; state: string | null } | null;
-  layouts: { id: string; name: string; tees?: string; holes: HoleInfo[] }[];
+  course?: { id: string; name: string; city: string | null; state: string | null } | null;
+  layouts: {
+    id: string;
+    name: string;
+    tees?: string;
+    holes: HoleInfo[];
+    /** The course's own card, with where the scores go (EH-019). */
+    cardGrid?: CourseCardGrid | null;
+  }[];
   players: {
     playerId: string;
     nickname: string;
@@ -459,6 +475,8 @@ export interface CourseLayout {
   /** Scorecards that used this layout; par and stroke index are locked once it's above 0. */
   cards: number;
   retiredAt: string | null;
+  /** Where scores go on one of the course's card pictures, once a site admin sets it up. */
+  cardGrid: { imageId: string; grid: CardGrid } | null;
   holes: CourseHole[];
 }
 
