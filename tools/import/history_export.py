@@ -2,7 +2,7 @@
 """Export every regular season in the weekly spreadsheets for the LeagueMates import.
 
 Usage:
-    python3 -I tools/import/history_export.py ../teemate-data/history ../teemate-data/history-export.json
+    python3 -I tools/import/history_export.py ../leaguemates-data/history ../leaguemates-data/history-export.json
 
 For each season it rebuilds the regular-season rounds from the schedule and
 results sheets:
@@ -215,7 +215,7 @@ def main():
     years = read_season_sheets(sys.argv[1])
     seasons = [s for s in (export_season(y, years[y]) for y in sorted(years)) if s]
     out = Path(sys.argv[2])
-    out.write_text(json.dumps({'source': 'teemate-data/history', 'seasons': seasons}, indent=1) + '\n')
+    out.write_text(json.dumps({'source': 'leaguemates-data/history', 'seasons': seasons}, indent=1) + '\n')
     for s in seasons:
         r = s['report']
         print(

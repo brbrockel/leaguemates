@@ -4,12 +4,12 @@
 Two sources:
 
   imap  Download directly from Gmail using an app password (fastest):
-          python3 -I tools/import/gmail_attachments.py imap you@gmail.com ../teemate-data/history
+          python3 -I tools/import/gmail_attachments.py imap you@gmail.com ../leaguemates-data/history
         The app password is read from TEEMATE_GMAIL_APP_PASSWORD or prompted for.
         Mailbox access is read-only.
 
   mbox  Extract from a Google Takeout .mbox export:
-          python3 -I tools/import/gmail_attachments.py mbox "Golf League.mbox" ../teemate-data/history
+          python3 -I tools/import/gmail_attachments.py mbox "Golf League.mbox" ../leaguemates-data/history
 
 Identical attachments (same bytes) are saved once. Files are named
 <email date>_<short hash>_<original name>, and manifest.csv lists every file saved.

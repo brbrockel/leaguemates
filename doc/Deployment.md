@@ -22,7 +22,7 @@ How LeagueMates runs in the homelab, and how to update it. Since 1.0.0 (2026-10-
 ## Update to a new version
 
 ```bash
-cd ~/repos/teemate
+cd ~/repos/leaguemates
 git pull && pnpm check                      # must pass
 TAG=$(git rev-parse --short HEAD)           # a release uses its version instead, e.g. TAG=1.0.0
 docker build --build-arg APP_VERSION=$TAG -t teemate:$TAG -t teemate:latest .
@@ -79,11 +79,11 @@ docker exec $(docker ps -qf name=teemate_postgres) psql -U teemate             #
 
 ## League history
 
-The spreadsheets in `../teemate-data/history/` (private data repository) are turned into `../teemate-data/history-export.json` and loaded into **Wednesday League** alongside its new seasons (see [HistoricalImport.md](HistoricalImport.md)). After an exporter fix, rebuild just the affected season in place:
+The spreadsheets in `../leaguemates-data/history/` (private data repository) are turned into `../leaguemates-data/history-export.json` and loaded into **Wednesday League** alongside its new seasons (see [HistoricalImport.md](HistoricalImport.md)). After an exporter fix, rebuild just the affected season in place:
 
 ```bash
-python3 -I tools/import/history_export.py ../teemate-data/history ../teemate-data/history-export.json   # prints a per-season report
-docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-history.js - --season 2025 < ../teemate-data/history-export.json
+python3 -I tools/import/history_export.py ../leaguemates-data/history ../leaguemates-data/history-export.json   # prints a per-season report
+docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-history.js - --season 2025 < ../leaguemates-data/history-export.json
 ```
 
 `--replace` rebuilds every imported season from scratch, which deletes and recreates them (and so unlinks anything attached to them, such as season photos); prefer `--season`.

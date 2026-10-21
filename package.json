@@ -15,7 +15,7 @@
     "format:check": "prettier --check .",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test",
     "dev:services": "docker compose up -d",
-    "history:fixture": "python3 -I tools/import/history_fixture.py ../teemate-data/history packages/shared/test/fixtures/history.json",
+    "history:fixture": "python3 -I tools/import/history_fixture.py ../leaguemates-data/history packages/shared/test/fixtures/history.json",
     "dev:services:stop": "docker compose stop"
   },
   "type": "module",

@@ -2,7 +2,7 @@
 """Build a test fixture of real league results from the weekly spreadsheets.
 
 Usage:
-    python3 -I tools/import/history_fixture.py ../teemate-data/history packages/shared/test/fixtures/history.json
+    python3 -I tools/import/history_fixture.py ../leaguemates-data/history packages/shared/test/fixtures/history.json
 
 For each regular season from 2021 on (the years with weekly results sheets), it
 writes every week whose results line up with the next standings snapshot, plus
@@ -111,7 +111,7 @@ def main():
     anonymize(seasons)
     out = Path(sys.argv[2])
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({'source': 'teemate-data/history (names anonymized)', 'seasons': seasons}, indent=1) + '\n')
+    out.write_text(json.dumps({'source': 'leaguemates-data/history (names anonymized)', 'seasons': seasons}, indent=1) + '\n')
     for s in seasons:
         n = sum(len(w['matches']) for w in s['weeks'])
         print(f"{s['year']}: {len(s['weeks'])} weeks, {n} matches")
