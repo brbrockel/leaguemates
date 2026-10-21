@@ -35,6 +35,7 @@ import {
   seasonPlayers,
   seasons,
   weeks,
+  type CoverCrop,
 } from '../db/schema.js';
 import { todayInLeague } from '../common/league-time.js';
 
@@ -358,6 +359,7 @@ export class SeasonsService {
         seed: season.seed,
         settings: season.settings,
         coverPhotoId: season.coverPhotoId,
+        coverCrop: season.coverCrop,
         course: (
           await this.db
             .select({ id: courses.id, name: courses.name })
@@ -491,8 +493,17 @@ export class SeasonsService {
     return this.schedule(leagueId, seasonId);
   }
 
-  /** Chooses the photo across the top of the season page (any photo in the league), or clears it. */
-  async setCover(actor: SessionUser, leagueId: string, seasonId: string, photoId: string | null) {
+  /**
+   * Chooses the photo across the top of the season page (any photo in the league), and the part
+   * of it shown (the whole photo without a crop), or clears it.
+   */
+  async setCover(
+    actor: SessionUser,
+    leagueId: string,
+    seasonId: string,
+    photoId: string | null,
+    crop: CoverCrop | null = null,
+  ) {
     const season = await this.season(leagueId, seasonId);
     if (photoId) {
       const [p] = await this.db
@@ -502,17 +513,21 @@ export class SeasonsService {
         .limit(1);
       if (!p) throw new NotFoundException();
     }
-    await this.db.update(seasons).set({ coverPhotoId: photoId }).where(eq(seasons.id, seasonId));
+    const coverCrop = photoId ? crop : null;
+    await this.db
+      .update(seasons)
+      .set({ coverPhotoId: photoId, coverCrop })
+      .where(eq(seasons.id, seasonId));
     await this.audit.record({
       leagueId,
       actorUserId: actor.id,
       action: 'season.cover',
       entityType: 'season',
       entityId: seasonId,
-      before: { photoId: season.coverPhotoId },
-      after: { photoId },
+      before: { photoId: season.coverPhotoId, crop: season.coverCrop },
+      after: { photoId, crop: coverCrop },
     });
-    return { coverPhotoId: photoId };
+    return { coverPhotoId: photoId, coverCrop };
   }
 
   async remove(actor: SessionUser, leagueId: string, seasonId: string) {

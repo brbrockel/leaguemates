@@ -1,0 +1,1 @@
+ALTER TABLE "seasons" ADD COLUMN "cover_crop" jsonb;

@@ -148,9 +148,22 @@ describe('season photos', () => {
     await put(`/leagues/${L}/seasons/${s24.id}/cover`, { photoId: list[0].id }).expect(200);
     let season = (await as(site).get(`/leagues/${L}/seasons/${s24.id}`).expect(200)).body;
     expect(season.season.coverPhotoId).toBe(list[0].id);
+    expect(season.season.coverCrop).toBeNull();
+
+    // Framed: the part of the photo shown. A crop outside the photo is refused.
+    const crop = { x: 0.25, y: 0.4, w: 0.5, h: 0.375 };
+    await put(`/leagues/${L}/seasons/${s24.id}/cover`, {
+      photoId: list[0].id,
+      crop: { ...crop, x: 0.6 },
+    }).expect(400);
+    await put(`/leagues/${L}/seasons/${s24.id}/cover`, { photoId: list[0].id, crop }).expect(200);
+    season = (await as(site).get(`/leagues/${L}/seasons/${s24.id}`).expect(200)).body;
+    expect(season.season.coverCrop).toEqual(crop);
+
     await put(`/leagues/${L}/seasons/${s24.id}/cover`, { photoId: null }).expect(200);
     season = (await as(site).get(`/leagues/${L}/seasons/${s24.id}`).expect(200)).body;
     expect(season.season.coverPhotoId).toBeNull();
+    expect(season.season.coverCrop).toBeNull();
 
     const { body: other } = await as(site).post('/leagues', { name: 'Other' }).expect(201);
     await as(site).post(`/leagues/${other.id}/players`, { nickname: 'X' }).expect(201);

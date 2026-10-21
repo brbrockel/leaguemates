@@ -150,7 +150,12 @@ export function SeasonPage() {
         </Badge>
       </div>
 
-      <SeasonBanner leagueId={leagueId} seasonId={seasonId} coverPhotoId={season.coverPhotoId} />
+      <SeasonBanner
+        leagueId={leagueId}
+        seasonId={seasonId}
+        coverPhotoId={season.coverPhotoId}
+        coverCrop={season.coverCrop ?? null}
+      />
 
       <RosterCard
         leagueId={leagueId}
