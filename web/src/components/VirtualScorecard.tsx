@@ -241,7 +241,7 @@ function OnCourseCard({
           />
         </div>
       </div>
-      <CardFooter matches={matches} footer={footer} />
+      <CardFooter matches={matches} footer={footer} eagle={hasEagle(rows, layout.holes)} />
     </div>
   );
 }
@@ -268,7 +268,24 @@ function CardTop({
   );
 }
 
-function CardFooter({ matches, footer }: { matches: VirtualMatch[]; footer?: ReactNode }) {
+/** Anyone two or more under par on a hole. */
+const hasEagle = (rows: VirtualRow[], holes: HoleInfo[]) =>
+  rows.some(
+    (r) =>
+      r.attendance === 'played' &&
+      holes.some((h, i) => r.holeScores[i] != null && r.holeScores[i]! <= h.par - 2),
+  );
+
+function CardFooter({
+  matches,
+  footer,
+  eagle,
+}: {
+  matches: VirtualMatch[];
+  footer?: ReactNode;
+  /** Explain the double circle only when the card has one. */
+  eagle: boolean;
+}) {
   return (
     <div className="font-serif">
       {matches.length > 0 && (
@@ -282,7 +299,7 @@ function CardFooter({ matches, footer }: { matches: VirtualMatch[]; footer?: Rea
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[color:var(--vc-rule)] px-3 py-1.5 text-[11px]">
-        <Legend />
+        <Legend eagle={eagle} />
         {footer && <span className="italic">{footer}</span>}
       </div>
     </div>
@@ -371,7 +388,7 @@ function PaperCard({
         </table>
       </div>
 
-      <CardFooter matches={matches} footer={footer} />
+      <CardFooter matches={matches} footer={footer} eagle={hasEagle(rows, layout.holes)} />
     </div>
   );
 }
@@ -509,10 +526,11 @@ function MatchSummary({ match: { a, b, result } }: { match: VirtualMatch }) {
   );
 }
 
-function Legend() {
+function Legend({ eagle }: { eagle: boolean }) {
   const swatch = (diff: number) => <Mark score={4 + diff} par={4} />;
   return (
     <span className="flex flex-wrap items-center gap-x-3 gap-y-1" aria-hidden>
+      {eagle && <span className="flex items-center gap-1">{swatch(-2)} eagle</span>}
       <span className="flex items-center gap-1">{swatch(-1)} birdie</span>
       <span className="flex items-center gap-1">{swatch(1)} bogey</span>
       <span className="flex items-center gap-1">{swatch(2)} double+</span>

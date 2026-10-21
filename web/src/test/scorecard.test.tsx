@@ -123,6 +123,8 @@ describe('scorecard entry', () => {
     expect(marks('birdie')).toBe(2); // hole 1, plus the legend
     expect(marks('bogey')).toBe(1 + 2 + 1); // Jerry's 3rd, Brian's par 5s, legend
     expect(marks('double bogey or worse')).toBe(1 + 7 + 1); // Jerry's 5th, Brian's others, legend
+    // No eagle on this card, so the legend doesn't explain one.
+    expect(within(card).queryByText('eagle')).toBeNull();
     // Brian's 7 strokes are dotted on the 7 hardest holes.
     expect(within(card).getAllByLabelText('1 stroke')).toHaveLength(7);
     expect(within(card).getByText('Jerry wins')).toBeInTheDocument();
@@ -260,6 +262,21 @@ describe('scorecard entry', () => {
     expect(share).toHaveBeenCalledTimes(3);
     delete (navigator as { canShare?: unknown }).canShare;
     delete (navigator as { share?: unknown }).share;
+  });
+
+  it('double-circles an eagle and explains it in the legend', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: view() }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    await userEvent.type(screen.getByLabelText('Jerry hole 1'), '3'); // par 5
+    await userEvent.click(screen.getByRole('button', { name: /Virtual scorecard/ }));
+    const card = within(await screen.findByRole('dialog')).getByRole('figure');
+    // Jerry's 3, and the legend's sample.
+    expect(card.querySelectorAll('[data-mark="eagle or better"]')).toHaveLength(2);
+    expect(within(card).getByText('eagle')).toBeInTheDocument();
   });
 
   it('marks a player absent and applies the absence rule', async () => {
