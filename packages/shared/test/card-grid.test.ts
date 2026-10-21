@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { foldOver, gridBox, gridHole, gridOffset, type CardGrid } from '../src/index.js';
+import {
+  foldOver,
+  gridBox,
+  gridHole,
+  gridOffset,
+  type CardGrid,
+  type GridPoint,
+} from '../src/index.js';
 
 // A card like Timberlin's front: two lines above the par row and two below it.
 const grid: CardGrid = {
@@ -78,5 +85,28 @@ describe('card grid', () => {
     // The front's first line (160 px down, scaled) lands on the back's (168 px).
     expect(g.top + 160 * 0.7).toBeCloseTo(168);
     expect(g.nameX).toBeCloseTo(50 * 0.7);
+  });
+
+  it('trusts the picture sizes over taps a few pixels off (Timberlin)', () => {
+    // Both pictures are the same 366 px tall card; the back's lines were tapped a little tight.
+    const front = {
+      grid: { ...grid, rows: [118.2, 138.1, 161.3, 192.8].map((y) => [0.2, y / 366] as GridPoint) },
+      width: 994,
+      height: 366,
+      holes: 9,
+    };
+    const back = {
+      grid: {
+        ...grid,
+        rows: [120.1, 138.3, 158.2, 189.6].map((y) => [0.01, y / 366] as GridPoint),
+      },
+      width: 993,
+      height: 366,
+      holes: 9,
+    };
+    const f = foldOver(back, front);
+    expect(f.scale).toBe(1);
+    // Levelled on all four lines: within a pixel or so of the printed rules.
+    expect(Math.abs(f.top)).toBeLessThan(1.5);
   });
 });
