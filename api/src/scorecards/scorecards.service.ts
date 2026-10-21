@@ -22,6 +22,7 @@ import { MembershipService } from '../auth/membership.service.js';
 import { DB, type Database } from '../db/db.js';
 import {
   cardRounds,
+  courses,
   groups,
   holes,
   layouts,
@@ -113,10 +114,16 @@ export class ScorecardsService {
     return ls.map((l) => ({
       id: l.id,
       name: l.name,
+      tees: l.tees,
       retired: l.retiredAt !== null,
       holes: hs
         .filter((h) => h.layoutId === l.id)
-        .map((h) => ({ number: h.number, par: h.par, strokeIndex: h.strokeIndex })),
+        .map((h) => ({
+          number: h.number,
+          par: h.par,
+          strokeIndex: h.strokeIndex,
+          yards: h.yards,
+        })),
     }));
   }
 
@@ -168,6 +175,11 @@ export class ScorecardsService {
       ? await this.db.select().from(cardRounds).where(eq(cardRounds.scorecardId, card.id))
       : [];
     const courseLayouts = await this.courseLayouts(row.season.courseId);
+    const [course] = await this.db
+      .select({ name: courses.name, city: courses.city, state: courses.state })
+      .from(courses)
+      .where(eq(courses.id, row.season.courseId))
+      .limit(1);
 
     const role = await this.memberships.roleIn(user, leagueId);
     const isAdmin = role === 'admin';
@@ -182,6 +194,7 @@ export class ScorecardsService {
       rounds,
       status,
       courseLayouts,
+      course: course ?? null,
       isAdmin,
       inGroup,
       seasonLocked: row.season.status === 'scheduled',
@@ -269,6 +282,8 @@ export class ScorecardsService {
       date: c.week.date,
       teeTime: c.group.teeTime,
       plannedLayoutId: c.week.layoutId,
+      /** For drawing the course's paper card. */
+      course: c.course,
       // Retired layouts only where this card or week already uses them.
       layouts: c.courseLayouts
         .filter((l) => !l.retired || l.id === c.card?.layoutId || l.id === c.week.layoutId)

@@ -82,6 +82,49 @@ describe('scorecard entry', () => {
     expect(screen.getAllByText('Jerry').length).toBeGreaterThan(1);
   });
 
+  it('draws the virtual scorecard on request, like the paper card', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({
+        status: 200,
+        body: view({
+          course: { name: 'Fox Run', city: 'Springfield', state: 'IL' },
+          layouts: [
+            {
+              ...FRONT,
+              tees: 'White',
+              holes: FRONT.holes.map((h) => ({ ...h, yards: 300 + h.number })),
+            },
+            BACK,
+          ],
+        }),
+      }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    // Not shown until asked for.
+    expect(screen.queryByText('Fox Run')).not.toBeInTheDocument();
+    for (const [h, s] of ['4', '4', '5', '3', '6', '5', '3', '4', '4'].entries())
+      await userEvent.type(screen.getByLabelText(`Jerry hole ${h + 1}`), s); // 38
+    await fillAll('Brian', '6'); // 54, gets 7 -> 47
+
+    await userEvent.click(screen.getByRole('button', { name: /Virtual scorecard/ }));
+    const card = await screen.findByRole('dialog', { name: 'Virtual scorecard' });
+    expect(within(card).getByText('Fox Run')).toBeInTheDocument();
+    expect(within(card).getByText('Springfield, IL')).toBeInTheDocument();
+    expect(within(card).getByText('WHITE')).toBeInTheDocument();
+    expect(within(card).getByText(String(9 * 300 + 45))).toBeInTheDocument(); // total yards
+    expect(within(card).getByText('Includes changes not saved yet.')).toBeInTheDocument();
+    const marks = (label: string) => card.querySelectorAll(`[data-mark="${label}"]`).length;
+    expect(marks('birdie')).toBe(2); // hole 1, plus the legend
+    expect(marks('bogey')).toBe(1 + 2 + 1); // Jerry's 3rd, Brian's par 5s, legend
+    expect(marks('double bogey or worse')).toBe(1 + 7 + 1); // Jerry's 5th, Brian's others, legend
+    // Brian's 7 strokes are dotted on the 7 hardest holes.
+    expect(within(card).getAllByLabelText('1 stroke')).toHaveLength(7);
+    expect(within(card).getByText('Jerry wins')).toBeInTheDocument();
+    expect(within(card).getByText(/Brian gets 7/)).toBeInTheDocument();
+  });
+
   it('marks a player absent and applies the absence rule', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),

@@ -132,6 +132,17 @@ describe('entering a card', () => {
       .expect(400);
   });
 
+  it("carries the course's name, tees and yardage for the virtual scorecard", async () => {
+    const { L, S, week, jerryGroup } = await setup();
+    const { body: view } = await as(site)
+      .get(cardPath(L, S, week.id, jerryGroup.id))
+      .expect(200);
+    expect(view.course).toEqual(expect.objectContaining({ name: expect.any(String) }));
+    const layout = view.layouts.find((l: { id: string }) => l.id === view.plannedLayoutId);
+    expect(layout.tees).toEqual(expect.any(String));
+    expect(layout.holes[0]).toHaveProperty('yards');
+  });
+
   it('a skipped round takes no cards and stays skipped', async () => {
     const { L, S, sched } = await setup();
     const week = sched.weeks[1]!;

@@ -8,6 +8,7 @@ import {
   Flag,
   History,
   Save,
+  ScrollText,
   Send,
   ShieldCheck,
 } from 'lucide-react';
@@ -15,6 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { useMe } from '@/auth/session';
 import { PhotosCard } from '@/components/Photos';
+import { VirtualScorecard } from '@/components/VirtualScorecard';
 import type { CardReading, ScanResult } from '@/components/ScanCardButton';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -76,6 +78,7 @@ export function ScorecardPage() {
   const [dirty, setDirty] = useState(false);
   const [reason, setReason] = useState('');
   const [disputing, setDisputing] = useState(false);
+  const [showVirtual, setShowVirtual] = useState(false);
 
   // Load the server's card into the form whenever a fresh version arrives.
   useEffect(() => {
@@ -185,6 +188,11 @@ export function ScorecardPage() {
       />
     );
   const editable = perms.canEdit;
+  const roundTitle = data.playoff?.isFinal
+    ? 'Finals'
+    : data.playoff
+      ? `Playoffs · Round ${data.playoff.round}`
+      : `Round ${data.round}`;
   const status: CardStatus = data.card?.status ?? 'draft';
   const nick = (id: string) => data.players.find((p) => p.playerId === id)?.nickname ?? '?';
   const gross = (e: Entry) =>
@@ -270,14 +278,7 @@ export function ScorecardPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">
-            {data.playoff?.isFinal
-              ? 'Finals'
-              : data.playoff
-                ? `Playoffs · Round ${data.playoff.round}`
-                : `Round ${data.round}`}{' '}
-            scorecard
-          </h1>
+          <h1 className="text-xl font-semibold tracking-tight">{roundTitle} scorecard</h1>
           <p className="text-sm text-muted-foreground">
             {formatDay(data.date)} · tee {aboutTeeTime(data.teeTime)}
           </p>
@@ -308,30 +309,35 @@ export function ScorecardPage() {
         />
       )}
 
-      <div
-        role="radiogroup"
-        aria-label="Nine played"
-        className="inline-flex w-fit rounded-lg border bg-muted p-1"
-      >
-        {data.layouts.map((l) => (
-          <button
-            key={l.id}
-            role="radio"
-            aria-checked={l.id === layoutId}
-            disabled={!editable}
-            onClick={() => switchNine(l.id)}
-            className={cn(
-              'rounded-md px-4 py-1.5 text-sm text-muted-foreground disabled:cursor-default',
-              l.id === layoutId && 'bg-card text-foreground shadow-xs',
-            )}
-          >
-            <Flag className="mr-1 inline size-3.5" aria-hidden />
-            {l.name}
-            {l.id === data.plannedLayoutId && l.id !== layoutId && (
-              <span className="ml-1 text-xs">(planned)</span>
-            )}
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div
+          role="radiogroup"
+          aria-label="Nine played"
+          className="inline-flex w-fit rounded-lg border bg-muted p-1"
+        >
+          {data.layouts.map((l) => (
+            <button
+              key={l.id}
+              role="radio"
+              aria-checked={l.id === layoutId}
+              disabled={!editable}
+              onClick={() => switchNine(l.id)}
+              className={cn(
+                'rounded-md px-4 py-1.5 text-sm text-muted-foreground disabled:cursor-default',
+                l.id === layoutId && 'bg-card text-foreground shadow-xs',
+              )}
+            >
+              <Flag className="mr-1 inline size-3.5" aria-hidden />
+              {l.name}
+              {l.id === data.plannedLayoutId && l.id !== layoutId && (
+                <span className="ml-1 text-xs">(planned)</span>
+              )}
+            </button>
+          ))}
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setShowVirtual(true)}>
+          <ScrollText /> Virtual scorecard
+        </Button>
       </div>
 
       {/* Laid out like the paper card: holes across the top, one row per player. */}
@@ -596,6 +602,47 @@ export function ScorecardPage() {
       )}
 
       <PhotosCard leagueId={leagueId} groupId={groupId} title="Match photos" />
+
+      {showVirtual && (
+        <Dialog open onOpenChange={(o) => !o && setShowVirtual(false)}>
+          <DialogContent
+            title="Virtual scorecard"
+            description={dirty ? 'Includes changes not saved yet.' : undefined}
+            className="sm:max-w-4xl"
+          >
+            <VirtualScorecard
+              course={data.course ?? null}
+              layout={layout}
+              title={`${roundTitle} · ${layout.name}`}
+              date={data.date}
+              rows={entries.map((e) => {
+                const m = live.find((x) => x.playerA === e.playerId || x.playerB === e.playerId);
+                const side = m?.playerA === e.playerId ? 'A' : 'B';
+                return {
+                  playerId: e.playerId,
+                  name: nick(e.playerId),
+                  handicap: e.handicap,
+                  attendance: e.attendance,
+                  subName: e.subName,
+                  holeScores: e.holeScores,
+                  strokes: m?.result?.strokes[side] ?? null,
+                  net: m?.result?.net[side] ?? null,
+                };
+              })}
+              matches={
+                data.playoff
+                  ? []
+                  : live.map((m) => ({ a: nick(m.playerA), b: nick(m.playerB), result: m.result }))
+              }
+              footer={
+                data.card?.enteredBy
+                  ? `Entered by ${data.card.enteredBy} · ${STATUS[status].label}`
+                  : STATUS[status].label
+              }
+            />
+          </DialogContent>
+        </Dialog>
+      )}
 
       {disputing && (
         <DisputeDialog path={path} onClose={() => setDisputing(false)} onDone={onSaved} />
