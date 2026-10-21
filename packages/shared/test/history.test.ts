@@ -1,6 +1,6 @@
 /**
  * Checks the scoring rules against real league results from 2021-2026.
- * The fixture is built from teemate-data/history by `pnpm history:fixture`, with names anonymized.
+ * The fixture is built from leaguemates-data/history by `pnpm history:fixture`, with names anonymized.
  * Each match's recorded outcome comes from the change in the standings, not
  * from the scores. The sheets never record absences, so absence handling can
  * only be checked for consistency.

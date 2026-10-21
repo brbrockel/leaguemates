@@ -7,7 +7,7 @@ Usage:
 ROSTER.xls is the league's "Roster of ... League Players" sheet (NAME, PHONE #, EMAIL,
 ADDRESS columns under a header row). NICKNAMES.json maps each full name on the sheet to
 the player's name in the league, e.g. {"Jerry Smith": "Jerry"}; it lives with the data in
-the private teemate-data repository, never here. Rows without a nickname are reported and
+the private leaguemates-data repository, never here. Rows without a nickname are reported and
 left out, so nobody is matched by guesswork.
 
 Needs xlrd for the old .xls format: pip install --target <dir> xlrd==2.0.1 and run with

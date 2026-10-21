@@ -30,7 +30,7 @@ How to set up, run and check LeagueMates locally.
 | `pnpm check` | Lint, format check, typecheck and tests, the same checks CI runs |
 | `pnpm format` | Format the code with Prettier |
 | `pnpm build` | Build all packages |
-| `pnpm history:fixture` | Rebuild the history test fixture from `../teemate-data/history/` (the private data repository, cloned next to this one) |
+| `pnpm history:fixture` | Rebuild the history test fixture from `../leaguemates-data/history/` (the private data repository, cloned next to this one) |
 | `pnpm --filter @teemate/api dev` | Run the API with reload on change (http://localhost:4100/api) |
 | `pnpm --filter @teemate/api db:migrate` | Apply database migrations (build first) |
 | `pnpm --filter @teemate/api db:generate --name <change>` | Create a migration after editing `api/src/db/schema.ts` |
@@ -77,7 +77,7 @@ CI runs the same tests with a Postgres service container.
 - every unexplained tie fits the absence rule
 - the 2024 final standings can be rebuilt from its 15 weeks of results
 
-Rebuild the fixture with `pnpm history:fixture` after adding sheets to `../teemate-data/history/`.
+Rebuild the fixture with `pnpm history:fixture` after adding sheets to `../leaguemates-data/history/`.
 
 ## Conventions
 
