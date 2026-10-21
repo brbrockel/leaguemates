@@ -5,7 +5,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 ## Unreleased
 
-- **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies circled, bogeys boxed and stroke dots.
+- **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies circled, bogeys boxed and stroke dots. **Share image** sends it from a phone (Messages, email, …); elsewhere **Save image** downloads it.
 
 ## 1.1.0 (2026-10-18)
 

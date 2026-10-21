@@ -1,8 +1,10 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import type { ScorecardView } from '@/lib/api';
 import { me, mockApi, renderAt } from './render';
+
+vi.mock('html-to-image', () => ({ toBlob: vi.fn(async () => new Blob(['png'])) }));
 
 const L = me.leagues[0]!.id;
 const S = '22222222-2222-4222-8222-222222222222';
@@ -109,12 +111,13 @@ describe('scorecard entry', () => {
     await fillAll('Brian', '6'); // 54, gets 7 -> 47
 
     await userEvent.click(screen.getByRole('button', { name: /Virtual scorecard/ }));
-    const card = await screen.findByRole('dialog', { name: 'Virtual scorecard' });
+    const dialog = await screen.findByRole('dialog', { name: 'Virtual scorecard' });
+    const card = within(dialog).getByRole('figure', { name: 'Round 1 · Front 9 card' });
     expect(within(card).getByText('Fox Run')).toBeInTheDocument();
     expect(within(card).getByText('Springfield, IL')).toBeInTheDocument();
     expect(within(card).getByText('WHITE')).toBeInTheDocument();
     expect(within(card).getByText(String(9 * 300 + 45))).toBeInTheDocument(); // total yards
-    expect(within(card).getByText('Includes changes not saved yet.')).toBeInTheDocument();
+    expect(within(dialog).getByText('Includes changes not saved yet.')).toBeInTheDocument();
     const marks = (label: string) => card.querySelectorAll(`[data-mark="${label}"]`).length;
     expect(marks('birdie')).toBe(2); // hole 1, plus the legend
     expect(marks('bogey')).toBe(1 + 2 + 1); // Jerry's 3rd, Brian's par 5s, legend
@@ -123,6 +126,32 @@ describe('scorecard entry', () => {
     expect(within(card).getAllByLabelText('1 stroke')).toHaveLength(7);
     expect(within(card).getByText('Jerry wins')).toBeInTheDocument();
     expect(within(card).getByText(/Brian gets 7/)).toBeInTheDocument();
+  });
+
+  it('shares the virtual scorecard as an image, or saves it where sharing is not offered', async () => {
+    const share = vi.fn(async () => {});
+    Object.assign(navigator, { canShare: () => true, share });
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: view() }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await userEvent.click(await screen.findByRole('button', { name: /Virtual scorecard/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Share image' }));
+    await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
+    const [{ files, title }] = share.mock.calls[0] as unknown as [{ files: File[]; title: string }];
+    expect(title).toBe('Round 1 · Front 9');
+    expect(files[0]!.name).toBe('Round-1-Front-9-2099-04-21.png');
+    expect(files[0]!.type).toBe('image/png');
+
+    // The phone wants a fresh tap: the image waits for it.
+    share.mockRejectedValueOnce(Object.assign(new Error('no'), { name: 'NotAllowedError' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Share image' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Image ready: share it' }));
+    expect(share).toHaveBeenCalledTimes(3);
+    expect(screen.getByRole('button', { name: 'Share image' })).toBeInTheDocument();
+    delete (navigator as { canShare?: unknown }).canShare;
+    delete (navigator as { share?: unknown }).share;
   });
 
   it('marks a player absent and applies the absence rule', async () => {

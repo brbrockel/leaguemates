@@ -69,7 +69,7 @@ Site: https://teemate.bhbslp.org
 - [ ] As a player in a foursome: open the card from Home (**Open scorecard**) or from Schedule.
 - [ ] Enter hole scores on the phone. The number keypad appears, totals update, and match results show live with "X gets N".
 - [ ] Switch the nine (Front/Back) if the starter changed it.
-- [ ] **Virtual scorecard:** the button next to the nines shows the round as a paper card: course name, tee yardages, par and handicap rows, birdies circled, bogeys boxed (doubled for double bogey or worse), a dot on each hole a player gets a stroke, totals, handicaps, nets and the match results. It stays paper-colored in dark mode, scrolls sideways for 18 holes, and says when it includes unsaved changes.
+- [ ] **Virtual scorecard:** the button next to the nines shows the round as a paper card: course name, tee yardages, par and handicap rows, birdies circled, bogeys boxed (doubled for double bogey or worse), a dot on each hole a player gets a stroke, totals, handicaps, nets and the match results. It stays paper-colored in dark mode, scrolls sideways for 18 holes, and says when it includes unsaved changes. **Share image** on a phone opens the share sheet with a picture of the whole card (check iPhone and Android); on a computer **Save image** downloads it.
 - [ ] Mark a player **Absent** and add a sub's name. The match uses the absence rule ("must beat …").
 - [ ] **Save**, close the app, reopen: the scores are still there.
 - [ ] **Submit** with a hole missing is refused. With every hole filled, it's submitted.
