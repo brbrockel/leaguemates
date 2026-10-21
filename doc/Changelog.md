@@ -3,7 +3,7 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
-## Unreleased
+## 1.2.0 (2026-10-21)
 
 - **New address: leaguemates.bhbslp.org.** The old teemate.bhbslp.org address forwards there, links already sent keep working, and an app installed from the old address moves itself over. Sign in once on the new address and add it to the home screen again.
 - **TeeMate is now LeagueMates.** The new name is on every page, the home screen icon, emails, texts and notifications. The address and sign-ins stay the same.
