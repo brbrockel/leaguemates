@@ -74,6 +74,8 @@ Site: https://teemate.bhbslp.org
 - [ ] **Fold-over (Timberlin back nine):** after the front nine is set up with its name column, set up the back nine on the back picture and, at the name step, choose **Names are on the Front 9 card**. The preview and a back-nine card show the front's name column beside holes 10–18 with the lines level.
 - [ ] Mark a player **Absent** and add a sub's name. The match uses the absence rule ("must beat …").
 - [ ] **Save**, close the app, reopen: the scores are still there.
+- [ ] Type scores **without saving**, then close the app (or swipe it away) and reopen the card: "Your unsaved changes were brought back", with the scores in place. **Save** stores them; **Discard** shows the card as saved. Leaving the page in a browser with unsaved scores asks first.
+- [ ] **Updates:** after a new version is deployed, an open TeeMate shows "A new version of TeeMate is ready" with **Reload**; it never reloads by itself.
 - [ ] **Submit** with a hole missing is refused. With every hole filled, it's submitted.
 - [ ] **As another player in that foursome:** the card is read-only. **Dispute** it with a note.
 - [ ] **As Admin:** the disputed card shows the note. Correct a score (a reason is required), then **Approve as final**.

@@ -10,6 +10,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - **Fold-over cards:** a nine printed on a flap with no name column (Timberlin's back nine) takes the name column from another nine's card, shown beside it as when the card is folded.
 - **Download image** beside **Share image**, so a phone can save the card as well as send it.
 - The card's legend explains the eagle's double circle when the card has one.
+- **Fix: unsaved scores were lost when the app reloaded.** TeeMate updated itself by reloading the page, and phones also reload apps left in the background, wiping scores typed but not saved. Unsaved scores are now kept on the device and brought back (with **Discard** to drop them); leaving the page with unsaved scores asks first; and an update no longer reloads the app: **A new version of TeeMate is ready → Reload** lets you choose when.
 
 ## 1.1.0 (2026-10-18)
 

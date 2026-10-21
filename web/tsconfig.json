@@ -11,7 +11,12 @@
     "skipLibCheck": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "types": ["vite/client", "vite-plugin-pwa/client", "@testing-library/jest-dom/vitest"],
+    "types": [
+      "vite/client",
+      "vite-plugin-pwa/client",
+      "vite-plugin-pwa/react",
+      "@testing-library/jest-dom/vitest"
+    ],
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src", "vite.config.ts", "pwa-assets.config.ts"]
