@@ -6,10 +6,10 @@ self.addEventListener('push', (event) => {
   try {
     data = event.data ? event.data.json() : {};
   } catch {
-    data = { title: 'TeeMate', body: event.data ? event.data.text() : '' };
+    data = { title: 'LeagueMates', body: event.data ? event.data.text() : '' };
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || 'TeeMate', {
+    self.registration.showNotification(data.title || 'LeagueMates', {
       body: data.body || '',
       icon: '/pwa-192x192.png',
       badge: '/pwa-64x64.png',
@@ -23,7 +23,7 @@ self.addEventListener('notificationclick', (event) => {
   const url = new URL(event.notification.data?.url || '/', self.location.origin).href;
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
-      // Reuse an open TeeMate window if there is one.
+      // Reuse an open LeagueMates window if there is one.
       for (const w of windows) {
         if (w.url.startsWith(self.location.origin) && 'focus' in w) {
           return w.navigate(url).then((c) => (c || w).focus());

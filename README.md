@@ -1,4 +1,4 @@
-# TeeMate
+# LeagueMates
 
 Tee times, pairings and standings for a weekly golf league.
 

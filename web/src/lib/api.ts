@@ -1,4 +1,4 @@
-/** Thin fetch wrapper for the TeeMate API (same origin; nginx or the Vite dev server proxies /api). */
+/** Thin fetch wrapper for the LeagueMates API (same origin; nginx or the Vite dev server proxies /api). */
 import type { CardGrid } from '@teemate/shared';
 
 let csrfToken: string | null = null;
@@ -543,7 +543,7 @@ export interface Announcement {
   bannerUntil: string | null;
 }
 
-/** A notice from site admins to everyone using TeeMate. */
+/** A notice from site admins to everyone using LeagueMates. */
 export interface SiteNotice {
   id: string;
   title: string;

@@ -82,7 +82,7 @@ export function AppLayout() {
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-4">
           <NavLink to="/" className="flex items-center gap-2 font-semibold tracking-tight">
             <Logo className="size-7" />
-            <span>TeeMate</span>
+            <span>LeagueMates</span>
           </NavLink>
 
           <nav className="ml-4 hidden items-center gap-1 md:flex">
@@ -184,7 +184,7 @@ export function AppLayout() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-                    TeeMate {appVersion}
+                    LeagueMates {appVersion}
                   </DropdownMenuLabel>
                 </DropdownMenuContent>
               </DropdownMenu>

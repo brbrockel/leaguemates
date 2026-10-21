@@ -468,7 +468,7 @@ function EmailCard({
               required
               value={form.from}
               onChange={(e) => set({ from: e.target.value })}
-              placeholder="TeeMate <you@gmail.com>"
+              placeholder="LeagueMates <you@gmail.com>"
             />
           </div>
           {save.isError && <Alert variant="destructive">{save.error.message}</Alert>}

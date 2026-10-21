@@ -1,10 +1,10 @@
 # Architecture
 
-This document describes the planned high-level architecture of TeeMate. It follows the same deployment pattern as RigTracker.
+This document describes the planned high-level architecture of LeagueMates. It follows the same deployment pattern as RigTracker.
 
 ## Overview
 
-TeeMate is a full-stack web application with three parts:
+LeagueMates is a full-stack web application with three parts:
 
 - a React frontend, installable as a PWA
 - a NestJS API
@@ -43,7 +43,7 @@ In production, the frontend and API run in a single container:
    - A vision AI API that reads scorecard photos (Phase 2, EH-008)
 
 6. Edge
-   - Cloudflare Tunnel, then Traefik, then the TeeMate container. HTTPS is terminated at Cloudflare.
+   - Cloudflare Tunnel, then Traefik, then the LeagueMates container. HTTPS is terminated at Cloudflare.
 
 ## Deployment Topology
 

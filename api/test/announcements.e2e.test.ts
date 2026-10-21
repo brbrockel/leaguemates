@@ -217,7 +217,7 @@ describe('notices for a foursome or one person, read and dismissed', () => {
         port: 25,
         secure: false,
         user: null,
-        from: 'TeeMate <noreply@example.com>',
+        from: 'LeagueMates <noreply@example.com>',
       })
       .expect(200);
     expect((await as(keith).get('/auth/me').expect(200)).body.user.noticeEmails).toBe(true);
@@ -276,7 +276,7 @@ describe('notices for a foursome or one person, read and dismissed', () => {
     expect(list[0]).toMatchObject({
       title: 'Rained out: round 1',
       kind: 'week.rainout',
-      author: 'TeeMate',
+      author: 'LeagueMates',
       to: 'League',
       urgent: true,
       banner: true,

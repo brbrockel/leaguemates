@@ -45,7 +45,7 @@ const Uuid = new ParseUUIDPipe();
 const expiry = (days: number | null) => (days === null ? null : new Date(Date.now() + days * DAY));
 
 /**
- * Notices from site admins to everyone using TeeMate, shown as a banner on every page (guests
+ * Notices from site admins to everyone using LeagueMates, shown as a banner on every page (guests
  * too) until they expire or each person dismisses them; "must see" ones can't be dismissed.
  */
 @Injectable()

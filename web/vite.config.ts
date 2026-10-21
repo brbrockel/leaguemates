@@ -26,8 +26,8 @@ export default defineConfig({
       registerType: 'prompt',
       pwaAssets: { config: true },
       manifest: {
-        name: 'TeeMate',
-        short_name: 'TeeMate',
+        name: 'LeagueMates',
+        short_name: 'LeagueMates',
         description: 'Tee times, pairings and standings for your golf league',
         theme_color: '#15803d',
         background_color: '#ffffff',

@@ -75,7 +75,7 @@ export function matchTotp(
 }
 
 export const otpauthUrl = (secret: string, account: string) =>
-  `otpauth://totp/${encodeURIComponent(`TeeMate:${account}`)}?secret=${secret}&issuer=TeeMate&algorithm=SHA1&digits=6&period=30`;
+  `otpauth://totp/${encodeURIComponent(`LeagueMates:${account}`)}?secret=${secret}&issuer=LeagueMates&algorithm=SHA1&digits=6&period=30`;
 
 /** One-time recovery codes like "k3f9-x2qa", stored only as SHA-256 hashes. */
 export function newRecoveryCodes(n = 8): string[] {

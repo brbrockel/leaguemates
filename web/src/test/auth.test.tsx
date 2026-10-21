@@ -131,7 +131,10 @@ describe('opening a sign-in link while already signed in', () => {
     window.history.replaceState(null, '', '/sign-in/verify#token=abc123abc123abc123abc123');
     renderAt('/sign-in/verify');
     expect(await screen.findByText("You're already signed in")).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Continue to TeeMate' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Continue to LeagueMates' })).toHaveAttribute(
+      'href',
+      '/',
+    );
     expect(calls.some((c) => c.key === 'POST /api/auth/verify')).toBe(false);
   });
 });

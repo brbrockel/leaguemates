@@ -360,7 +360,7 @@ function TextEveryone({ phones, count }: { phones: string[]; count: number }) {
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm">
       <Button asChild size="sm" variant="outline">
-        <a href={smsHref(phones, 'TeeMate: ')}>
+        <a href={smsHref(phones, 'LeagueMates: ')}>
           <MessageSquare /> Text everyone
         </a>
       </Button>
@@ -387,7 +387,7 @@ function TextLinkButton({ userId, nickname }: { userId: string; nickname: string
   });
   if (make.data) {
     const d = make.data;
-    const body = `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your TeeMate sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`;
+    const body = `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your LeagueMates sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`;
     return (
       <Button asChild size="sm" variant="secondary" className="h-8">
         <a href={smsHref([d.phone], body)} aria-label={`Send ${nickname} the text`}>

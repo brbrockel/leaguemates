@@ -1,6 +1,6 @@
 # Sign-in and account security
 
-TeeMate signs people in itself, with an email address and password. Nothing depends on Google or any other outside service, and no email is needed.
+LeagueMates signs people in itself, with an email address and password. Nothing depends on Google or any other outside service, and no email is needed.
 
 ## Passwords
 
@@ -17,7 +17,7 @@ There's no email, so admins hand out links:
 3. The admin sends it by text or however they usually reach the person.
 4. The person opens it, sees which email it's for, and sets a password. They're signed in, and the link is used up. If the account has authenticator codes on, they also enter a code before they're signed in, so a link alone can't get past the authenticator.
 
-Site admins can instead email the link from a season's roster (the mail button next to anyone with an account), or text it from their own phone (the message button: it opens Messages with the link filled in; TeeMate itself sends no texts). The mail guard still applies: until mail is fully on, it only goes to addresses on the allowlist, and the button says when an email was held back.
+Site admins can instead email the link from a season's roster (the mail button next to anyone with an account), or text it from their own phone (the message button: it opens Messages with the link filled in; LeagueMates itself sends no texts). The mail guard still applies: until mail is fully on, it only goes to addresses on the allowlist, and the button says when an email was held back.
 
 A league admin can get links for, edit, unlock and sign out only people whose every league is one they run. Adding someone to your league doesn't give you their account: for a person who is also in another league, or who is an admin anywhere, ask a site admin.
 

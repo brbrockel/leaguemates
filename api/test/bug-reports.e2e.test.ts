@@ -83,7 +83,7 @@ describe('reporting a problem', () => {
 
   it('signs with the first name when there is no nickname', () => {
     expect(reporterLabel({ nickname: null, name: 'Jerry Smith' })).toBe('Jerry');
-    expect(reporterLabel({ nickname: '  ', name: null })).toBe('a TeeMate user');
+    expect(reporterLabel({ nickname: '  ', name: null })).toBe('a LeagueMates user');
   });
 
   it('keeps the report when GitHub fails, and site admins see it with the reporter', async () => {

@@ -17,18 +17,18 @@ describe('add to Home Screen hint', () => {
   it('tells iPhone users how, until they dismiss it', async () => {
     as(IPHONE);
     const { unmount } = render(<InstallHint />);
-    expect(screen.getByText('Add TeeMate to your Home Screen')).toBeInTheDocument();
+    expect(screen.getByText('Add LeagueMates to your Home Screen')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: "Don't show again" }));
-    expect(screen.queryByText('Add TeeMate to your Home Screen')).not.toBeInTheDocument();
+    expect(screen.queryByText('Add LeagueMates to your Home Screen')).not.toBeInTheDocument();
     unmount();
     render(<InstallHint />);
-    expect(screen.queryByText('Add TeeMate to your Home Screen')).not.toBeInTheDocument();
+    expect(screen.queryByText('Add LeagueMates to your Home Screen')).not.toBeInTheDocument();
   });
 
   it("isn't shown on Android, where Chrome offers to install by itself", () => {
     as(ANDROID);
     render(<InstallHint />);
-    expect(screen.queryByText('Add TeeMate to your Home Screen')).not.toBeInTheDocument();
+    expect(screen.queryByText('Add LeagueMates to your Home Screen')).not.toBeInTheDocument();
   });
 
   it('recognises an iPad, which reports itself as a Mac with touch', () => {

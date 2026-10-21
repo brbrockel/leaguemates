@@ -41,7 +41,7 @@ export function githubIssues(c: Config): IssueTracker | null {
           Authorization: `Bearer ${c.GITHUB_TOKEN}`,
           Accept: 'application/vnd.github+json',
           'X-GitHub-Api-Version': '2022-11-28',
-          'User-Agent': 'TeeMate',
+          'User-Agent': 'LeagueMates',
         },
         body: JSON.stringify(issue),
         signal: AbortSignal.timeout(10_000),
@@ -64,7 +64,7 @@ const Report = z.object({
 
 /** What the public issue calls the reporter: nickname, else first name. Never more. */
 export function reporterLabel(u: { nickname: string | null; name: string | null }): string {
-  return u.nickname?.trim() || u.name?.trim().split(/\s+/)[0] || 'a TeeMate user';
+  return u.nickname?.trim() || u.name?.trim().split(/\s+/)[0] || 'a LeagueMates user';
 }
 
 /** Stops "@someone" in a report from pinging GitHub users. */

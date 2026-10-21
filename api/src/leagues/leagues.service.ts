@@ -299,9 +299,9 @@ export class LeaguesService {
     this.mailer
       .send({
         to: email,
-        subject: `You're invited to ${league.name} on TeeMate`,
+        subject: `You're invited to ${league.name} on LeagueMates`,
         text: [
-          `You've been invited to join ${league.name} on TeeMate.`,
+          `You've been invited to join ${league.name} on LeagueMates.`,
           '',
           `Sign in with this email address (${email}) at:`,
           `${this.config.APP_URL}/sign-in`,

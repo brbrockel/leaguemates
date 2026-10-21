@@ -44,12 +44,12 @@ export function InstallHint() {
   };
   return (
     <section
-      aria-label="Add TeeMate to your Home Screen"
+      aria-label="Add LeagueMates to your Home Screen"
       className="flex items-start gap-3 rounded-xl border bg-card p-3 text-sm shadow-xs"
     >
       <img src="/apple-touch-icon-180x180.png" alt="" className="size-10 shrink-0 rounded-lg" />
       <div className="min-w-0 flex-1">
-        <p className="font-medium">Add TeeMate to your Home Screen</p>
+        <p className="font-medium">Add LeagueMates to your Home Screen</p>
         <p className="text-muted-foreground">
           It opens like an app, full screen. In Safari, tap{' '}
           <Share className="inline size-4 align-text-bottom" aria-hidden /> Share, then{' '}

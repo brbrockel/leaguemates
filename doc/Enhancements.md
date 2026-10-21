@@ -60,7 +60,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-010 | Audit Log | MVP | Done (league Activity for admins, site-wide Activity for site admins) |
 | EH-011 | 2026 Spreadsheet Import | MVP | Done (covered by EH-012: 2026 is in the history import) |
 | EH-012 | Historical Import from Gmail | Phase 2 | Done (2018–2026 merged into Wednesday League, foursomes in tee order; see [HistoricalImport.md](HistoricalImport.md)) |
-| EH-013 | Notifications | Phase 2 | Done (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; shown as stacked one-line banners on every page that expire or are dismissed, with a horn in the top bar for the full list; site-wide notices from site admins; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; rainouts and skips are emailed to the league, and each person can turn notice emails off on Account; push notifications on each phone or computer where the person turns them on (Account), for rainouts and skips, admin notices, their foursome's news and TeeMate's notices) |
+| EH-013 | Notifications | Phase 2 | Done (in-app notices to the league, a foursome or one person, plus automatic ones for cards, rainouts and playoffs; shown as stacked one-line banners on every page that expire or are dismissed, with a horn in the top bar for the full list; site-wide notices from site admins; email set up in Site settings → Email; site admins email or text sign-in links from the season roster; admins open group texts to the roster or with an announcement, sent from their own phone; rainouts and skips are emailed to the league, and each person can turn notice emails off on Account; push notifications on each phone or computer where the person turns them on (Account), for rainouts and skips, admin notices, their foursome's news and LeagueMates' notices) |
 | EH-014 | Stats | Phase 2 | Done (scoring average, best round, net average, head-to-head; League → Stats: how each hole plays, with difficulty rank and the mix of results; each player's trend over time and their holes against the field) |
 | EH-015 | Playoffs | MVP | Done (seeded knockout or final foursome, card tie-breaks, forfeits, admin decisions, champion) |
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
@@ -146,7 +146,7 @@ Built in Phase 1 and required before any league data is loaded.
 **Owner**: TBD
 
 ### Problem
-There is one league today, but TeeMate should be able to host several. Each league needs its own data, roles and rules.
+There is one league today, but LeagueMates should be able to host several. Each league needs its own data, roles and rules.
 
 ### Scope
 In:
@@ -342,7 +342,7 @@ Out:
 
 ### Proposed Solution
 - **Entering the card:**
-  - The spreadsheets never recorded who was absent; about 96 ties from 2021–2026 are unexplained absences. TeeMate records it explicitly for every player.
+  - The spreadsheets never recorded who was absent; about 96 ties from 2021–2026 are unexplained absences. LeagueMates records it explicitly for every player.
   - Any member of a foursome can open its card and enter hole scores for all four players.
   - Each player is marked as played or absent. An absent player can have a sub, recorded by name only.
 - **Results** (shared package):
@@ -614,7 +614,7 @@ Phase 1.
 **Owner**: TBD
 
 ### Problem
-The current season has to carry over into TeeMate.
+The current season has to carry over into LeagueMates.
 
 ### Scope
 In:
@@ -999,7 +999,7 @@ Out:
 The scorecard screen is deliberately plain: numbers in a grid, nothing in the way. Sometimes people want to see the round the way golfers read it, as a filled-in paper card.
 
 ### Proposal
-A **Virtual scorecard** button on the scorecard screen (never the default view) draws the round as a classic paper card from the data TeeMate already has: the course's name and town, the layout's tees and yardage, par and handicap (stroke index) rows, then each player's scores in pen, circled under par and boxed over par, their total, handicap and match net, and the match results underneath.
+A **Virtual scorecard** button on the scorecard screen (never the default view) draws the round as a classic paper card from the data LeagueMates already has: the course's name and town, the layout's tees and yardage, par and handicap (stroke index) rows, then each player's scores in pen, circled under par and boxed over par, their total, handicap and match net, and the match results underneath.
 
 Every course stores the same facts (hole, yards, par, stroke index), so one drawing works for every course with no setup.
 

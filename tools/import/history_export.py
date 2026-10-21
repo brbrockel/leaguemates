@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export every regular season in the weekly spreadsheets for the TeeMate import.
+"""Export every regular season in the weekly spreadsheets for the LeagueMates import.
 
 Usage:
     python3 -I tools/import/history_export.py ../teemate-data/history ../teemate-data/history-export.json

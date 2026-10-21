@@ -220,9 +220,9 @@ export class SiteSettingsService {
     try {
       await sendWith(s, {
         to: actor.email,
-        subject: 'TeeMate test email',
+        subject: 'LeagueMates test email',
         text: [
-          'This is a test email from TeeMate.',
+          'This is a test email from LeagueMates.',
           '',
           `Sent through ${s.host}:${s.port} as ${s.from}.`,
           'If you can read this, email works.',

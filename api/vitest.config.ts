@@ -6,7 +6,7 @@ const env = {
   DATABASE_URL:
     process.env.TEST_DATABASE_URL ?? 'postgres://teemate:teemate@localhost:15432/teemate_test',
   APP_URL: 'http://localhost:4101',
-  MAIL_FROM: 'TeeMate <teemate@test>',
+  MAIL_FROM: 'LeagueMates <teemate@test>',
 };
 // Global setup runs in this process, before `test.env` reaches the workers.
 Object.assign(process.env, env);

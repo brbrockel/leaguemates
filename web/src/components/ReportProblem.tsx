@@ -45,7 +45,7 @@ export function ReportProblemDialog({ open, onClose }: { open: boolean; onClose:
     <Dialog open={open} onOpenChange={(o) => !o && close()}>
       <DialogContent
         title="Report a problem"
-        description="It goes to the people who build TeeMate as a public GitHub issue, signed with your nickname (or first name). Please leave out phone numbers, emails and other personal details."
+        description="It goes to the people who build LeagueMates as a public GitHub issue, signed with your nickname (or first name). Please leave out phone numbers, emails and other personal details."
       >
         {send.isSuccess ? (
           <div className="flex flex-col gap-3">

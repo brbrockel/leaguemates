@@ -78,7 +78,7 @@ describe('notice banners', () => {
     await userEvent.click(within(bar).getByRole('button', { name: 'Show all 3 notices' }));
     const rows = within(bar).getAllByRole('button', { expanded: false });
     expect(rows.map((r) => r.textContent)).toEqual([
-      'Down for updates Sunday 8pmTeeMate',
+      'Down for updates Sunday 8pmLeagueMates',
       'Rained out: round 4League',
       'Bring $20 for the potLeague',
     ]);
@@ -269,7 +269,7 @@ describe('notices panel (the horn)', () => {
     renderAt('/');
     await userEvent.click(await screen.findByRole('button', { name: 'Notices' }));
     const panel = await screen.findByRole('dialog', { name: 'Notices' });
-    const site = within(panel).getByRole('region', { name: 'TeeMate' });
+    const site = within(panel).getByRole('region', { name: 'LeagueMates' });
     await userEvent.click(within(site).getByRole('button', { name: /Notice for everyone/ }));
     await userEvent.type(within(site).getByLabelText('Title'), 'Down Sunday');
     await userEvent.selectOptions(within(site).getByLabelText('Show as a banner'), 'kept');
