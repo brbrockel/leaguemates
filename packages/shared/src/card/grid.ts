@@ -36,15 +36,25 @@ export interface GridPicture {
 /**
  * How another nine's name column sits beside a fold-over panel, in the panel picture's
  * pixels: the other picture is scaled so its player lines are as far apart as the panel's,
- * moved so its first line is level with the panel's, and cut just before its first hole box.
+ * moved so its lines are level with the panel's, and cut just before its first hole box.
+ *
+ * Taps land a few pixels off, so when the line spacing agrees with the pictures' heights to
+ * within that (two pictures of one card, taken alike), the heights set the scale; and the
+ * lines are levelled on average rather than by the first one alone.
  */
 export function foldOver(panel: GridPicture, names: GridPicture) {
   const span = (p: GridPicture) => {
     const rs = p.grid.rows;
     return rs.length > 1 ? (rs[rs.length - 1]![1] - rs[0]![1]) * p.height : 0;
   };
-  const scale =
-    span(panel) > 0 && span(names) > 0 ? span(panel) / span(names) : panel.height / names.height;
+  const byHeight = panel.height / names.height;
+  const byLines = span(panel) > 0 && span(names) > 0 ? span(panel) / span(names) : byHeight;
+  const scale = Math.abs(byLines / byHeight - 1) <= FOLD_TAP_SLACK ? byHeight : byLines;
+  const pairs = Math.min(panel.grid.rows.length, names.grid.rows.length);
+  let top = 0;
+  for (let i = 0; i < pairs; i++)
+    top += panel.grid.rows[i]![1] * panel.height - names.grid.rows[i]![1] * names.height * scale;
+  top /= pairs;
   const first = names.grid.rows[0]!;
   const holeGap = (names.grid.last[0] - first[0]) / Math.max(1, names.holes - 1);
   /** Where the strip is cut, in the names picture's pixels. */
@@ -54,13 +64,16 @@ export function foldOver(panel: GridPicture, names: GridPicture) {
     /** The strip's width once scaled. */
     width: cut * scale,
     /** The names picture's top edge, from the panel's top. */
-    top: panel.grid.rows[0]![1] * panel.height - first[1] * names.height * scale,
+    top,
     /** Where names are written, from the strip's left edge. */
     nameX: (names.grid.name?.[0] ?? first[0] / 10) * names.width * scale,
   };
 }
 
 export const CARD_GRID_MAX_ROWS = 6;
+
+/** How far tapped line spacing can stray from the pictures' sizes and still be tapping error. */
+const FOLD_TAP_SLACK = 0.12;
 
 const add = (p: GridPoint, q: GridPoint, k = 1): GridPoint => [p[0] + q[0] * k, p[1] + q[1] * k];
 const sub = (p: GridPoint, q: GridPoint): GridPoint => [p[0] - q[0], p[1] - q[1]];
