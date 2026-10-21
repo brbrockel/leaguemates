@@ -73,7 +73,9 @@ describe('push notifications on Account', () => {
     const box = await screen.findByRole('checkbox', { name: 'Notify me on this device' });
     await waitFor(() => expect(box).toBeEnabled());
     await userEvent.click(box);
-    expect(await screen.findByText(/Notifications are blocked for TeeMate/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Notifications are blocked for LeagueMates/),
+    ).toBeInTheDocument();
     expect(box).not.toBeChecked();
   });
 

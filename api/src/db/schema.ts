@@ -535,7 +535,7 @@ export const announcements = pgTable(
   (t) => [index('announcements_league_idx').on(t.leagueId, t.createdAt)],
 );
 
-/** A notice from site admins to everyone using TeeMate (e.g. "Down for updates Sunday"). */
+/** A notice from site admins to everyone using LeagueMates (e.g. "Down for updates Sunday"). */
 export const siteNotices = pgTable('site_notices', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),

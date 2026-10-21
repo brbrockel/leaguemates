@@ -1,6 +1,6 @@
 # Deployment
 
-How TeeMate runs in the homelab, and how to update it. Since 1.0.0 (2026-10-17) this is **production**: back up before any data change or risky deploy, and confirm with the owner before writing data by hand.
+How LeagueMates runs in the homelab, and how to update it. Since 1.0.0 (2026-10-17) this is **production**: back up before any data change or risky deploy, and confirm with the owner before writing data by hand.
 
 ## Where it runs
 
@@ -15,7 +15,7 @@ How TeeMate runs in the homelab, and how to update it. Since 1.0.0 (2026-10-17) 
 | Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) `teemate_anthropic_api_key` (reads scorecard photos) and `teemate_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/teemate`), and `teemate_vapid_private_key` (signs push notifications; its public half is `VAPID_PUBLIC_KEY` in the stack file), created once and never stored in a file |
 | Photos | Volume `teemate_photos` at `/data/photos` (`PHOTOS_DIR`). Files are served only through the app, to league members |
 | Email | Set in the app: profile menu → **Site settings → Email** (site admins only): who gets email (off, an allowlist, or everyone), the mail server and its password (stored encrypted with `APP_SECRET`), and the From address. **Send me a test email** checks it. Until it's saved there, the stack's `MAIL_MODE=off` applies and nothing is sent. Sending to everyone is only with the owner's consent |
-| Dashboard | Heimdall tile "TeeMate" (dashboard.bhbslp.org) |
+| Dashboard | Heimdall tile "LeagueMates" (dashboard.bhbslp.org) |
 | Testing mode | Switched on and off in the app: profile menu → **Site settings** (site admins only). While on, the sign-in page offers instant sign-in with a shared access code, and new emails become users in the chosen league. It can't be on while email goes to everyone. Turn it off before go-live |
 
 ## Update to a new version

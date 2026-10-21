@@ -47,7 +47,7 @@ export function VerifyPage() {
           </CardHeader>
           <CardContent>
             <Button asChild size="lg" className="w-full">
-              <Link to="/">Continue to TeeMate</Link>
+              <Link to="/">Continue to LeagueMates</Link>
             </Button>
           </CardContent>
         </Card>
@@ -59,7 +59,7 @@ export function VerifyPage() {
     <AuthShell>
       <Card>
         <CardHeader>
-          <CardTitle>Sign in to TeeMate</CardTitle>
+          <CardTitle>Sign in to LeagueMates</CardTitle>
           <CardDescription>
             {token
               ? 'Tap the button to finish signing in on this device.'

@@ -3,7 +3,7 @@ import { api } from '@/lib/api';
 /** Where this browser stands with push notifications. */
 export type PushSupport =
   | 'ready'
-  /** iPhone or iPad in Safari: push only works once TeeMate is on the home screen. */
+  /** iPhone or iPad in Safari: push only works once LeagueMates is on the home screen. */
   | 'needs-home-screen'
   | 'unsupported';
 

@@ -226,7 +226,7 @@ function PersonCard({
       setTextHref(
         smsHref(
           [d.phone],
-          `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your TeeMate sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`,
+          `${d.greeting ? `Hi ${d.greeting}, here` : 'Here'}'s your LeagueMates sign-in link. Set your password and you're in: ${d.link} (works once, for ${d.hours} hours)`,
         ),
       );
     },
@@ -512,8 +512,8 @@ function SignInLinkDialog({
                 onClick={() =>
                   navigator
                     .share({
-                      title: 'TeeMate',
-                      text: 'Set your TeeMate password with this link',
+                      title: 'LeagueMates',
+                      text: 'Set your LeagueMates password with this link',
                       url: link,
                     })
                     .catch(() => {})

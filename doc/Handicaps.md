@@ -1,6 +1,6 @@
 # Handicaps
 
-How TeeMate suggests handicaps, and the evidence behind the default rule. **The rule needs the league's confirmation:** the spreadsheets hold the handicaps that were used, but not how they were worked out.
+How LeagueMates suggests handicaps, and the evidence behind the default rule. **The rule needs the league's confirmation:** the spreadsheets hold the handicaps that were used, but not how they were worked out.
 
 ## What the app does
 

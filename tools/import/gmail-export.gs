@@ -1,18 +1,18 @@
 /**
- * TeeMate: export Golf League attachments from Gmail to a Drive folder.
+ * LeagueMates: export Golf League attachments from Gmail to a Drive folder.
  *
  * Run in your own Google account at https://script.google.com:
  *   1. New project, paste this file, save.
  *   2. Select `exportGolfLeagueAttachments` and click Run. Approve the permission prompt.
  *   3. If the log says "Paused", click Run again until it says "Done".
- *   4. In Drive, download the "TeeMate Golf League Export" folder (downloads as a zip).
+ *   4. In Drive, download the "LeagueMates Golf League Export" folder (downloads as a zip).
  *
  * Only reads mail. Identical attachments (same bytes) are saved once.
  * Files are named <email date>_<short hash>_<original name>. manifest.csv lists every file saved.
  */
 
 const LABEL = 'Golf League';
-const FOLDER_NAME = 'TeeMate Golf League Export';
+const FOLDER_NAME = 'LeagueMates Golf League Export';
 const EXTENSIONS = ['xlsx', 'xlsm', 'xls', 'csv', 'ods', 'pdf'];
 const THREADS_PER_BATCH = 50;
 const RUN_BUDGET_MS = 5 * 60 * 1000; // Apps Script stops a run after 6 minutes

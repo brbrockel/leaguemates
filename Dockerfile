@@ -1,4 +1,4 @@
-# TeeMate: one container serving the API and the built web app on port 4100.
+# LeagueMates: one container serving the API and the built web app on port 4100.
 
 FROM node:24-slim AS build
 WORKDIR /repo

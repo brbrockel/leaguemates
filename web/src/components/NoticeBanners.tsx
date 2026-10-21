@@ -54,7 +54,7 @@ interface Banner {
   site: boolean;
   title: string;
   body: string;
-  /** Who it's for or from: "TeeMate", "League", "Your foursome", "You". */
+  /** Who it's for or from: "LeagueMates", "League", "Your foursome", "You". */
   label: string;
   urgent: boolean;
   dismissible: boolean;
@@ -92,7 +92,7 @@ export function NoticeBanners({
   const banners: Banner[] = [
     ...(site.data ?? [])
       .filter((n) => n.banner)
-      .map((n) => ({ ...n, site: true, label: 'TeeMate', urgent: false, rank: 0 })),
+      .map((n) => ({ ...n, site: true, label: 'LeagueMates', urgent: false, rank: 0 })),
     ...(league.data ?? [])
       .filter((n) => n.banner)
       .map((n) => ({

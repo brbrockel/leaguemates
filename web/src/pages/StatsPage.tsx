@@ -66,7 +66,7 @@ export function StatsPage() {
             <CardDescription>
               Earlier seasons came from the league's spreadsheets, which only kept each player's
               total for the night, so there's nothing to break down by hole. These stats fill in as
-              rounds are scored in TeeMate, typed in hole by hole or scanned from the card.
+              rounds are scored in LeagueMates, typed in hole by hole or scanned from the card.
             </CardDescription>
           </CardHeader>
         </Card>

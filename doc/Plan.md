@@ -1,10 +1,10 @@
-# TeeMate Plan
+# LeagueMates Plan
 
-This document sets out what TeeMate is for, the league rules it enforces, the features it will offer and the order they will be built in.
+This document sets out what LeagueMates is for, the league rules it enforces, the features it will offer and the order they will be built in.
 
 ## Objective
 
-TeeMate replaces the weekly spreadsheet with a web app that works on phones and computers. It becomes the one place a league goes for its schedule, tee times, scorecards, handicaps, standings and photos.
+LeagueMates replaces the weekly spreadsheet with a web app that works on phones and computers. It becomes the one place a league goes for its schedule, tee times, scorecards, handicaps, standings and photos.
 
 - Strokes, net scores, results, handicaps and standings are all worked out from the scores entered. Nothing that can be calculated is typed in by hand.
 - One player in each foursome enters the card at the end of the round, either by hand or by taking a photo of the card that fills in the form.
@@ -20,7 +20,7 @@ Source: the league's 2026 weekly spreadsheet (in the private `teemate-data` repo
 - The standings add up: 16 players with 11 weeks each, 65 wins and 65 losses, points = 3W + T.
 - 23 of the 88 matches (26%) are ties. Many of these are probably absence matches (see the rules below).
 - One known error: July 15, Match 1 is recorded as a tie, but Mike B won 54 to 56 on net.
-- Matches that haven't been played show negative net scores because the gross score is 0. TeeMate shows these as blank.
+- Matches that haven't been played show negative net scores because the gross score is 0. LeagueMates shows these as blank.
 - The sheet has no tee times, no foursomes and no history beyond the previous week.
 
 ## League rules
@@ -83,7 +83,7 @@ The full specs are in [Enhancements.md](Enhancements.md).
 1. **Foundation:** repo layout, CI (lint, typecheck, tests), Docker image, Swarm stack, Postgres, object storage, EH-001, EH-002, EH-010.
 2. **League setup:** EH-003 and EH-004. Timberlin is entered as the first course and the 2026 schedule is rebuilt in the app.
 3. **Scoring:** EH-005, EH-006, EH-007, EH-011, EH-015, EH-016. Scoring rules get unit tests that use the spreadsheet's known results.
-4. **Parallel run:** run TeeMate alongside the spreadsheet for 2–3 weeks, compare the results, then switch over.
+4. **Parallel run:** run LeagueMates alongside the spreadsheet for 2–3 weeks, compare the results, then switch over.
 5. **Phase 2:** EH-008, EH-009, EH-012, EH-013, EH-014.
 
 **Where it stands (1.0.0, 2026-10-17):** phases 1–3 and 5 are done except push notifications (EH-013). The parallel run (phase 4) waits for the 2027 season, since the 2026 season is over; the league's answers to the open questions below are still needed.

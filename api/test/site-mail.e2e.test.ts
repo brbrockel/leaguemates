@@ -41,7 +41,7 @@ const gmail = {
   secure: true,
   user: 'league@example.com',
   password: 'abcd efgh ijkl mnop',
-  from: 'TeeMate <league@example.com>',
+  from: 'LeagueMates <league@example.com>',
 };
 
 describe('email settings', () => {

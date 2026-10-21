@@ -450,9 +450,9 @@ export class UsersService {
     );
     await this.mailer.send({
       to: target.email,
-      subject: 'Sign in to TeeMate',
+      subject: 'Sign in to LeagueMates',
       text: [
-        `${target.name ? `Hi ${target.name.split(' ')[0]},\n\n` : ''}Use this link to set your TeeMate password and sign in:`,
+        `${target.name ? `Hi ${target.name.split(' ')[0]},\n\n` : ''}Use this link to set your LeagueMates password and sign in:`,
         '',
         link,
         '',

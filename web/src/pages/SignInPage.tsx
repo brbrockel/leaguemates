@@ -97,7 +97,7 @@ function PasswordSignInCard() {
         <CardDescription>
           {needsCode
             ? 'Enter the 6-digit code from your authenticator app, or one of your recovery codes.'
-            : 'With your email and TeeMate password.'}
+            : 'With your email and LeagueMates password.'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -325,8 +325,8 @@ function EmailLinkCard({ compact }: { compact: boolean }) {
           <MailCheck className="mb-2 size-10 text-primary" aria-hidden />
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
-            If <strong className="text-foreground">{email.trim()}</strong> is in a TeeMate league, a
-            sign-in link is on its way. It works once and expires in 15 minutes.
+            If <strong className="text-foreground">{email.trim()}</strong> is in a LeagueMates
+            league, a sign-in link is on its way. It works once and expires in 15 minutes.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
@@ -380,7 +380,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
     <main className="flex min-h-dvh flex-col items-center justify-center gap-6 px-4 py-10">
       <div className="flex items-center gap-3">
         <Logo className="size-11" />
-        <span className="text-2xl font-semibold tracking-tight">TeeMate</span>
+        <span className="text-2xl font-semibold tracking-tight">LeagueMates</span>
       </div>
       <div className="w-full max-w-sm">{children}</div>
     </main>

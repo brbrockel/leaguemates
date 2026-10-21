@@ -1,6 +1,6 @@
 # Development
 
-How to set up, run and check TeeMate locally.
+How to set up, run and check LeagueMates locally.
 
 ## Prerequisites
 

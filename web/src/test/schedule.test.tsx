@@ -271,7 +271,7 @@ describe('roster sign-in links', () => {
     const href = send.getAttribute('href')!;
     expect(href).toMatch(/^sms:\+18605551234[?&]body=/);
     expect(decodeURIComponent(href)).toContain(
-      "Hi Brian, here's your TeeMate sign-in link. Set your password and you're in: https://teemate.test/set-password#token=abc",
+      "Hi Brian, here's your LeagueMates sign-in link. Set your password and you're in: https://teemate.test/set-password#token=abc",
     );
     expect(posts).toEqual(['text']);
   });
@@ -281,7 +281,7 @@ describe('roster sign-in links', () => {
     renderAt(`/leagues/${LEAGUE}/seasons/${SEASON}`);
     const link = await screen.findByRole('link', { name: /Text everyone/ });
     // Brian is the only roster player with an account (and a phone) here.
-    expect(link.getAttribute('href')).toMatch(/^sms:\+18605551234[?&]body=TeeMate/);
+    expect(link.getAttribute('href')).toMatch(/^sms:\+18605551234[?&]body=LeagueMates/);
     expect(screen.getByText('1 of 4 have a phone number.')).toBeInTheDocument();
   });
 });

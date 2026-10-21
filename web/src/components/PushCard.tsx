@@ -4,7 +4,7 @@ import { currentSubscription, disablePush, enablePush, pushSupport } from '@/lib
 
 /**
  * Account → Notifications on this device: one switch per phone or computer. Rainouts, skipped
- * rounds, notices from admins, your foursome's news and TeeMate's own notices pop up here.
+ * rounds, notices from admins, your foursome's news and LeagueMates' own notices pop up here.
  */
 export function PushCard() {
   const support = pushSupport();
@@ -32,7 +32,7 @@ export function PushCard() {
         if (r === 'on') setOn(true);
         else if (r === 'denied')
           setNote(
-            'Notifications are blocked for TeeMate. Allow them in your browser or phone settings, then try again.',
+            'Notifications are blocked for LeagueMates. Allow them in your browser or phone settings, then try again.',
           );
         else setNote("Push notifications aren't set up on this server yet.");
       } else {
@@ -52,8 +52,8 @@ export function PushCard() {
         <CardTitle>Notifications on this device</CardTitle>
         <CardDescription>
           Rainouts and skipped rounds, notices from your league's admins, news for your foursome
-          (who can't make it, a card to check) and notices from TeeMate. Turn it on for each phone
-          or computer you use.
+          (who can't make it, a card to check) and notices from LeagueMates. Turn it on for each
+          phone or computer you use.
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm">
@@ -69,7 +69,7 @@ export function PushCard() {
           </label>
         ) : support === 'needs-home-screen' ? (
           <p className="text-muted-foreground">
-            On iPhone, add TeeMate to your home screen first: tap Share, then{' '}
+            On iPhone, add LeagueMates to your home screen first: tap Share, then{' '}
             <span className="font-medium text-foreground">Add to Home Screen</span>. Open it from
             there and turn notifications on here.
           </p>

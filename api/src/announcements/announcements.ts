@@ -178,7 +178,7 @@ export class AnnouncementsService {
         to,
         createdAt: r.a.createdAt,
         updatedAt: r.a.updatedAt,
-        author: r.a.kind ? 'TeeMate' : r.author,
+        author: r.a.kind ? 'LeagueMates' : r.author,
         read: Boolean(r.readAt && r.readAt >= changed),
         dismissed,
         ...bannerState(r.a, dismissed, now, today),
@@ -354,9 +354,9 @@ export class AnnouncementsService {
           text: [
             n.body || n.title,
             '',
-            `TeeMate: ${this.config.APP_URL}`,
+            `LeagueMates: ${this.config.APP_URL}`,
             '',
-            'To stop notice emails, turn them off on your Account page in TeeMate.',
+            'To stop notice emails, turn them off on your Account page in LeagueMates.',
           ].join('\n'),
         })
         .then(() => emailed++)

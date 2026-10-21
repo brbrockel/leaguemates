@@ -8,4 +8,4 @@ const config = loadConfig();
 const app = await NestFactory.create(AppModule.with(config));
 configureApp(app, config);
 await app.listen(config.PORT);
-console.log(`TeeMate API listening on :${config.PORT}`);
+console.log(`LeagueMates API listening on :${config.PORT}`);

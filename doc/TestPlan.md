@@ -1,6 +1,6 @@
 # Test Plan
 
-A hands-on checklist for reviewing TeeMate on a **phone** and on a **desktop browser** before the league uses it. Work through each section on both. Tick items off, and write down anything that fails or feels wrong, with the device, the screen and what you expected.
+A hands-on checklist for reviewing LeagueMates on a **phone** and on a **desktop browser** before the league uses it. Work through each section on both. Tick items off, and write down anything that fails or feels wrong, with the device, the screen and what you expected.
 
 Site: https://teemate.bhbslp.org
 
@@ -11,7 +11,7 @@ Site: https://teemate.bhbslp.org
   - your normal browser: **you** (site admin, and Admin of the league)
   - a private window: **test.admin@example.com** (league Admin)
   - another device or browser: **test.user@example.com** (User)
-- [ ] **Phone:** add TeeMate to the home screen. In Safari: Share → Add to Home Screen. Open it from the icon, and check it opens full screen with the TeeMate icon.
+- [ ] **Phone:** add LeagueMates to the home screen. In Safari: Share → Add to Home Screen. Open it from the icon, and check it opens full screen with the LeagueMates icon.
 
 ## 1. Sign-in
 
@@ -75,7 +75,7 @@ Site: https://teemate.bhbslp.org
 - [ ] Mark a player **Absent** and add a sub's name. The match uses the absence rule ("must beat …").
 - [ ] **Save**, close the app, reopen: the scores are still there.
 - [ ] Type scores **without saving**, then close the app (or swipe it away) and reopen the card: "Your unsaved changes were brought back", with the scores in place. **Save** stores them; **Discard** shows the card as saved. Leaving the page in a browser with unsaved scores asks first.
-- [ ] **Updates:** after a new version is deployed, an open TeeMate shows "A new version of TeeMate is ready" with **Reload**; it never reloads by itself.
+- [ ] **Updates:** after a new version is deployed, an open LeagueMates shows "A new version of LeagueMates is ready" with **Reload**; it never reloads by itself.
 - [ ] **Submit** with a hole missing: the Save bar says which ("Brian has no score on hole 6"), the page scrolls to it with the cursor in it, and empty holes are outlined in amber. With every hole filled, it's submitted.
 - [ ] **As another player in that foursome:** the card is read-only. **Dispute** it with a note.
 - [ ] **As Admin:** the disputed card shows the note. Correct a score (a reason is required), then **Approve as final**.
@@ -121,20 +121,20 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 
 ## 10. Notices
 
-- [ ] **Banners:** on every page, new notices show as one-line banners under the top bar, most urgent first: TeeMate's, then a rainout or skip, then ones for you or your foursome, then the league's. With more than one they sit in a stack (the top one with "+N", the edges of the rest below); tap the stack to fan them out, **Show less** to fold them back. Tap one for the full text (that marks it read); **✕** clears it for good and brings up the next.
+- [ ] **Banners:** on every page, new notices show as one-line banners under the top bar, most urgent first: LeagueMates', then a rainout or skip, then ones for you or your foursome, then the league's. With more than one they sit in a stack (the top one with "+N", the edges of the rest below); tap the stack to fan them out, **Show less** to fold them back. Tap one for the full text (that marks it read); **✕** clears it for good and brings up the next.
 - [ ] **How long:** an admin's league notice is a banner for a week (or what they chose under **Show as a banner**), one for a foursome or one person two days, "Until each person clears it" until you ✕ it. If an admin edits it, it comes back. Card and playoff notices never show as banners.
 - [ ] **Rainout or skip:** a banner through the round's day. On the day itself it has no ✕.
-- [ ] **The horn (📣) in the top bar:** the count is new notices not already showing as banners. Tap it: the league's notices, then TeeMate's. Opening it leaves them unread: **✓** marks one read, **Mark all read** marks them all, and the count drops to match.
+- [ ] **The horn (📣) in the top bar:** the count is new notices not already showing as banners. Tap it: the league's notices, then LeagueMates'. Opening it leaves them unread: **✓** marks one read, **Mark all read** marks them all, and the count drops to match.
 - [ ] **As Site admin, horn → Notice for everyone:** it shows to everyone, guests too, on every page. **Everyone must see it** removes the ✕ until it ends (it needs an end).
 - [ ] **As Admin, horn → New notice:** post to **The whole league**, **One foursome** (pick the round and foursome) and **One person**. Each shows only for the people it's for (and admins); others don't see it.
 - [ ] **Also email it:** recipients get it by email (the mail guard in Site settings → Email still decides). **Also text it** opens a group text on your phone.
 - [ ] **Rainout or skip emails:** in the Demo league, rain out or skip a round: everyone in the league who wants notice emails gets one (with email limited to your own address, only you do). Other automatic notices (cards, absences, playoffs) are never emailed.
-- [ ] **Push, on your phone:** on iPhone, Share → Add to Home Screen first and open TeeMate from there. Account → **Notifications on this device** → tick it and allow. Rain out a Demo round: a notification arrives; tapping it opens the season. Post a Demo notice from another device: it arrives. Your own actions never notify you.
+- [ ] **Push, on your phone:** on iPhone, Share → Add to Home Screen first and open LeagueMates from there. Account → **Notifications on this device** → tick it and allow. Rain out a Demo round: a notification arrives; tapping it opens the season. Post a Demo notice from another device: it arrives. Your own actions never notify you.
 - [ ] **Push off:** untick it: nothing more arrives on that device. Card approvals and playoff updates never push.
 - [ ] **Account → Email → Email me notices:** untick it, rain out another Demo round: no email comes. Sign-in and password emails still do.
 - [ ] The message button on an existing notice opens a text to the people it's for.
 - [ ] **Shortcuts (Admin):** on the Schedule, the small message button on a foursome opens a new notice for that foursome (the dialog says who it's for). On People, **⋯ → Send a notice** does the same for one person.
-- [ ] **Automatic notices:** submit a card (the foursome gets "Round N card submitted"), dispute it, correct it as Admin with a reason, rain out or skip a round, start or advance the playoffs. Each shows as from TeeMate, for the right people.
+- [ ] **Automatic notices:** submit a card (the foursome gets "Round N card submitted"), dispute it, correct it as Admin with a reason, rain out or skip a round, start or advance the playoffs. Each shows as from LeagueMates, for the right people.
 
 ## 11. Photos
 

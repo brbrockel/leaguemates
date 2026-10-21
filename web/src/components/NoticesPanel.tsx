@@ -36,7 +36,7 @@ import { cn, ordinal } from '@/lib/utils';
 
 /**
  * The horn in the top bar: how many notices are unread that aren't already showing as a
- * banner, and a panel with every notice for the league you're in plus TeeMate's own. Opening
+ * banner, and a panel with every notice for the league you're in plus LeagueMates' own. Opening
  * it doesn't mark anything read: ✓ marks one, "Mark all read" marks the lot. League admins
  * post here; site admins post to everyone.
  */
@@ -118,8 +118,8 @@ export function NoticesButton({
             )}
             {(siteItems.length > 0 || isSiteAdmin) && (
               <NoticeSection
-                title="TeeMate"
-                hint="For everyone using TeeMate"
+                title="LeagueMates"
+                hint="For everyone using LeagueMates"
                 empty="Nothing for everyone right now."
                 canPost={isSiteAdmin}
                 form={(done) => <SiteNoticeForm onDone={done} />}
@@ -166,7 +166,7 @@ function NoticeSection({
         </div>
         {canPost && !posting && (
           <Button size="sm" variant="outline" onClick={() => setPosting(true)}>
-            <Plus /> {title === 'TeeMate' ? 'Notice for everyone' : 'New notice'}
+            <Plus /> {title === 'LeagueMates' ? 'Notice for everyone' : 'New notice'}
           </Button>
         )}
       </div>
@@ -686,7 +686,7 @@ function SiteNoticeItem({
   );
 }
 
-/** Site admins: a notice for everyone using TeeMate, guests included. */
+/** Site admins: a notice for everyone using LeagueMates, guests included. */
 function SiteNoticeForm({ existing, onDone }: { existing?: SiteNotice; onDone: () => void }) {
   const qc = useQueryClient();
   const [title, setTitle] = useState(existing?.title ?? '');

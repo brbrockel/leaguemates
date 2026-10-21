@@ -9,7 +9,7 @@ All three options below read only the Gmail label `Golf League`. They keep sprea
 Script: [`tools/import/gmail_attachments.py`](../tools/import/gmail_attachments.py). It runs locally and logs in to Gmail read-only.
 
 1. Make sure IMAP is on: Gmail → Settings → **See all settings** → **Forwarding and POP/IMAP** → **Enable IMAP**.
-2. Create an app password at https://myaccount.google.com/apppasswords. This needs 2-Step Verification turned on. Name it `TeeMate import`.
+2. Create an app password at https://myaccount.google.com/apppasswords. This needs 2-Step Verification turned on. Name it `LeagueMates import`.
 3. Run the script **in your own terminal**, so the password never appears in a chat or log:
 
    ```bash
@@ -27,7 +27,7 @@ Script: [`tools/import/gmail-export.gs`](../tools/import/gmail-export.gs)
 2. Save the project, select `exportGolfLeagueAttachments` and click **Run**.
 3. Approve the permission prompt. Google asks for Gmail and Drive access. The script only reads mail and writes to one Drive folder.
 4. If the log says **Paused**, click **Run** again. Repeat until it says **Done**.
-5. In Google Drive, right-click the **TeeMate Golf League Export** folder, choose **Download**, and unzip it into `../teemate-data/history/`.
+5. In Google Drive, right-click the **LeagueMates Golf League Export** folder, choose **Download**, and unzip it into `../teemate-data/history/`.
 6. Delete the Apps Script project when you've finished.
 
 ## Option C: Google Takeout (no script or password)

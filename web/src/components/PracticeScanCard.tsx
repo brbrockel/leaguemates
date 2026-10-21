@@ -80,9 +80,9 @@ export function PracticeScanCard() {
           <ScanLine className="size-5 text-primary" aria-hidden /> Practice a card scan
         </CardTitle>
         <CardDescription>
-          Take a photo of a scorecard (or pick one) and check what TeeMate reads, the way you would
-          on game day: match each name to a league player, leave out rows that aren't players, and
-          fix any score it got wrong. Nothing is saved, so use any card you like.
+          Take a photo of a scorecard (or pick one) and check what LeagueMates reads, the way you
+          would on game day: match each name to a league player, leave out rows that aren't players,
+          and fix any score it got wrong. Nothing is saved, so use any card you like.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">

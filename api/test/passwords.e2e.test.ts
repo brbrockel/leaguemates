@@ -150,7 +150,7 @@ describe('authenticator codes (optional)', () => {
       totpAvailable: true,
     });
     const { body: setup } = await as(me).post('/auth/totp/start').expect(200);
-    expect(setup.url).toMatch(/^otpauth:\/\/totp\/TeeMate%3Ajerry%40example\.com\?secret=/);
+    expect(setup.url).toMatch(/^otpauth:\/\/totp\/LeagueMates%3Ajerry%40example\.com\?secret=/);
     // The secret is stored encrypted.
     const [row] = await t.db.select().from(users).where(eq(users.id, jerryId));
     expect(row!.totpSecret).not.toContain(setup.secret);

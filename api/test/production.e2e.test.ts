@@ -8,7 +8,7 @@ import { createTestApp, resetDb, type TestApp } from './helpers.js';
 
 const web = mkdtempSync(join(tmpdir(), 'teemate-web-'));
 mkdirSync(join(web, 'assets'));
-writeFileSync(join(web, 'index.html'), '<!doctype html><title>TeeMate</title>');
+writeFileSync(join(web, 'index.html'), '<!doctype html><title>LeagueMates</title>');
 writeFileSync(join(web, 'assets', 'app-abc123.js'), 'console.log(1)');
 writeFileSync(join(web, 'sw.js'), '// sw');
 
@@ -27,7 +27,7 @@ const http = () => request(t.app.getHttpServer());
 describe('serving the web app', () => {
   it('serves index.html for app routes, uncached, with a strict CSP', async () => {
     const res = await http().get('/leagues/123').expect(200);
-    expect(res.text).toContain('<title>TeeMate</title>');
+    expect(res.text).toContain('<title>LeagueMates</title>');
     expect(res.headers['cache-control']).toBe('no-cache');
     expect(res.headers['content-security-policy']).toContain("script-src 'self'");
   });

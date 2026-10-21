@@ -106,9 +106,9 @@ export class AuthService {
     this.mailer
       .send({
         to: email,
-        subject: 'Your TeeMate sign-in link',
+        subject: 'Your LeagueMates sign-in link',
         text: [
-          'Use this link to sign in to TeeMate:',
+          'Use this link to sign in to LeagueMates:',
           '',
           link,
           '',

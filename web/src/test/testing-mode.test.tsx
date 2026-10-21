@@ -87,7 +87,7 @@ describe('site settings', () => {
     secure: false,
     user: null,
     hasPassword: false,
-    from: 'TeeMate <teemate@test>',
+    from: 'LeagueMates <teemate@test>',
     canStorePassword: true,
   };
   const view = (over = {}) => ({
