@@ -14,6 +14,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - **Fix: correcting a submitted card on a phone.** The reason box and any save error sat below the card, hidden under the Save bar, so Save seemed to do nothing. Both are now in the bar, and Save waits until a reason is given.
 - **Errors go to the problem:** Submit with an empty hole (or a missing handicap or reason) says what's missing in the Save bar, scrolls to it and puts the cursor there, outlining every empty hole; nothing is sent until it's fixed. A refusal from the server does the same where the form can tell what it's about.
 - **Frame the season photo:** on a season's banner, admins tap **Adjust**, zoom and drag so the people fill a wide banner. The photo itself isn't changed; **Show the whole photo** undoes it, and choosing a different photo starts unframed.
+- **People:** each league's nickname on a person's card opens their player page (stats, trend, head-to-head).
 
 ## 1.1.0 (2026-10-18)
 

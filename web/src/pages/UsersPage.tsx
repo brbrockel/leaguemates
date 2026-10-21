@@ -273,7 +273,18 @@ function PersonCard({
                 <span className={cn(l.role === 'admin' && 'font-semibold text-primary')}>
                   {l.role === 'admin' ? 'Admin' : 'User'}
                 </span>
-                {l.player && <span className="text-muted-foreground"> · {l.player.nickname}</span>}
+                {l.player && (
+                  <>
+                    {' · '}
+                    <Link
+                      to={`/leagues/${l.leagueId}/players/${l.player.id}`}
+                      className="font-medium text-primary underline decoration-dotted underline-offset-2"
+                      aria-label={`${l.player.nickname}'s stats in ${l.leagueName}`}
+                    >
+                      {l.player.nickname}
+                    </Link>
+                  </>
+                )}
               </li>
             ))}
           </ul>

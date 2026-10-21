@@ -39,7 +39,11 @@ describe('people page', () => {
       'div.rounded-xl',
     ) as HTMLElement;
     expect(within(card).getByText(/Never signed in · No password yet/)).toBeInTheDocument();
-    expect(within(card).getByText(/· Jerry/)).toBeInTheDocument();
+    // The nickname opens the player's stats in that league.
+    expect(within(card).getByRole('link', { name: /Jerry's stats in/ })).toHaveAttribute(
+      'href',
+      expect.stringMatching(/^\/leagues\/[^/]+\/players\/[^/]+$/),
+    );
   });
 
   it('gets a password link without sending email and shows it to copy', async () => {
