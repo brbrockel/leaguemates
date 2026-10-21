@@ -636,33 +636,32 @@ export function ScorecardPage() {
         </section>
       )}
 
-      {perms.needsReason && editable && (
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="reason">Reason for changing a submitted card</Label>
-          <Input
-            id="reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            placeholder="e.g. Fixed per dispute"
-          />
-        </div>
-      )}
-
-      {[save, submit, approve].map(
-        (m, i) =>
-          m.isError && (
-            <Alert key={i} variant="destructive">
-              {m.error.message}
-            </Alert>
-          ),
-      )}
-
       {(editable || perms.canSubmit || perms.canDispute || perms.canApprove) && (
         <div className="sticky bottom-20 z-30 flex flex-wrap items-center gap-2 rounded-xl border bg-card/95 p-3 shadow-md backdrop-blur md:bottom-4">
+          {/* Kept in the bar, where they're seen on a phone: below the card they were hidden. */}
+          {[save, submit, approve].map(
+            (m, i) =>
+              m.isError && (
+                <Alert key={i} variant="destructive" className="w-full">
+                  {m.error.message}
+                </Alert>
+              ),
+          )}
+          {perms.needsReason && editable && dirty && (
+            <div className="flex w-full flex-col gap-1">
+              <Label htmlFor="reason">Reason for changing a submitted card</Label>
+              <Input
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="e.g. Fixed per dispute"
+              />
+            </div>
+          )}
           {editable && (
             <Button
               variant={perms.canSubmit ? 'outline' : 'default'}
-              disabled={!dirty || save.isPending}
+              disabled={!dirty || save.isPending || (perms.needsReason && !reason.trim())}
               onClick={() => save.mutate()}
             >
               <Save /> {save.isPending ? 'Saving…' : dirty ? 'Save' : 'Saved'}

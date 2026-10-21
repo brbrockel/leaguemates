@@ -11,6 +11,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - **Download image** beside **Share image**, so a phone can save the card as well as send it.
 - The card's legend explains the eagle's double circle when the card has one.
 - **Fix: unsaved scores were lost when the app reloaded.** TeeMate updated itself by reloading the page, and phones also reload apps left in the background, wiping scores typed but not saved. Unsaved scores are now kept on the device and brought back (with **Discard** to drop them); leaving the page with unsaved scores asks first; and an update no longer reloads the app: **A new version of TeeMate is ready → Reload** lets you choose when.
+- **Fix: correcting a submitted card on a phone.** The reason box and any save error sat below the card, hidden under the Save bar, so Save seemed to do nothing. Both are now in the bar, and Save waits until a reason is given.
 
 ## 1.1.0 (2026-10-18)
 

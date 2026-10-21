@@ -340,6 +340,57 @@ describe('scorecard entry', () => {
     expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
   });
 
+  it('an admin correcting a final card gives the reason beside Save', async () => {
+    const bodies: { reason?: string }[] = [];
+    const card = {
+      id: 'c1',
+      status: 'final' as const,
+      layoutId: 'front',
+      version: 2,
+      enteredBy: 'Jerry',
+      submittedAt: '2099-04-21T22:00:00Z',
+      finalAt: '2099-04-23T22:00:00Z',
+      dispute: null,
+      rounds: ['jerry', 'brian'].map((playerId) => ({
+        playerId,
+        handicap: 7,
+        attendance: 'played' as const,
+        subName: null,
+        holeScores: Array.from({ length: 9 }, () => 5),
+      })),
+    };
+    const permissions = {
+      canEdit: true,
+      canSubmit: false,
+      canDispute: false,
+      canApprove: false,
+      needsReason: true,
+    };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: view({ card, permissions }) }),
+      [`PUT ${PATH}`]: (init) => {
+        bodies.push(JSON.parse(String(init?.body)));
+        return { status: 200, body: view({ card: { ...card, version: 3 }, permissions }) };
+      },
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    expect(screen.queryByLabelText('Reason for changing a submitted card')).toBeNull();
+    const hole = screen.getByLabelText('Jerry hole 1');
+    await userEvent.clear(hole);
+    await userEvent.type(hole, '3');
+    // The reason is asked for in the bar with Save, which waits for it.
+    const save = screen.getByRole('button', { name: /^Save$/ });
+    expect(save).toBeDisabled();
+    await userEvent.type(screen.getByLabelText('Reason for changing a submitted card'), 'Eagle');
+    expect(save).toBeEnabled();
+    await userEvent.click(save);
+    await waitFor(() => expect(bodies).toHaveLength(1));
+    expect(bodies[0]!.reason).toBe('Eagle');
+    expect(await screen.findByRole('button', { name: /Saved/ })).toBeInTheDocument();
+  });
+
   it('marks a player absent and applies the absence rule', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),
