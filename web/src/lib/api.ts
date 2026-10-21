@@ -162,6 +162,14 @@ export interface SeasonSummary {
   nextDate?: string | null;
 }
 
+/** A rectangle of a photo, as fractions of its width and height from the top left. */
+export interface CoverCrop {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface SeasonSchedule {
   season: {
     id: string;
@@ -170,6 +178,8 @@ export interface SeasonSchedule {
     startDate: string;
     seed: number | null;
     coverPhotoId?: string | null;
+    /** The part of the cover photo shown. */
+    coverCrop?: CoverCrop | null;
     course?: { id: string; name: string };
     nines?: { id: string; name: string }[];
   };

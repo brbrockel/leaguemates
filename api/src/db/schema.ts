@@ -232,6 +232,14 @@ export const siteSettings = pgTable('site_settings', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** A rectangle of a photo, as fractions of its width and height from the top left. */
+export interface CoverCrop {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface StoredMailSettings {
   mode: 'off' | 'allowlist' | 'all';
   allowlist: string;
@@ -333,6 +341,8 @@ export const seasons = pgTable(
     coverPhotoId: uuid('cover_photo_id').references((): AnyPgColumn => photos.id, {
       onDelete: 'set null',
     }),
+    /** The part of the cover photo shown (fractions of it), so a team photo can be framed. */
+    coverCrop: jsonb('cover_crop').$type<CoverCrop>(),
     /** Nines played in rotation, in order (layout ids); null = the league's nines setting. */
     layoutIds: jsonb('layout_ids').$type<string[]>(),
     settings: jsonb('settings').notNull(),

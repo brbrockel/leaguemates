@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Camera, Check, ChevronLeft, ChevronRight, ImageIcon, Trash2, X } from 'lucide-react';
+import { Camera, Check, ChevronLeft, ChevronRight, Crop, ImageIcon, Trash2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useIsGuest, useMe } from '@/auth/session';
-import { api, type PhotoView } from '@/lib/api';
+import { CoverCropEditor, CroppedPhoto } from '@/components/CoverCrop';
+import { api, type CoverCrop, type PhotoView } from '@/lib/api';
 import { formatDay, timeAgo } from '@/lib/time';
 
 const src = (leagueId: string, id: string, size: 'full' | 'thumb') =>
@@ -275,12 +276,17 @@ export function SeasonBanner({
   leagueId,
   seasonId,
   coverPhotoId,
+  coverCrop = null,
 }: {
   leagueId: string;
   seasonId: string;
   coverPhotoId?: string | null;
+  coverCrop?: CoverCrop | null;
 }) {
   const guest = useIsGuest();
+  const { data: me } = useMe();
+  const isAdmin = me?.leagues.find((l) => l.id === leagueId)?.role === 'admin';
+  const [framing, setFraming] = useState(false);
   const q = useQuery({
     queryKey: ['photos', leagueId, `?seasonId=${seasonId}`],
     queryFn: () => api<PhotoView[]>(`/leagues/${leagueId}/photos?seasonId=${seasonId}`),
@@ -297,15 +303,53 @@ export function SeasonBanner({
       })) ||
     q.data?.find((p) => p.teamPhoto);
   if (!team || guest) return null;
+  // The admin's framing applies to the photo they chose, once its size is known.
+  const chosen = team.id === coverPhotoId && team.width && team.height;
   return (
-    <figure className="overflow-hidden rounded-xl border bg-muted">
-      <img
-        src={src(leagueId, team.id, 'full')}
-        alt={team.caption ?? 'Team photo'}
-        width={team.width}
-        height={team.height}
-        className="h-auto max-h-[60vh] w-full object-cover"
-      />
+    <figure className="relative overflow-hidden rounded-xl border bg-muted">
+      {chosen ? (
+        <CroppedPhoto
+          src={src(leagueId, team.id, 'full')}
+          alt={team.caption ?? 'Team photo'}
+          width={team.width!}
+          height={team.height!}
+          crop={coverCrop}
+          className={coverCrop ? undefined : 'max-h-[60vh]'}
+        />
+      ) : (
+        <img
+          src={src(leagueId, team.id, 'full')}
+          alt={team.caption ?? 'Team photo'}
+          width={team.width}
+          height={team.height}
+          className="h-auto max-h-[60vh] w-full object-cover"
+        />
+      )}
+      {isAdmin && chosen && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="absolute right-2 top-2 bg-card/90"
+          onClick={() => setFraming(true)}
+        >
+          <Crop /> Adjust
+        </Button>
+      )}
+      {framing && chosen && (
+        <CoverCropEditor
+          leagueId={leagueId}
+          seasonId={seasonId}
+          photo={{
+            id: team.id,
+            src: src(leagueId, team.id, 'full'),
+            width: team.width!,
+            height: team.height!,
+            alt: team.caption ?? 'Team photo',
+          }}
+          crop={coverCrop}
+          onClose={() => setFraming(false)}
+        />
+      )}
       {team.caption && (
         <figcaption className="px-4 py-2 text-sm text-muted-foreground">{team.caption}</figcaption>
       )}

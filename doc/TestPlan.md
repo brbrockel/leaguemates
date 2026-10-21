@@ -144,6 +144,8 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 - [ ] Another member can view but not delete your photo. You (or an Admin) can delete it.
 - [ ] Signed out, a copied photo link doesn't load.
 
+- [ ] **Frame the season photo (Admin):** on a season with a chosen photo, **Adjust** on the banner: zoom with the slider and drag (or arrow keys) until the people fill the frame, **Save**. The banner shows just that part, on a phone too. **Show the whole photo** puts it back. Members don't see Adjust.
+
 ## 12. Courses (site admin)
 
 - [ ] **League → Courses → Timberlin:** front and back nines show par, index and yards. As test.user it's view-only.

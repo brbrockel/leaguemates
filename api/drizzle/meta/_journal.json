@@ -281,6 +281,13 @@
       "when": 1792588414353,
       "tag": "0039_card_grids",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1792599653084,
+      "tag": "0040_season_cover_crop",
+      "breakpoints": true
     }
   ]
 }

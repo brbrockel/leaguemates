@@ -30,7 +30,15 @@ const TeeOrder = z.object({ groupId: z.uuid(), direction: z.enum(['up', 'down'])
 const Regroup = z.object({ matchA: z.uuid(), matchB: z.uuid() });
 const Absence = z.object({ subName: z.string().trim().max(60).nullable().optional() });
 const Roster = z.object({ playerIds: z.array(z.uuid()).max(64) });
-const Cover = z.object({ photoId: z.uuid().nullable() });
+const Fraction = z.number().min(0).max(1);
+const Cover = z.object({
+  photoId: z.uuid().nullable(),
+  /** The part shown; leaving it out shows the whole photo. */
+  crop: z
+    .object({ x: Fraction, y: Fraction, w: Fraction.min(0.02), h: Fraction.min(0.02) })
+    .refine((c) => c.x + c.w <= 1.0001 && c.y + c.h <= 1.0001, 'The crop must be inside the photo.')
+    .nullish(),
+});
 const Uuid = new ParseUUIDPipe();
 
 @Controller()
@@ -228,6 +236,6 @@ export class SeasonsController {
     @Param('seasonId', Uuid) seasonId: string,
     @Body(new ZodPipe(Cover)) body: z.infer<typeof Cover>,
   ) {
-    return this.seasons.setCover(user, leagueId, seasonId, body.photoId);
+    return this.seasons.setCover(user, leagueId, seasonId, body.photoId, body.crop ?? null);
   }
 }
