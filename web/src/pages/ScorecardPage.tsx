@@ -640,6 +640,12 @@ export function ScorecardPage() {
                   ? {
                       ...layout.cardGrid,
                       src: cardImageSrc(data.course.id, layout.cardGrid.imageId),
+                      names: layout.cardGrid.names
+                        ? {
+                            ...layout.cardGrid.names,
+                            src: cardImageSrc(data.course.id, layout.cardGrid.names.imageId),
+                          }
+                        : null,
                     }
                   : null
               }

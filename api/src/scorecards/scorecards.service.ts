@@ -43,9 +43,34 @@ import { grossOf, isComplete, matchResults, type RoundData } from './results.js'
 
 type CardStatus = 'draft' | 'submitted' | 'disputed' | 'final';
 
-const cardGridOf = (
-  g: { imageId: string; grid: CardGrid; width: number; height: number } | undefined,
-) => (g ? { imageId: g.imageId, grid: g.grid, width: g.width, height: g.height } : null);
+interface GridRow {
+  layoutId: string;
+  imageId: string;
+  grid: CardGrid;
+  width: number;
+  height: number;
+  holes: number;
+}
+/** A nine's card, with the card whose name column it folds over (fold-over panels). */
+const cardGridOf = (g: GridRow | undefined, all: GridRow[]) => {
+  if (!g) return null;
+  const names = g.grid.nameFrom ? all.find((x) => x.layoutId === g.grid.nameFrom) : undefined;
+  return {
+    imageId: g.imageId,
+    grid: g.grid,
+    width: g.width,
+    height: g.height,
+    names: names
+      ? {
+          imageId: names.imageId,
+          grid: names.grid,
+          width: names.width,
+          height: names.height,
+          holes: names.holes,
+        }
+      : null,
+  };
+};
 type Card = typeof scorecards.$inferSelect;
 
 export interface SaveCardInput {
@@ -136,6 +161,10 @@ export class ScorecardsService {
             ),
           )
       : [];
+    const withHoles = grids.map((g) => ({
+      ...g,
+      holes: hs.filter((h) => h.layoutId === g.layoutId).length,
+    }));
     return ls.map((l) => ({
       id: l.id,
       name: l.name,
@@ -150,7 +179,10 @@ export class ScorecardsService {
           yards: h.yards,
         })),
       /** Where the scores go on a picture of the course's card, if it's set up. */
-      cardGrid: cardGridOf(grids.find((g) => g.layoutId === l.id)),
+      cardGrid: cardGridOf(
+        withHoles.find((g) => g.layoutId === l.id),
+        withHoles,
+      ),
     }));
   }
 

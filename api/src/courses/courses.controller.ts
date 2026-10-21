@@ -52,6 +52,7 @@ const CardGrid = z.object({
     last: Point,
     total: Point.nullable(),
     name: Point.nullable(),
+    nameFrom: z.uuid().nullish(),
   }),
 });
 const Uuid = new ParseUUIDPipe();

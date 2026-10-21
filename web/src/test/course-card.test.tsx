@@ -106,6 +106,62 @@ describe('course card setup (site admin)', () => {
     expect(await screen.findByText('Scores are written on the course card.')).toBeInTheDocument();
   });
 
+  it("a fold-over panel takes its names from another nine's card", async () => {
+    let saved: { grid: { nameFrom?: string; name: unknown } } | null = null;
+    const frontGrid = {
+      imageId: 'card-front',
+      grid: {
+        rows: [
+          [0.22, 0.32],
+          [0.22, 0.38],
+        ] as [number, number][],
+        last: [0.51, 0.32] as [number, number],
+        total: null,
+        name: [0.02, 0.32] as [number, number],
+      },
+    };
+    const back: CourseLayout = {
+      ...front,
+      id: 'back',
+      name: 'Back 9',
+      holes: front.holes.map((h) => ({ ...h, number: h.number + 9 })),
+    };
+    const withBoth = {
+      ...course({ ...front, cardGrid: frontGrid }),
+      layouts: [{ ...front, cardGrid: frontGrid }, back],
+    };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: siteAdmin }),
+      'GET /api/courses': () => ({ status: 200, body: [withBoth] }),
+      'PUT /api/courses/timberlin/layouts/back/card-grid': (init) => {
+        saved = JSON.parse(String(init?.body));
+        return { status: 200, body: withBoth };
+      },
+    });
+    renderAt('/courses/timberlin');
+    await userEvent.click(await screen.findByRole('button', { name: 'Set up the course card' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Course card: Back 9' });
+    await userEvent.click(within(dialog).getByRole('radio', { name: 'Back' }));
+    tapAt(0.01, 0.32);
+    tapAt(0.27, 0.32);
+    tapAt(0.3, 0.32);
+    // The name step offers the front nine's card, which has a name column.
+    expect(within(dialog).getByText(/folds over another nine's card/)).toBeInTheDocument();
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Names are on the Front 9 card' }),
+    );
+    tapAt(0.01, 0.38);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Skip' }));
+    // The preview joins the front card's name column to the panel.
+    expect(
+      dialog.querySelectorAll('img[src="/api/courses/timberlin/images/card-front"]').length,
+    ).toBeGreaterThan(0);
+    expect(within(dialog).getByText('Player 1')).toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(saved).not.toBeNull());
+    expect(saved!.grid).toMatchObject({ name: null, nameFrom: 'front' });
+  });
+
   it("isn't offered without a picture of the card, or to other members", async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),

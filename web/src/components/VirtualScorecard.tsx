@@ -1,4 +1,4 @@
-import { allocateStrokes, gridBox, type CardGrid, type Layout } from '@teemate/shared';
+import { allocateStrokes, foldOver, gridBox, type CardGrid, type Layout } from '@teemate/shared';
 import { Download, Share2 } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { CourseCard } from '@/components/CourseCard';
@@ -36,7 +36,14 @@ export interface VirtualScorecardProps {
   matches: VirtualMatch[];
   footer?: ReactNode;
   /** The course's own card, when a site admin has marked where the scores go. */
-  courseCard?: { src: string; grid: CardGrid; width: number; height: number } | null;
+  courseCard?: {
+    src: string;
+    grid: CardGrid;
+    width: number;
+    height: number;
+    /** Fold-over panels: the card whose name column sits on the left. */
+    names?: { src: string; grid: CardGrid; width: number; height: number; holes: number } | null;
+  } | null;
 }
 
 /**
@@ -67,7 +74,7 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
 
   const send = async (file: File) => {
     try {
-      await shareOrSave(file, props.title);
+      await navigator.share({ files: [file], title: props.title });
       setReady(null);
     } catch (err) {
       const name = (err as Error).name;
@@ -76,14 +83,16 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
     }
   };
 
-  const make = async () => {
+  const make = async (how: 'share' | 'download') => {
     setError(null);
     setBusy(true);
     try {
       const { toBlob } = await import('html-to-image');
       const blob = await toBlob(shot.current!, { pixelRatio: 2, backgroundColor: '#ffffff' });
       if (!blob) throw new Error("couldn't draw the card");
-      await send(new File([blob], fileName, { type: 'image/png' }));
+      const file = new File([blob], fileName, { type: 'image/png' });
+      if (how === 'share' && navigator.canShare?.({ files: [file] })) await send(file);
+      else download(file);
     } catch (err) {
       setError(`Couldn't make the image: ${(err as Error).message}`);
     } finally {
@@ -133,11 +142,16 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
             <Share2 /> Image ready: share it
           </Button>
         ) : (
-          <Button variant="outline" size="sm" disabled={busy} onClick={() => void make()}>
-            {canShare ? <Share2 /> : <Download />}
-            {busy ? 'Making image…' : canShare ? 'Share image' : 'Save image'}
-          </Button>
+          canShare && (
+            <Button variant="outline" size="sm" disabled={busy} onClick={() => void make('share')}>
+              <Share2 /> Share image
+            </Button>
+          )
         )}
+        <Button variant="outline" size="sm" disabled={busy} onClick={() => void make('download')}>
+          <Download /> Download image
+        </Button>
+        {busy && <span className="text-sm text-muted-foreground">Making image…</span>}
         {error && <span className="text-sm text-destructive">{error}</span>}
       </div>
       {/* The picture is taken from this full-width copy, so nothing is cut off. */}
@@ -152,12 +166,8 @@ export function VirtualScorecard(props: VirtualScorecardProps) {
   );
 }
 
-/** Shares the image where the device can (phones), otherwise downloads it. */
-async function shareOrSave(file: File, title: string) {
-  if (navigator.canShare?.({ files: [file] })) {
-    await navigator.share({ files: [file], title });
-    return;
-  }
+/** Saves the image to the device (Downloads, or Files on an iPhone). */
+function download(file: File) {
   const url = URL.createObjectURL(file);
   const a = document.createElement('a');
   a.href = url;
@@ -195,18 +205,21 @@ function OnCourseCard({
   ref?: Ref<HTMLDivElement>;
 }) {
   const scroller = useRef<HTMLDivElement>(null);
-  const { grid, width, height } = courseCard;
+  const { grid, width, height, names } = courseCard;
+  // A fold-over panel is shown with the other card's name column on its left.
+  const fold = names ? foldOver({ grid, width, height, holes: layout.holes.length }, names) : null;
+  const widen = fold ? (width + fold.width) / width : 1;
   // Wide enough that a box is about a fingertip (22 px) on screen, a little more in the image.
   const box = gridBox(grid, layout.holes.length, height / width);
   const readable = (px: number, least: number) =>
-    Math.round(Math.min(2400, Math.max(least, px / box)));
+    Math.round(Math.min(2400, Math.max(least, (px / box) * widen)));
   // On a phone the card is shown at a readable size, scrolled to where the scores are.
   useEffect(() => {
     const el = scroller.current;
     if (!el || wide) return;
-    const left = Math.min(grid.rows[0]![0], grid.name?.[0] ?? 1) - 0.02;
+    const left = fold ? 0 : Math.min(grid.rows[0]![0], grid.name?.[0] ?? 1) - 0.02;
     el.scrollLeft = Math.max(0, left * el.scrollWidth);
-  }, [grid, wide]);
+  }, [grid, wide, fold === null]);
   return (
     <div
       ref={ref}

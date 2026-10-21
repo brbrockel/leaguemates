@@ -38,7 +38,12 @@ function stepsFor(layout: CourseLayout): Step[] {
     },
     { key: 'last', prompt: `Tap the hole ${last} box on the same line.`, optional: false },
     { key: 'total', prompt: `Tap the ${total} box on the same line.`, optional: true },
-    { key: 'name', prompt: "Tap where the first player's name is written.", optional: true },
+    {
+      key: 'name',
+      prompt:
+        "Tap where the first player's name is written. No name column, because this panel folds over another nine's card? Choose that card, or Skip.",
+      optional: true,
+    },
     line(1),
     line(2),
     line(3),
@@ -50,12 +55,14 @@ interface Draft {
   last: GridPoint | null;
   total: GridPoint | null;
   name: GridPoint | null;
+  /** Fold-over panel: the nine whose card's name column is used. */
+  nameFrom: string | null;
   /** Steps answered so far (a skip counts; a saved grid is all done). */
   done: number;
 }
 
-const empty: Draft = { rows: [], last: null, total: null, name: null, done: 0 };
-const fromGrid = (g: CardGrid): Draft => ({ ...g, done: Infinity });
+const empty: Draft = { rows: [], last: null, total: null, name: null, nameFrom: null, done: 0 };
+const fromGrid = (g: CardGrid): Draft => ({ ...g, nameFrom: g.nameFrom ?? null, done: Infinity });
 const SAMPLE = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
 
 /**
@@ -89,6 +96,23 @@ export function CardGridSetup({
           last: draft.last,
           total: draft.total,
           name: draft.name,
+          ...(draft.nameFrom ? { nameFrom: draft.nameFrom } : {}),
+        }
+      : null;
+  // Nines whose card has a name column this one can fold over.
+  const lenders = course.layouts.filter(
+    (l) => l.id !== layout.id && !l.retiredAt && l.cardGrid?.grid.name && !l.cardGrid.grid.nameFrom,
+  );
+  const lender = course.layouts.find((l) => l.id === draft.nameFrom);
+  const lenderImage = course.images.find((i) => i.id === lender?.cardGrid?.imageId);
+  const names =
+    lender?.cardGrid && lenderImage
+      ? {
+          src: cardImageSrc(course.id, lenderImage.id),
+          width: lenderImage.width,
+          height: lenderImage.height,
+          grid: lender.cardGrid.grid,
+          holes: lender.holes.length,
         }
       : null;
   const pars = layout.holes.map((h) => h.par);
@@ -119,6 +143,11 @@ export function CardGridSetup({
       } else next[step.key] = p;
       return next;
     });
+  };
+  /** Fold-over: names are written in another nine's name column. */
+  const borrowNames = (from: string) => {
+    setHistory((h) => [...h, draft]);
+    setDraft((d) => ({ ...d, name: null, nameFrom: from, done: d.done + 1 }));
   };
   const tap = (e: MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -189,6 +218,12 @@ export function CardGridSetup({
                 <SkipForward /> Skip
               </Button>
             )}
+            {step?.key === 'name' &&
+              lenders.map((l) => (
+                <Button key={l.id} variant="outline" size="sm" onClick={() => borrowNames(l.id)}>
+                  Names are on the {l.name} card
+                </Button>
+              ))}
             <Button variant="outline" size="sm" onClick={restart}>
               <RotateCcw /> Start over
             </Button>
@@ -224,6 +259,7 @@ export function CardGridSetup({
                 width={image.width}
                 height={image.height}
                 grid={step ? null : grid}
+                names={step ? null : names}
                 pars={pars}
                 lines={
                   step || !grid

@@ -167,9 +167,62 @@ describe('scorecard entry', () => {
     expect(within(card).getByText('45')).toBeInTheDocument();
     expect(within(card).getByText('Brian')).toBeInTheDocument();
 
+    // Where sharing isn't offered, only Download image.
+    expect(within(dialog).queryByRole('button', { name: 'Share image' })).toBeNull();
+    expect(within(dialog).getByRole('button', { name: 'Download image' })).toBeInTheDocument();
+
     await userEvent.click(within(dialog).getByRole('radio', { name: 'Drawn card' }));
     expect(within(dialog).getByRole('figure').querySelector('img')).toBeNull();
     expect(within(within(dialog).getByRole('figure')).getByText('HANDICAP')).toBeInTheDocument();
+  });
+
+  it('a fold-over panel shows the name column from the other card', async () => {
+    const at = (x: number): CardGrid => ({
+      rows: [
+        [x, 0.4],
+        [x, 0.5],
+      ],
+      last: [x + 0.4, 0.4],
+      total: null,
+      name: null,
+    });
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({
+        status: 200,
+        body: view({
+          course: { id: 'fox', name: 'Fox Run', city: null, state: null },
+          layouts: [
+            {
+              ...FRONT,
+              cardGrid: {
+                imageId: 'back-panel',
+                grid: { ...at(0.05), nameFrom: 'other' },
+                width: 1000,
+                height: 400,
+                names: {
+                  imageId: 'front-card',
+                  grid: { ...at(0.3), name: [0.03, 0.4] },
+                  width: 1000,
+                  height: 400,
+                  holes: 9,
+                },
+              },
+            },
+            BACK,
+          ],
+        }),
+      }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    await userEvent.click(screen.getByRole('button', { name: /Virtual scorecard/ }));
+    const card = within(await screen.findByRole('dialog')).getByRole('figure');
+    expect([...card.querySelectorAll('img')].map((i) => i.getAttribute('src'))).toEqual([
+      '/api/courses/fox/images/front-card',
+      '/api/courses/fox/images/back-panel',
+    ]);
+    expect(within(card).getByText('Jerry')).toBeInTheDocument();
   });
 
   it('shares the virtual scorecard as an image, or saves it where sharing is not offered', async () => {
@@ -194,6 +247,17 @@ describe('scorecard entry', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Image ready: share it' }));
     expect(share).toHaveBeenCalledTimes(3);
     expect(screen.getByRole('button', { name: 'Share image' })).toBeInTheDocument();
+
+    // Download image saves it instead, beside Share.
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    URL.createObjectURL = vi.fn(() => 'blob:card');
+    URL.revokeObjectURL = vi.fn();
+    await userEvent.click(screen.getByRole('button', { name: 'Download image' }));
+    await waitFor(() => expect(click).toHaveBeenCalledTimes(1));
+    expect((click.mock.contexts[0] as HTMLAnchorElement).download).toBe(
+      'Round-1-Front-9-2099-04-21.png',
+    );
+    expect(share).toHaveBeenCalledTimes(3);
     delete (navigator as { canShare?: unknown }).canShare;
     delete (navigator as { share?: unknown }).share;
   });
