@@ -18,6 +18,7 @@ beforeAll(async () => {
     WEB_DIST: web,
     CLIENT_IP_HEADER: 'cf-connecting-ip',
     MAGIC_LINK_LIMIT_PER_IP: 2,
+    movedFrom: ['teemate.example.com'],
   });
 });
 afterAll(async () => t.close());
@@ -42,6 +43,26 @@ describe('serving the web app', () => {
   it('never answers API paths with the web app', async () => {
     await http().get('/api/does-not-exist').expect(404);
     await http().get('/api/auth/me').expect(401);
+  });
+});
+
+describe('the old address', () => {
+  it('redirects pages and the API to APP_URL, keeping the path', async () => {
+    const page = await http().get('/leagues/123?x=1').set('Host', 'teemate.example.com');
+    expect(page.status).toBe(301);
+    expect(page.headers.location).toBe('http://localhost:4101/leagues/123?x=1');
+    const post = await http().post('/api/auth/login').set('Host', 'TeeMate.example.com');
+    expect(post.status).toBe(308);
+    // The new address is served as usual.
+    await http().get('/leagues/123').expect(200);
+  });
+
+  it("replaces an installed app's service worker with one that moves it", async () => {
+    const sw = await http().get('/sw.js').set('Host', 'teemate.example.com').expect(200);
+    expect(sw.headers['content-type']).toContain('javascript');
+    expect(sw.headers['cache-control']).toBe('no-cache');
+    expect(sw.text).toContain('registration.unregister()');
+    expect(sw.text).toContain('"http://localhost:4101"');
   });
 });
 
