@@ -18,8 +18,19 @@ if (!window.matchMedia) {
     }) as MediaQueryList;
 }
 
+// The service worker isn't registered in tests.
+vi.mock('virtual:pwa-register/react', () => ({
+  useRegisterSW: () => ({
+    needRefresh: [false, () => {}],
+    offlineReady: [false, () => {}],
+    updateServiceWorker: async () => {},
+  }),
+}));
+
 afterEach(() => {
   cleanup();
+  // Each test starts with nothing kept on the device (e.g. unsaved scorecard edits).
+  localStorage.clear();
   vi.restoreAllMocks();
 });
 

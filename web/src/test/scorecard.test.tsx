@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import type { CardGrid } from '@teemate/shared';
@@ -279,6 +279,67 @@ describe('scorecard entry', () => {
     expect(within(card).getByText('eagle')).toBeInTheDocument();
   });
 
+  it('keeps unsaved scores through a reload, until saved or discarded', async () => {
+    const saved = { ...view(), card: null };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: saved }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    await userEvent.type(screen.getByLabelText('Jerry hole 1'), '3');
+    expect(screen.getByRole('button', { name: /^Save$/ })).toBeEnabled();
+    // The app reloads (an update, or the phone closed it): the page starts again.
+    cleanup();
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    expect(await screen.findByText(/Your unsaved changes were brought back/)).toBeInTheDocument();
+    expect(screen.getByLabelText('Jerry hole 1')).toHaveValue('3');
+    expect(screen.getByRole('button', { name: /^Save$/ })).toBeEnabled();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Discard' }));
+    expect(screen.getByLabelText('Jerry hole 1')).toHaveValue('');
+    expect(screen.queryByText(/brought back/)).toBeNull();
+    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
+  });
+
+  it('drops kept edits once someone else has saved the card', async () => {
+    localStorage.setItem(
+      `teemate.card-draft.${G}`,
+      JSON.stringify({
+        version: 1,
+        layoutId: 'front',
+        reason: '',
+        entries: ['jerry', 'brian'].map((playerId) => ({
+          playerId,
+          handicap: 7,
+          attendance: 'played',
+          subName: '',
+          holeScores: Array.from({ length: 9 }, () => 3),
+        })),
+      }),
+    );
+    const card = {
+      id: 'c1',
+      status: 'draft' as const,
+      layoutId: 'front',
+      version: 2,
+      enteredBy: null,
+      submittedAt: null,
+      finalAt: null,
+      dispute: null,
+      rounds: [],
+    };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: view({ card }) }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    expect(screen.queryByText(/brought back/)).toBeNull();
+    expect(screen.getByLabelText('Jerry hole 1')).toHaveValue('');
+    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
+  });
+
   it('marks a player absent and applies the absence rule', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),
@@ -346,6 +407,8 @@ describe('scorecard entry', () => {
     await userEvent.click(screen.getByRole('radio', { name: /Back 9/ })); // the starter changed the nine
     await fillAll('Jerry', '5', 10);
     await fillAll('Brian', '6', 10);
+    // Kept on the device while unsaved...
+    expect(localStorage.getItem(`teemate.card-draft.${G}`)).not.toBeNull();
     await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
     expect(await screen.findByRole('button', { name: /Dispute/ })).toBeInTheDocument();
     expect(bodies[0]).toMatchObject({
@@ -356,6 +419,8 @@ describe('scorecard entry', () => {
       ],
     });
     expect(calls.map((c) => c.key)).toContain(`POST ${PATH}/submit`);
+    // ...and gone once saved.
+    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
   });
 
   it('read-only for people outside the group', async () => {

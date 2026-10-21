@@ -62,6 +62,37 @@ function toEntries(view: ScorecardView, holes: number): Entry[] {
   });
 }
 
+/** Unsaved edits kept on this device, so a reload (an app update, the phone closing the app) doesn't lose them. */
+interface Draft {
+  /** The card version the edits were made on (null before the card exists). */
+  version: number | null;
+  layoutId: string;
+  entries: Entry[];
+  reason: string;
+}
+const draftKey = (groupId: string) => `teemate.card-draft.${groupId}`;
+function readDraft(groupId: string): Draft | null {
+  try {
+    return JSON.parse(localStorage.getItem(draftKey(groupId)) ?? 'null') as Draft | null;
+  } catch {
+    return null;
+  }
+}
+function writeDraft(groupId: string, draft: Draft) {
+  try {
+    localStorage.setItem(draftKey(groupId), JSON.stringify(draft));
+  } catch {
+    // Private browsing or full storage: edits just aren't kept across a reload.
+  }
+}
+function clearDraft(groupId: string) {
+  try {
+    localStorage.removeItem(draftKey(groupId));
+  } catch {
+    // Nothing kept.
+  }
+}
+
 export function ScorecardPage() {
   const { leagueId = '', seasonId = '', weekId = '', groupId = '' } = useParams();
   const path = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}/groups/${groupId}/scorecard`;
@@ -80,16 +111,62 @@ export function ScorecardPage() {
   const [reason, setReason] = useState('');
   const [disputing, setDisputing] = useState(false);
   const [showVirtual, setShowVirtual] = useState(false);
+  /** Unsaved edits from before a reload were brought back. */
+  const [restored, setRestored] = useState(false);
+  /**
+   * Someone changed the form since the card was loaded. Set at once (a ref), so the effect that
+   * keeps drafts never mistakes a freshly loaded or just-saved card for unsaved edits.
+   */
+  const edited = useRef(false);
+  const edit = () => {
+    edited.current = true;
+    setDirty(true);
+  };
 
-  // Load the server's card into the form whenever a fresh version arrives.
+  // Load the server's card into the form whenever a fresh version arrives, then any unsaved
+  // edits this device kept for that same version.
   useEffect(() => {
     if (!view.data) return;
     const lid = view.data.card?.layoutId ?? view.data.plannedLayoutId;
     const holes = view.data.layouts.find((l) => l.id === lid)?.holes.length ?? 9;
+    const draft = readDraft(groupId);
+    const sameCard =
+      draft &&
+      draft.version === (view.data.card?.version ?? null) &&
+      view.data.permissions.canEdit &&
+      draft.entries.length === view.data.players.length &&
+      draft.entries.every((e) => view.data.players.some((p) => p.playerId === e.playerId));
+    if (sameCard) {
+      setLayoutId(draft.layoutId);
+      setEntries(draft.entries);
+      setReason(draft.reason);
+      setDirty(true);
+      edited.current = true;
+      setRestored(true);
+      return;
+    }
+    // Someone saved the card since (or it can't be edited now): those edits no longer apply.
+    if (draft) clearDraft(groupId);
+    edited.current = false;
     setLayoutId(lid);
     setEntries(toEntries(view.data, holes));
     setDirty(false);
-  }, [view.data]);
+    setRestored(false);
+  }, [view.data, groupId]);
+
+  // Keep unsaved edits on this device until they're saved or discarded.
+  useEffect(() => {
+    if (!dirty || !edited.current || !view.data) return;
+    writeDraft(groupId, { version: view.data.card?.version ?? null, layoutId, entries, reason });
+  }, [dirty, entries, layoutId, reason, groupId, view.data]);
+
+  // Leaving the page (or closing it) with unsaved edits asks first.
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
 
   // A card scanned from the schedule or Home arrives with the navigation: apply it once.
   const location = useLocation();
@@ -108,6 +185,8 @@ export function ScorecardPage() {
   }, [scanned, appliedScan, view.data, entries.length, navigate, location.pathname]);
 
   const onSaved = async (data: ScorecardView) => {
+    clearDraft(groupId);
+    setReason('');
     qc.setQueryData(key, data);
     await qc.invalidateQueries({ queryKey: ['season-results', seasonId] });
     await qc.invalidateQueries({ queryKey: ['standings'] });
@@ -208,7 +287,7 @@ export function ScorecardPage() {
 
   const update = (playerId: string, change: (e: Entry) => Entry) => {
     setEntries((list) => list.map((e) => (e.playerId === playerId ? change(e) : e)));
-    setDirty(true);
+    edit();
   };
   const setScore = (playerId: string, hole: number, raw: string) => {
     const n = raw === '' ? null : Number.parseInt(raw, 10);
@@ -230,7 +309,7 @@ export function ScorecardPage() {
           : { ...e, holeScores: Array.from({ length: holes }, () => null) },
       ),
     );
-    setDirty(true);
+    edit();
   };
 
   /** Fills the form from a card scan; nothing is saved until the person presses Save. */
@@ -266,7 +345,7 @@ export function ScorecardPage() {
         ),
       ),
     );
-    setDirty(true);
+    edit();
   };
   applyScanRef.current = applyScan;
 
@@ -286,6 +365,33 @@ export function ScorecardPage() {
         </div>
         <Badge className={cn('ml-auto', STATUS[status].className)}>{STATUS[status].label}</Badge>
       </div>
+
+      {restored && dirty && (
+        <Alert className="flex flex-wrap items-center gap-2 border-primary/40 bg-primary/5">
+          <span className="flex-1">
+            Your unsaved changes were brought back. Save them, or discard them to see the card as
+            saved.
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              clearDraft(groupId);
+              const lid = data.card?.layoutId ?? data.plannedLayoutId;
+              setLayoutId(lid);
+              setEntries(
+                toEntries(data, data.layouts.find((l) => l.id === lid)?.holes.length ?? 9),
+              );
+              setReason('');
+              edited.current = false;
+              setDirty(false);
+              setRestored(false);
+            }}
+          >
+            Discard
+          </Button>
+        </Alert>
+      )}
 
       {data.card?.dispute && status === 'disputed' && (
         <Alert className="border-amber-500/40 bg-amber-500/10">

@@ -22,7 +22,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // Never reload by itself: an update could land mid-scorecard. UpdateBanner offers it.
+      registerType: 'prompt',
       pwaAssets: { config: true },
       manifest: {
         name: 'TeeMate',
