@@ -391,6 +391,31 @@ describe('scorecard entry', () => {
     expect(await screen.findByRole('button', { name: /Saved/ })).toBeInTheDocument();
   });
 
+  it('Submit with an empty hole goes to it instead', async () => {
+    const calls = mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({ status: 200, body: view() }),
+    });
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    await fillAll('Jerry', '5');
+    for (let h = 1; h <= 9; h++)
+      if (h !== 6) await userEvent.type(screen.getByLabelText(`Brian hole ${h}`), '6');
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(screen.getByText('Brian has no score on hole 6.')).toBeInTheDocument();
+    const hole6 = screen.getByLabelText('Brian hole 6');
+    expect(hole6).toHaveFocus();
+    expect(hole6.className).toMatch(/border-amber-500/);
+    expect(confirm).not.toHaveBeenCalled();
+    expect(calls.some((c) => c.key.startsWith('PUT') || c.key.endsWith('/submit'))).toBe(false);
+
+    // Filling it in clears the message.
+    await userEvent.type(hole6, '6');
+    expect(screen.queryByText('Brian has no score on hole 6.')).toBeNull();
+  });
+
   it('marks a player absent and applies the absence rule', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),

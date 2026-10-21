@@ -121,7 +121,12 @@ export function ScorecardPage() {
   const edit = () => {
     edited.current = true;
     setDirty(true);
+    setProblem(null);
   };
+  /** What the form found wrong before sending (shown in the Save bar). */
+  const [problem, setProblem] = useState<string | null>(null);
+  /** Jumps to whatever stops the card saving; set each render, used when the server refuses. */
+  const jumpToProblem = useRef<() => void>(() => {});
 
   // Load the server's card into the form whenever a fresh version arrives, then any unsaved
   // edits this device kept for that same version.
@@ -211,6 +216,7 @@ export function ScorecardPage() {
         },
       }),
     onSuccess: onSaved,
+    onError: () => jumpToProblem.current(),
   });
   const submit = useMutation({
     mutationFn: async () => {
@@ -218,6 +224,7 @@ export function ScorecardPage() {
       return api<ScorecardView>(`${path}/submit`, { method: 'POST' });
     },
     onSuccess: onSaved,
+    onError: () => jumpToProblem.current(),
   });
   const approve = useMutation({
     mutationFn: () => api<ScorecardView>(`${path}/approve`, { method: 'POST' }),
@@ -348,6 +355,56 @@ export function ScorecardPage() {
     edit();
   };
   applyScanRef.current = applyScan;
+
+  /** Scrolls a field into view and puts the cursor in it. */
+  const jumpTo = (id: string) => {
+    const el = document.getElementById(id);
+    el?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+    el?.focus({ preventScroll: true });
+  };
+  /**
+   * The first thing stopping this card being saved (or, with `forSubmit`, submitted) that the
+   * form can point at: the reason, a missing handicap, or an empty hole (all empty holes are
+   * outlined).
+   */
+  const findProblem = (forSubmit: boolean): { id: string; message: string } | null => {
+    if (perms.needsReason && editable && dirty && !reason.trim())
+      return { id: 'reason', message: 'Give a reason for changing a submitted card.' };
+    const noHandicap = entries.find(
+      (e) => e.handicap === null && document.getElementById(`hcp-${e.playerId}`),
+    );
+    if (noHandicap)
+      return {
+        id: `hcp-${noHandicap.playerId}`,
+        message: `${nick(noHandicap.playerId)} needs a handicap.`,
+      };
+    if (!forSubmit) return null;
+    const empty = entries
+      .filter((e) => e.attendance === 'played')
+      .map((e) => ({
+        playerId: e.playerId,
+        holes: e.holeScores.flatMap((x, i) => (x === null ? [i] : [])),
+      }))
+      .filter((e) => e.holes.length > 0);
+    if (!empty.length) return null;
+    setCheck((c) => ({ ...c, ...Object.fromEntries(empty.map((e) => [e.playerId, e.holes])) }));
+    const first = empty[0]!;
+    return {
+      id: `hole-${first.playerId}-${first.holes[0]}`,
+      message: `${nick(first.playerId)} has no score on hole ${layout.holes[first.holes[0]!]!.number}.`,
+    };
+  };
+  jumpToProblem.current = () => {
+    const p = findProblem(true);
+    if (p) jumpTo(p.id);
+  };
+  /** Checks the form first; if something's missing, says so and goes to it instead. */
+  const ready = (forSubmit: boolean) => {
+    const p = findProblem(forSubmit);
+    setProblem(p?.message ?? null);
+    if (p) jumpTo(p.id);
+    return !p;
+  };
 
   return (
     <div className="flex flex-col gap-4 pb-24">
@@ -511,6 +568,7 @@ export function ScorecardPage() {
                       HCP{' '}
                       {perms.needsReason || perms.canApprove ? (
                         <input
+                          id={`hcp-${e.playerId}`}
                           aria-label={`Handicap for ${nick(e.playerId)}`}
                           className="w-6 rounded border bg-card text-center sm:w-7"
                           inputMode="numeric"
@@ -557,6 +615,7 @@ export function ScorecardPage() {
                       <span className="text-muted-foreground">–</span>
                     ) : (
                       <input
+                        id={`hole-${e.playerId}-${i}`}
                         aria-label={`${nick(e.playerId)} hole ${h.number}`}
                         inputMode="numeric"
                         pattern="[0-9]*"
@@ -639,6 +698,11 @@ export function ScorecardPage() {
       {(editable || perms.canSubmit || perms.canDispute || perms.canApprove) && (
         <div className="sticky bottom-20 z-30 flex flex-wrap items-center gap-2 rounded-xl border bg-card/95 p-3 shadow-md backdrop-blur md:bottom-4">
           {/* Kept in the bar, where they're seen on a phone: below the card they were hidden. */}
+          {problem && (
+            <Alert variant="destructive" className="w-full">
+              {problem}
+            </Alert>
+          )}
           {[save, submit, approve].map(
             (m, i) =>
               m.isError && (
@@ -662,7 +726,7 @@ export function ScorecardPage() {
             <Button
               variant={perms.canSubmit ? 'outline' : 'default'}
               disabled={!dirty || save.isPending || (perms.needsReason && !reason.trim())}
-              onClick={() => save.mutate()}
+              onClick={() => ready(false) && save.mutate()}
             >
               <Save /> {save.isPending ? 'Saving…' : dirty ? 'Save' : 'Saved'}
             </Button>
@@ -672,6 +736,7 @@ export function ScorecardPage() {
               disabled={submit.isPending}
               onClick={() => {
                 if (
+                  ready(true) &&
                   window.confirm(
                     'Submit this card? The other players will have time to dispute it, then it becomes final.',
                   )
