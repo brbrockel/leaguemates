@@ -76,7 +76,7 @@ Site: https://teemate.bhbslp.org
 - [ ] **Save**, close the app, reopen: the scores are still there.
 - [ ] Type scores **without saving**, then close the app (or swipe it away) and reopen the card: "Your unsaved changes were brought back", with the scores in place. **Save** stores them; **Discard** shows the card as saved. Leaving the page in a browser with unsaved scores asks first.
 - [ ] **Updates:** after a new version is deployed, an open TeeMate shows "A new version of TeeMate is ready" with **Reload**; it never reloads by itself.
-- [ ] **Submit** with a hole missing is refused. With every hole filled, it's submitted.
+- [ ] **Submit** with a hole missing: the Save bar says which ("Brian has no score on hole 6"), the page scrolls to it with the cursor in it, and empty holes are outlined in amber. With every hole filled, it's submitted.
 - [ ] **As another player in that foursome:** the card is read-only. **Dispute** it with a note.
 - [ ] **As Admin:** the disputed card shows the note. Correct a score (a reason is required), then **Approve as final**.
 - [ ] **As a player outside the foursome:** can view the card but not enter it.
