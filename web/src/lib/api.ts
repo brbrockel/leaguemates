@@ -237,6 +237,7 @@ export interface HoleInfo {
   number: number;
   par: number;
   strokeIndex: number;
+  yards?: number | null;
 }
 
 export interface MatchResultView {
@@ -256,7 +257,9 @@ export interface ScorecardView {
   date: string;
   teeTime: string;
   plannedLayoutId: string;
-  layouts: { id: string; name: string; holes: HoleInfo[] }[];
+  /** For drawing the course's paper card. */
+  course?: { name: string; city: string | null; state: string | null } | null;
+  layouts: { id: string; name: string; tees?: string; holes: HoleInfo[] }[];
   players: {
     playerId: string;
     nickname: string;

@@ -24,6 +24,7 @@ This page tracks planned enhancements in a consistent, reviewable format. It use
 18. [EH-016: Post-Season Team Scramble](#eh-016-post-season-team-scramble)
 19. [EH-017: Player Profiles and Contact Info](#eh-017-player-profiles-and-contact-info)
 20. [EH-018: One Net Score for Everyone](#eh-018-one-net-score-for-everyone)
+21. [EH-019: Virtual Scorecard](#eh-019-virtual-scorecard)
 
 ## How To Document An Enhancement
 
@@ -65,6 +66,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
 | EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address + optional nickname; self-edit on Account, admin edit on People, call/text/map links for league members; 2026 players loaded from the roster sheet) |
 | EH-018 | One Net Score for Everyone | Later | Proposed (the app shows match net, as the spreadsheet did) |
+| EH-019 | Virtual Scorecard | Phase 2 | In progress (drawn from course data; the course's own card is a later option) |
 
 Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
 
@@ -987,3 +989,33 @@ Out:
 - [ ] If plain net: every page shows the same net for the same round, and results don't change
 - [ ] The stand-in scores question is decided
 
+---
+
+## EH-019: Virtual Scorecard
+**Status**: In progress (2026-10-21)
+**Owner**: TBD
+
+### Problem
+The scorecard screen is deliberately plain: numbers in a grid, nothing in the way. Sometimes people want to see the round the way golfers read it, as a filled-in paper card.
+
+### Proposal
+A **Virtual scorecard** button on the scorecard screen (never the default view) draws the round as a classic paper card from the data TeeMate already has: the course's name and town, the layout's tees and yardage, par and handicap (stroke index) rows, then each player's scores in pen, circled under par and boxed over par, a dot on each hole where they get a stroke, their total, handicap and match net, and the match results underneath.
+
+Every course stores the same facts (hole, yards, par, stroke index), so one drawing works for every course with no setup.
+
+### Later option: the course's own card
+An admin uploads a scan of the course's blank card and taps the corners of the score grid; TeeMate saves the image and the grid positions as the course's card template and writes the scores onto it. About five minutes of setup per course (redone when the course reprints its card); courses without a template keep the drawn card.
+
+### Scope
+In:
+- The drawn card for league rounds and playoffs, showing unsaved changes too
+- Front, back or 18 holes (scrolls sideways on a phone)
+Out (for now):
+- Saving or sharing the card as an image
+- Course card templates
+
+### Acceptance Criteria
+- [x] The scorecard screen has a Virtual scorecard button; the plain grid stays the default
+- [x] Yardage, par and handicap rows come from the course's layout
+- [x] Birdies are circled, bogeys boxed, double bogeys or worse double-boxed, and strokes dotted on the hardest holes
+- [x] Totals, handicaps, nets and match results match the scorecard screen

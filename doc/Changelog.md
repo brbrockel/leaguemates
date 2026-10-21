@@ -3,6 +3,10 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
+## Unreleased
+
+- **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies circled, bogeys boxed and stroke dots.
+
 ## 1.1.0 (2026-10-18)
 
 - **Notices panel:** opening it no longer marks everything read; ✓ marks one, **Mark all read** marks them all.
