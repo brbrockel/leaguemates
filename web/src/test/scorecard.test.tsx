@@ -125,8 +125,8 @@ describe('scorecard entry', () => {
     expect(marks('double bogey or worse')).toBe(1 + 7 + 1); // Jerry's 5th, Brian's others, legend
     // No eagle on this card, so the legend doesn't explain one.
     expect(within(card).queryByText('eagle')).toBeNull();
-    // Brian's 7 strokes are dotted on the 7 hardest holes.
-    expect(within(card).getAllByLabelText('1 stroke')).toHaveLength(7);
+    // Strokes aren't dotted on holes: the match is decided on total net.
+    expect(within(card).queryByText('stroke')).toBeNull();
     expect(within(card).getByText('Jerry wins')).toBeInTheDocument();
     expect(within(card).getByText(/Brian gets 7/)).toBeInTheDocument();
   });

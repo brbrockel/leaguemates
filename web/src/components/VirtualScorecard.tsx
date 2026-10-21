@@ -1,4 +1,4 @@
-import { allocateStrokes, foldOver, gridBox, type CardGrid, type Layout } from '@teemate/shared';
+import { foldOver, gridBox, type CardGrid } from '@teemate/shared';
 import { Download, Share2 } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { CourseCard } from '@/components/CourseCard';
@@ -15,8 +15,6 @@ export interface VirtualRow {
   attendance: 'played' | 'absent';
   subName: string;
   holeScores: (number | null)[];
-  /** Strokes from their match: dotted on the hardest holes, as players mark a paper card. */
-  strokes: number | null;
   /** Match net, when the match has a result. */
   net: number | null;
 }
@@ -48,7 +46,7 @@ export interface VirtualScorecardProps {
 
 /**
  * The virtual scorecard: the round drawn as a classic paper card (yardage, par and handicap
- * rows, scores circled and boxed in pen, stroke dots), from the course's own data. It always
+ * rows, scores circled and boxed in pen), from the course's own data. It always
  * looks like paper, in dark mode too, because it's a picture of a card. It can be shared or
  * saved as an image.
  */
@@ -419,10 +417,6 @@ function Head({ children }: { children: ReactNode }) {
 }
 
 function PlayerRow({ row, holes }: { row: VirtualRow; holes: HoleInfo[] }) {
-  const dots =
-    row.strokes && row.attendance === 'played'
-      ? allocateStrokes(row.strokes, { holes } as Layout)
-      : holes.map(() => 0);
   const gross =
     row.attendance === 'played' && row.holeScores.some((s) => s !== null)
       ? row.holeScores.reduce<number>((t, s) => t + (s ?? 0), 0)
@@ -442,17 +436,7 @@ function PlayerRow({ row, holes }: { row: VirtualRow; holes: HoleInfo[] }) {
         )}
       </th>
       {holes.map((h, i) => (
-        <td key={h.number} className={cn(cell, 'relative')}>
-          {dots[i]! > 0 && (
-            <span
-              className="absolute right-0.5 top-0.5 flex gap-px"
-              aria-label={`${dots[i]} stroke${dots[i] === 1 ? '' : 's'}`}
-            >
-              {Array.from({ length: dots[i]! }, (_, k) => (
-                <span key={k} className="size-1 rounded-full bg-[color:var(--vc-ink)]" />
-              ))}
-            </span>
-          )}
+        <td key={h.number} className={cell}>
           {row.attendance === 'absent' ? (
             <span aria-hidden>–</span>
           ) : (
@@ -534,9 +518,6 @@ function Legend({ eagle }: { eagle: boolean }) {
       <span className="flex items-center gap-1">{swatch(-1)} birdie</span>
       <span className="flex items-center gap-1">{swatch(1)} bogey</span>
       <span className="flex items-center gap-1">{swatch(2)} double+</span>
-      <span className="flex items-center gap-1">
-        <span className="size-1 rounded-full bg-[color:var(--vc-ink)]" /> stroke
-      </span>
     </span>
   );
 }

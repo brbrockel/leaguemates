@@ -5,7 +5,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 ## Unreleased
 
-- **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies circled, bogeys boxed and stroke dots. **Share image** sends it from a phone (Messages, email, …); elsewhere **Save image** downloads it.
+- **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies and eagles circled, bogeys boxed. **Share image** sends it from a phone (Messages, email, …); elsewhere **Save image** downloads it.
 - **Course cards:** a site admin marks where the scores go on a picture of the club's card (a few taps per nine, with a preview); the virtual scorecard then writes the round on the real card in pen, with a switch to the drawn card.
 - **Fold-over cards:** a nine printed on a flap with no name column (Timberlin's back nine) takes the name column from another nine's card, shown beside it as when the card is folded.
 - **Download image** beside **Share image**, so a phone can save the card as well as send it.

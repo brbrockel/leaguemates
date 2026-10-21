@@ -999,7 +999,7 @@ Out:
 The scorecard screen is deliberately plain: numbers in a grid, nothing in the way. Sometimes people want to see the round the way golfers read it, as a filled-in paper card.
 
 ### Proposal
-A **Virtual scorecard** button on the scorecard screen (never the default view) draws the round as a classic paper card from the data TeeMate already has: the course's name and town, the layout's tees and yardage, par and handicap (stroke index) rows, then each player's scores in pen, circled under par and boxed over par, a dot on each hole where they get a stroke, their total, handicap and match net, and the match results underneath.
+A **Virtual scorecard** button on the scorecard screen (never the default view) draws the round as a classic paper card from the data TeeMate already has: the course's name and town, the layout's tees and yardage, par and handicap (stroke index) rows, then each player's scores in pen, circled under par and boxed over par, their total, handicap and match net, and the match results underneath.
 
 Every course stores the same facts (hole, yards, par, stroke index), so one drawing works for every course with no setup.
 
@@ -1020,7 +1020,7 @@ Out:
 ### Acceptance Criteria
 - [x] The scorecard screen has a Virtual scorecard button; the plain grid stays the default
 - [x] Yardage, par and handicap rows come from the course's layout
-- [x] Birdies are circled, bogeys boxed, double bogeys or worse double-boxed, and strokes dotted on the hardest holes
+- [x] Birdies are circled, bogeys boxed, eagles double-circled, double bogeys or worse double-boxed. No stroke dots: matches are decided on total net, so the strokes show once, as "X gets N" with the result
 - [x] Totals, handicaps, nets and match results match the scorecard screen
 - [x] Share image (phones) or Save image (computers) gives a PNG of the whole card
 - [x] A site admin marks a nine on a card picture; the virtual scorecard writes the round on it
