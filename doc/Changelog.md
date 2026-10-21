@@ -9,6 +9,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - **Course cards:** a site admin marks where the scores go on a picture of the club's card (a few taps per nine, with a preview); the virtual scorecard then writes the round on the real card in pen, with a switch to the drawn card.
 - **Fold-over cards:** a nine printed on a flap with no name column (Timberlin's back nine) takes the name column from another nine's card, shown beside it as when the card is folded.
 - **Download image** beside **Share image**, so a phone can save the card as well as send it.
+- The card's legend explains the eagle's double circle when the card has one.
 
 ## 1.1.0 (2026-10-18)
 
