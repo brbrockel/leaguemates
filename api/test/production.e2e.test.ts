@@ -1,4 +1,4 @@
-import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import request from 'supertest';
@@ -6,7 +6,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { loadConfig, resolveFileVars } from '../src/config.js';
 import { createTestApp, resetDb, type TestApp } from './helpers.js';
 
-const web = mkdtempSync(join(tmpdir(), 'teemate-web-'));
+const web = mkdtempSync(join(tmpdir(), 'leaguemates-web-'));
 mkdirSync(join(web, 'assets'));
 writeFileSync(join(web, 'index.html'), '<!doctype html><title>LeagueMates</title>');
 writeFileSync(join(web, 'assets', 'app-abc123.js'), 'console.log(1)');
@@ -21,7 +21,10 @@ beforeAll(async () => {
     movedFrom: ['teemate.example.com'],
   });
 });
-afterAll(async () => t.close());
+afterAll(async () => {
+  await t.close();
+  rmSync(web, { recursive: true, force: true });
+});
 beforeEach(async () => resetDb(t.db));
 const http = () => request(t.app.getHttpServer());
 
@@ -82,11 +85,12 @@ describe('client IP from the edge header', () => {
 
 describe('secrets from files', () => {
   it('reads FOO from FOO_FILE', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'teemate-secret-'));
+    const dir = mkdtempSync(join(tmpdir(), 'leaguemates-secret-'));
     writeFileSync(join(dir, 'db'), 'postgres://u:p@db/teemate\n');
     const env = resolveFileVars({ DATABASE_URL_FILE: join(dir, 'db') });
     expect(env.DATABASE_URL).toBe('postgres://u:p@db/teemate');
     const c = loadConfig({ ...env, APP_URL: 'https://teemate.test', MAIL_FROM: 'x' });
     expect(c.DATABASE_URL).toBe('postgres://u:p@db/teemate');
+    rmSync(dir, { recursive: true, force: true });
   });
 });
