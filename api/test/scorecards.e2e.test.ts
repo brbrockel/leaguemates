@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { auditLog, scorecards } from '../src/db/schema.js';
+import { auditLog, cardGrids, courseImages, scorecards } from '../src/db/schema.js';
 import {
   createTestApp,
   createUser,
@@ -141,6 +141,38 @@ describe('entering a card', () => {
     const layout = view.layouts.find((l: { id: string }) => l.id === view.plannedLayoutId);
     expect(layout.tees).toEqual(expect.any(String));
     expect(layout.holes[0]).toHaveProperty('yards');
+    expect(layout.cardGrid).toBeNull();
+
+    // With the course card marked, a fold-over back nine brings the front's name column.
+    const other = view.layouts.find((l: { id: string }) => l.id !== layout.id);
+    const [img] = await t.db
+      .insert(courseImages)
+      .values({ courseId: view.course.id, width: 994, height: 366 })
+      .returning();
+    const grid = (g: object) => ({
+      rows: [
+        [0.2, 0.33],
+        [0.2, 0.38],
+      ] as [number, number][],
+      last: [0.5, 0.33] as [number, number],
+      total: null,
+      name: [0.03, 0.33] as [number, number],
+      ...g,
+    });
+    await t.db.insert(cardGrids).values([
+      { layoutId: other.id, imageId: img!.id, grid: grid({}) },
+      { layoutId: layout.id, imageId: img!.id, grid: grid({ name: null, nameFrom: other.id }) },
+    ]);
+    const { body: again } = await as(site)
+      .get(cardPath(L, S, week.id, jerryGroup.id))
+      .expect(200);
+    const marked = again.layouts.find((l: { id: string }) => l.id === layout.id);
+    expect(marked.cardGrid).toMatchObject({
+      imageId: img!.id,
+      width: 994,
+      height: 366,
+      names: { imageId: img!.id, holes: other.holes.length, grid: { name: [0.03, 0.33] } },
+    });
   });
 
   it('a skipped round takes no cards and stays skipped', async () => {

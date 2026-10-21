@@ -17,6 +17,47 @@ export interface CardGrid {
   total: GridPoint | null;
   /** Where the name goes on the first line. */
   name: GridPoint | null;
+  /**
+   * Fold-over cards: this nine's panel has no name column and folds over another nine's
+   * card, whose name column then sits beside it (that layout's id).
+   */
+  nameFrom?: string | null;
+}
+
+/** A card picture with its grid: what a fold-over joins. */
+export interface GridPicture {
+  grid: CardGrid;
+  width: number;
+  height: number;
+  /** Holes in that nine. */
+  holes: number;
+}
+
+/**
+ * How another nine's name column sits beside a fold-over panel, in the panel picture's
+ * pixels: the other picture is scaled so its player lines are as far apart as the panel's,
+ * moved so its first line is level with the panel's, and cut just before its first hole box.
+ */
+export function foldOver(panel: GridPicture, names: GridPicture) {
+  const span = (p: GridPicture) => {
+    const rs = p.grid.rows;
+    return rs.length > 1 ? (rs[rs.length - 1]![1] - rs[0]![1]) * p.height : 0;
+  };
+  const scale =
+    span(panel) > 0 && span(names) > 0 ? span(panel) / span(names) : panel.height / names.height;
+  const first = names.grid.rows[0]!;
+  const holeGap = (names.grid.last[0] - first[0]) / Math.max(1, names.holes - 1);
+  /** Where the strip is cut, in the names picture's pixels. */
+  const cut = Math.max(0, (first[0] - holeGap / 2) * names.width);
+  return {
+    scale,
+    /** The strip's width once scaled. */
+    width: cut * scale,
+    /** The names picture's top edge, from the panel's top. */
+    top: panel.grid.rows[0]![1] * panel.height - first[1] * names.height * scale,
+    /** Where names are written, from the strip's left edge. */
+    nameX: (names.grid.name?.[0] ?? first[0] / 10) * names.width * scale,
+  };
 }
 
 export const CARD_GRID_MAX_ROWS = 6;

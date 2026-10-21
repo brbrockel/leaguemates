@@ -1006,6 +1006,8 @@ Every course stores the same facts (hole, yards, par, stroke index), so one draw
 ### The course's own card
 A site admin picks one of the course's card pictures for a nine and taps: the first hole's box on the first player line, the last hole's box, the Out/In box and where the name goes (both optional), then the first hole's box on each further player line (cards like Timberlin's split the lines with a par row, so each line is tapped; lines left out continue the spacing). A preview writes sample scores before saving. Holes in between are evenly spaced, and the line through the first and last box follows a picture taken at a slight angle. A new version of the nine keeps the marks; removing the picture removes them. Nines without marks keep the drawn card.
 
+**Fold-over cards.** Timberlin's back nine is printed on a flap with no name column (holes 10–18, In, Tot, HCP, NET) that folds over the front nine, so names written on the front serve both. At the name step, the setup offers "Names are on the Front 9 card": the back nine's card is then shown with the front card's name column joined on its left, scaled and moved so the player lines are level, and names are written there. The official card on timberlingolf.com is the same two pictures (hole 10 is cut at the flap's edge there too). A new version of the lending nine keeps lending its names.
+
 ### Scope
 In:
 - The drawn card for league rounds and playoffs, showing unsaved changes too

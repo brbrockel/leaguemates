@@ -303,6 +303,58 @@ describe('course card templates', () => {
     const after = (await as(site).get(`/courses/${courseId}`).expect(200)).body;
     expect(after.layouts.map((l: { cardGrid: unknown }) => l.cardGrid)).toEqual([null, null]);
   });
+
+  it('a fold-over panel takes its names from another nine with a name column', async () => {
+    const { courseId, layoutId: front } = await courseWithNine();
+    const back = (
+      await as(site)
+        .post(`/courses/${courseId}/layouts`, {
+          name: 'Back 9',
+          tees: 'White',
+          holes: nine().map((h) => ({ ...h, number: h.number + 9 })),
+        })
+        .expect(201)
+    ).body.layoutId as string;
+    const card = await sharp({
+      create: { width: 900, height: 340, channels: 3, background: '#fff' },
+    })
+      .jpeg()
+      .toBuffer();
+    const imageId = (
+      await site.agent
+        .post(`/api/courses/${courseId}/images`)
+        .set('X-CSRF-Token', site.csrf)
+        .attach('file', card, 'card.jpg')
+        .expect(201)
+    ).body.images[0].id as string;
+    const put = (layout: string, g: object) =>
+      as(site).put(`/courses/${courseId}/layouts/${layout}/card-grid`, {
+        imageId,
+        grid: { ...grid, ...g },
+      });
+
+    // The front has no marks yet, so it can't lend its names.
+    await put(back, { nameFrom: front }).expect(400);
+    await put(front, { name: null }).expect(200);
+    await put(back, { nameFrom: front }).expect(400); // no name column marked
+    await put(front, { name: [0.05, 0.4] }).expect(200);
+    await put(back, { nameFrom: back }).expect(400);
+    await put(back, { nameFrom: front }).expect(200);
+    // A panel that folds over another can't lend names itself.
+    await put(front, { name: [0.05, 0.4], nameFrom: back }).expect(400);
+
+    // A new version of the front nine keeps lending its names.
+    const { body: v2 } = await as(site)
+      .post(`/courses/${courseId}/layouts`, {
+        name: 'Front 9',
+        tees: 'White',
+        holes: nine(),
+        replaces: front,
+      })
+      .expect(201);
+    const backView = v2.course.layouts.find((l: { id: string }) => l.id === back);
+    expect(backView.cardGrid.grid.nameFrom).toBe(v2.layoutId);
+  });
 });
 
 describe('default course', () => {

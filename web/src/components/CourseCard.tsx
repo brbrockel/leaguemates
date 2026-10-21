@@ -1,5 +1,12 @@
 import '@fontsource/caveat/700.css';
-import { gridBox, gridHole, gridOffset, type CardGrid, type GridPoint } from '@teemate/shared';
+import {
+  foldOver,
+  gridBox,
+  gridHole,
+  gridOffset,
+  type CardGrid,
+  type GridPoint,
+} from '@teemate/shared';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -27,6 +34,7 @@ export function CourseCard({
   ref,
   className,
   crop,
+  names,
   children,
 }: {
   src: string;
@@ -40,12 +48,22 @@ export function CourseCard({
   className?: string;
   /** Show only this band of the picture (fractions of its height). */
   crop?: [top: number, bottom: number];
+  /**
+   * Fold-over panels: another nine's card whose name column sits to the left, as when the
+   * panel is folded over it. Names are written there.
+   */
+  names?: { src: string; width: number; height: number; grid: CardGrid; holes: number } | null;
   /** Drawn over the card, e.g. the marks while setting it up. */
   children?: ReactNode;
 }) {
   const n = pars.length;
+  // With a name column from another card, the picture is that strip and then this card.
+  const fold = grid && names ? foldOver({ grid, width, height, holes: n }, names) : null;
+  const full = width + (fold?.width ?? 0);
+  /** A point on this card, as a fraction of the whole (strip included). */
+  const own = ([x, y]: GridPoint): GridPoint => [((fold?.width ?? 0) + x * width) / full, y];
   // Writing fills about two thirds of a box; sizes are in container widths, so they scale.
-  const box = grid ? gridBox(grid, n, height / width) * 100 : 0;
+  const box = grid ? ((gridBox(grid, n, height / width) * width) / full) * 100 : 0;
   const pen: CSSProperties = {
     color: PEN,
     fontFamily: "Caveat, 'Bradley Hand', 'Segoe Print', cursive",
@@ -64,15 +82,33 @@ export function CourseCard({
   const card = (
     <div
       className="relative w-full select-none overflow-hidden bg-white"
-      style={{ containerType: 'inline-size', aspectRatio: `${width} / ${height}` }}
+      style={{ containerType: 'inline-size', aspectRatio: `${full} / ${height}` }}
     >
+      {fold && names && (
+        <div
+          className="absolute inset-y-0 left-0 overflow-hidden"
+          style={{ width: `${(fold.width / full) * 100}%` }}
+        >
+          <img
+            src={names.src}
+            alt=""
+            draggable={false}
+            className="absolute left-0 max-w-none"
+            style={{
+              width: `${((names.width * fold.scale) / fold.width) * 100}%`,
+              top: `${(fold.top / height) * 100}%`,
+            }}
+          />
+        </div>
+      )}
       <img
         src={src}
         alt=""
         width={width}
         height={height}
         draggable={false}
-        className="absolute inset-0 size-full"
+        className="absolute inset-y-0 right-0 h-full"
+        style={{ width: `${(width / full) * 100}%` }}
       />
       <div style={pen} aria-hidden>
         {grid &&
@@ -80,8 +116,15 @@ export function CourseCard({
             const played = line.holeScores.filter((s): s is number => s !== null);
             return (
               <div key={row}>
-                {grid.name && (
-                  <span style={at(gridOffset(grid, row, grid.name), 'left')}>
+                {(fold || grid.name) && (
+                  <span
+                    style={at(
+                      fold
+                        ? [fold.nameX / full, lineY(grid, row)]
+                        : own(gridOffset(grid, row, grid.name!)),
+                      'left',
+                    )}
+                  >
                     {line.name}
                     {line.absent && <span style={{ fontSize: '0.7em' }}> (absent)</span>}
                   </span>
@@ -89,13 +132,13 @@ export function CourseCard({
                 {!line.absent &&
                   pars.map((par, i) =>
                     line.holeScores[i] == null ? null : (
-                      <span key={i} style={at(gridHole(grid, n, row, i))}>
+                      <span key={i} style={at(own(gridHole(grid, n, row, i)))}>
                         <PenMark score={line.holeScores[i]!} par={par} />
                       </span>
                     ),
                   )}
                 {grid.total && !line.absent && played.length === n && (
-                  <span style={at(gridOffset(grid, row, grid.total))}>
+                  <span style={at(own(gridOffset(grid, row, grid.total)))}>
                     {played.reduce((t, s) => t + s, 0)}
                   </span>
                 )}
@@ -111,7 +154,7 @@ export function CourseCard({
     <div
       ref={ref}
       className={cn('relative w-full overflow-hidden bg-white', className)}
-      style={{ aspectRatio: `${width} / ${height * (bottom - top)}` }}
+      style={{ aspectRatio: `${full} / ${height * (bottom - top)}` }}
     >
       <div className="absolute inset-x-0" style={{ top: `${(-top / (bottom - top)) * 100}%` }}>
         {card}
@@ -119,6 +162,9 @@ export function CourseCard({
     </div>
   );
 }
+
+/** How far down player line `row` is (fraction of the card's height). */
+const lineY = (grid: CardGrid, row: number) => gridHole(grid, 2, row, 0)[1];
 
 /** A handwritten score: circled under par, boxed over, twice for two or more. */
 function PenMark({ score, par }: { score: number; par: number }) {

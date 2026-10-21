@@ -249,6 +249,16 @@ export class CoursesService {
         const [g] = await tx.select().from(cardGrids).where(eq(cardGrids.layoutId, old.id));
         if (g)
           await tx.insert(cardGrids).values({ layoutId: l!.id, imageId: g.imageId, grid: g.grid });
+        // Fold-over panels that took their names from the old version take them from the new.
+        const folded = await tx
+          .select()
+          .from(cardGrids)
+          .where(sql`${cardGrids.grid}->>'nameFrom' = ${old.id}`);
+        for (const f of folded)
+          await tx
+            .update(cardGrids)
+            .set({ grid: { ...f.grid, nameFrom: l!.id } })
+            .where(eq(cardGrids.layoutId, f.layoutId));
         await tx
           .update(weeks)
           .set({ layoutId: l!.id })
@@ -352,6 +362,19 @@ export class CoursesService {
         .where(and(eq(courseImages.id, input.imageId), eq(courseImages.courseId, courseId)))
         .limit(1);
       if (!img) throw new BadRequestException("That picture isn't one of this course's.");
+      if (input.grid.nameFrom) {
+        const from = input.grid.nameFrom;
+        const [names] = await this.db
+          .select({ grid: cardGrids.grid })
+          .from(cardGrids)
+          .innerJoin(layouts, eq(layouts.id, cardGrids.layoutId))
+          .where(and(eq(cardGrids.layoutId, from), eq(layouts.courseId, courseId)))
+          .limit(1);
+        if (from === layoutId || !names?.grid.name || names.grid.nameFrom)
+          throw new BadRequestException(
+            'Names can only come from another nine of this course whose card has a name column.',
+          );
+      }
       await this.db
         .insert(cardGrids)
         .values({ layoutId, ...input })

@@ -259,6 +259,17 @@ export interface CourseCardGrid {
   grid: CardGrid;
   width: number;
   height: number;
+  /** Fold-over panels: the card whose name column sits beside this one. */
+  names?: NameColumn | null;
+}
+
+/** Another nine's card lending its name column to a fold-over panel. */
+export interface NameColumn {
+  imageId: string;
+  grid: CardGrid;
+  width: number;
+  height: number;
+  holes: number;
 }
 
 export interface ScorecardView {
