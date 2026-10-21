@@ -66,7 +66,7 @@ Reference commits to the spec they implement, for example `EH-004: round-robin g
 | EH-016 | Post-Season Team Scramble | MVP | Done (format defaults await league confirmation) |
 | EH-017 | Player Profiles and Contact Info | MVP | Done (phone + address + optional nickname; self-edit on Account, admin edit on People, call/text/map links for league members; 2026 players loaded from the roster sheet) |
 | EH-018 | One Net Score for Everyone | Later | Proposed (the app shows match net, as the spreadsheet did) |
-| EH-019 | Virtual Scorecard | Phase 2 | In progress (drawn from course data; the course's own card is a later option) |
+| EH-019 | Virtual Scorecard | Phase 2 | Done (drawn from course data, or written on the course's own card once a site admin marks it; shared or saved as an image) |
 
 Also done (2026-10-16): fixes from an independent code and data review (account takeover through password links, cross-league swaps, test sign-in as admins, unlocking or skipping rounds with cards); 2025 history rounds 11–13 recovered; **Report a problem** in the profile menu, filed as GitHub issues; the code repository made public (MIT), with league records in the private `teemate-data`.
 
@@ -992,7 +992,7 @@ Out:
 ---
 
 ## EH-019: Virtual Scorecard
-**Status**: In progress (2026-10-21)
+**Status**: Done (2026-10-21)
 **Owner**: TBD
 
 ### Problem
@@ -1003,16 +1003,17 @@ A **Virtual scorecard** button on the scorecard screen (never the default view) 
 
 Every course stores the same facts (hole, yards, par, stroke index), so one drawing works for every course with no setup.
 
-### Later option: the course's own card
-An admin uploads a scan of the course's blank card and taps the corners of the score grid; TeeMate saves the image and the grid positions as the course's card template and writes the scores onto it. About five minutes of setup per course (redone when the course reprints its card); courses without a template keep the drawn card.
+### The course's own card
+A site admin picks one of the course's card pictures for a nine and taps: the first hole's box on the first player line, the last hole's box, the Out/In box and where the name goes (both optional), then the first hole's box on each further player line (cards like Timberlin's split the lines with a par row, so each line is tapped; lines left out continue the spacing). A preview writes sample scores before saving. Holes in between are evenly spaced, and the line through the first and last box follows a picture taken at a slight angle. A new version of the nine keeps the marks; removing the picture removes them. Nines without marks keep the drawn card.
 
 ### Scope
 In:
 - The drawn card for league rounds and playoffs, showing unsaved changes too
 - Front, back or 18 holes (scrolls sideways on a phone)
 - Sharing the card as an image from a phone, or saving it elsewhere (the image always has every hole)
-Out (for now):
-- Course card templates
+- The course's own card, marked by a site admin, shown cropped to the score area in a handwriting face, with a switch to the drawn card
+Out:
+- Reading the grid from the picture automatically (unreliable across card designs; the taps take a minute)
 
 ### Acceptance Criteria
 - [x] The scorecard screen has a Virtual scorecard button; the plain grid stays the default
@@ -1020,3 +1021,4 @@ Out (for now):
 - [x] Birdies are circled, bogeys boxed, double bogeys or worse double-boxed, and strokes dotted on the hardest holes
 - [x] Totals, handicaps, nets and match results match the scorecard screen
 - [x] Share image (phones) or Save image (computers) gives a PNG of the whole card
+- [x] A site admin marks a nine on a card picture; the virtual scorecard writes the round on it

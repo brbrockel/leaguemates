@@ -235,6 +235,76 @@ describe('scorecard images', () => {
   });
 });
 
+describe('course card templates', () => {
+  const grid = {
+    rows: [
+      [0.2, 0.4],
+      [0.2, 0.45],
+      [0.2, 0.6],
+      [0.2, 0.65],
+    ],
+    last: [0.6, 0.4],
+    total: [0.65, 0.4],
+    name: null,
+  };
+
+  it('site admins mark where scores go on a card picture; new versions keep it', async () => {
+    const { courseId, layoutId } = await courseWithNine();
+    await createUser(t.db, 'user@example.com');
+    const user = await signIn(t, 'user@example.com');
+    const card = await sharp({
+      create: { width: 900, height: 340, channels: 3, background: '#fff' },
+    })
+      .jpeg()
+      .toBuffer();
+    const imageId = (
+      await site.agent
+        .post(`/api/courses/${courseId}/images`)
+        .set('X-CSRF-Token', site.csrf)
+        .attach('file', card, 'card.jpg')
+        .expect(201)
+    ).body.images[0].id as string;
+    const path = `/courses/${courseId}/layouts/${layoutId}/card-grid`;
+
+    await as(user).put(path, { imageId, grid }).expect(403);
+    await as(site)
+      .put(path, { imageId, grid: { ...grid, last: [1.2, 0.4] } })
+      .expect(400);
+    const { courseId: otherCourse } = await courseWithNine();
+    const otherImage = (
+      await site.agent
+        .post(`/api/courses/${otherCourse}/images`)
+        .set('X-CSRF-Token', site.csrf)
+        .attach('file', card, 'card.jpg')
+        .expect(201)
+    ).body.images[0].id as string;
+    await as(site).put(path, { imageId: otherImage, grid }).expect(400);
+
+    const course = (await as(site).put(path, { imageId, grid }).expect(200)).body;
+    expect(course.layouts[0].cardGrid).toEqual({ imageId, grid });
+
+    // A new version of the nine is on the same printed card.
+    const { body: replaced } = await as(site)
+      .post(`/courses/${courseId}/layouts`, {
+        name: 'Front 9',
+        tees: 'White',
+        holes: nine(),
+        replaces: layoutId,
+      })
+      .expect(201);
+    const v2 = replaced.course.layouts.find((l: { id: string }) => l.id === replaced.layoutId);
+    expect(v2.cardGrid).toEqual({ imageId, grid });
+
+    await as(site)
+      .delete(`/courses/${courseId}/layouts/${replaced.layoutId}/card-grid`)
+      .expect(200);
+    // Removing the picture removes what was marked on it.
+    await as(site).delete(`/courses/${courseId}/images/${imageId}`).expect(200);
+    const after = (await as(site).get(`/courses/${courseId}`).expect(200)).body;
+    expect(after.layouts.map((l: { cardGrid: unknown }) => l.cardGrid)).toEqual([null, null]);
+  });
+});
+
 describe('default course', () => {
   it('is listed first, and pinning another course moves the default', async () => {
     const pinned = async () =>

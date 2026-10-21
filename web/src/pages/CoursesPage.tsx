@@ -9,10 +9,12 @@ import {
   Pin,
   Plus,
   Trash2,
+  ScrollText,
 } from 'lucide-react';
 import { useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useMe } from '@/auth/session';
+import { CardGridSetup } from '@/components/CardGridSetup';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -346,6 +348,7 @@ function LayoutCard({
 }) {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
+  const [marking, setMarking] = useState(false);
   const remove = useMutation({
     mutationFn: () =>
       api<Course>(`/courses/${course.id}/layouts/${layout.id}`, { method: 'DELETE' }),
@@ -404,6 +407,20 @@ function LayoutCard({
           <LayoutForm course={course} layout={layout} onDone={() => setEditing(false)} />
         ) : (
           <HoleTable holes={layout.holes} />
+        )}
+        {canEdit && !layout.retiredAt && course.images.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <ScrollText className="size-4" aria-hidden />
+            {layout.cardGrid
+              ? 'Scores are written on the course card.'
+              : 'The virtual scorecard can write scores on the course card.'}
+            <Button variant="outline" size="sm" onClick={() => setMarking(true)}>
+              {layout.cardGrid ? 'Change' : 'Set up the course card'}
+            </Button>
+          </div>
+        )}
+        {marking && (
+          <CardGridSetup course={course} layout={layout} onClose={() => setMarking(false)} />
         )}
       </CardContent>
     </Card>

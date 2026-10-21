@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import type { CardGrid } from '@teemate/shared';
 import type { ScorecardView } from '@/lib/api';
 import { me, mockApi, renderAt } from './render';
 
@@ -90,7 +91,7 @@ describe('scorecard entry', () => {
       [`GET ${PATH}`]: () => ({
         status: 200,
         body: view({
-          course: { name: 'Fox Run', city: 'Springfield', state: 'IL' },
+          course: { id: 'fox', name: 'Fox Run', city: 'Springfield', state: 'IL' },
           layouts: [
             {
               ...FRONT,
@@ -126,6 +127,49 @@ describe('scorecard entry', () => {
     expect(within(card).getAllByLabelText('1 stroke')).toHaveLength(7);
     expect(within(card).getByText('Jerry wins')).toBeInTheDocument();
     expect(within(card).getByText(/Brian gets 7/)).toBeInTheDocument();
+  });
+
+  it("writes the scores on the course's own card when it's set up", async () => {
+    const grid: CardGrid = {
+      rows: [
+        [0.2, 0.4],
+        [0.2, 0.5],
+      ],
+      last: [0.6, 0.4],
+      total: [0.65, 0.4],
+      name: [0.05, 0.4],
+    };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({
+        status: 200,
+        body: view({
+          course: { id: 'fox', name: 'Fox Run', city: null, state: null },
+          layouts: [
+            { ...FRONT, cardGrid: { imageId: 'img', grid, width: 1000, height: 400 } },
+            BACK,
+          ],
+        }),
+      }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await screen.findByText('Round 1 scorecard');
+    await fillAll('Jerry', '5');
+    await userEvent.click(screen.getByRole('button', { name: /Virtual scorecard/ }));
+    const dialog = await screen.findByRole('dialog', { name: 'Virtual scorecard' });
+    expect(within(dialog).getByRole('radio', { name: 'Course card' })).toBeChecked();
+    const card = within(dialog).getByRole('figure');
+    expect(card.querySelector('img')).toHaveAttribute('src', '/api/courses/fox/images/img');
+    // Jerry's nine scores and his total are written on it, with both names.
+    expect(
+      card.querySelectorAll('[data-mark=under],[data-mark=par],[data-mark=over]'),
+    ).toHaveLength(9);
+    expect(within(card).getByText('45')).toBeInTheDocument();
+    expect(within(card).getByText('Brian')).toBeInTheDocument();
+
+    await userEvent.click(within(dialog).getByRole('radio', { name: 'Drawn card' }));
+    expect(within(dialog).getByRole('figure').querySelector('img')).toBeNull();
+    expect(within(within(dialog).getByRole('figure')).getByText('HANDICAP')).toBeInTheDocument();
   });
 
   it('shares the virtual scorecard as an image, or saves it where sharing is not offered', async () => {

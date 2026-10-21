@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import type { CardGrid } from '@teemate/shared';
 import {
   type AnyPgColumn,
   bigserial,
@@ -683,6 +684,21 @@ export const courseImages = pgTable('course_images', {
   width: integer('width').notNull(),
   height: integer('height').notNull(),
   createdAt: createdAt(),
+});
+
+/**
+ * Where a layout's scores go on a picture of the course's card (EH-019), so the virtual
+ * scorecard can write them on the real card. Points are fractions of the picture.
+ */
+export const cardGrids = pgTable('card_grids', {
+  layoutId: uuid('layout_id')
+    .primaryKey()
+    .references(() => layouts.id, { onDelete: 'cascade' }),
+  imageId: uuid('image_id')
+    .notNull()
+    .references(() => courseImages.id, { onDelete: 'cascade' }),
+  grid: jsonb('grid').$type<CardGrid>().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 /** A phone or computer where someone turned push notifications on (one row per browser). */
