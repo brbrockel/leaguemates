@@ -1,5 +1,7 @@
 import { allocateStrokes, type Layout } from '@teemate/shared';
-import type { CSSProperties, ReactNode } from 'react';
+import { Download, Share2 } from 'lucide-react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { Button } from '@/components/ui/button';
 import type { HoleInfo, MatchResultView } from '@/lib/api';
 import { formatDay } from '@/lib/time';
 import { cn } from '@/lib/utils';
@@ -24,20 +26,7 @@ export interface VirtualMatch {
   result: MatchResultView | null;
 }
 
-/**
- * The virtual scorecard: the round drawn as a classic paper card (yardage, par and handicap
- * rows, scores circled and boxed in pen, stroke dots), from the course's own data. It always
- * looks like paper, in dark mode too, because it's a picture of a card.
- */
-export function VirtualScorecard({
-  course,
-  layout,
-  title,
-  date,
-  rows,
-  matches,
-  footer,
-}: {
+export interface VirtualScorecardProps {
   course: { name: string; city: string | null; state: string | null } | null;
   layout: { name: string; tees?: string; holes: HoleInfo[] };
   title: string;
@@ -45,7 +34,109 @@ export function VirtualScorecard({
   rows: VirtualRow[];
   matches: VirtualMatch[];
   footer?: ReactNode;
-}) {
+}
+
+/**
+ * The virtual scorecard: the round drawn as a classic paper card (yardage, par and handicap
+ * rows, scores circled and boxed in pen, stroke dots), from the course's own data. It always
+ * looks like paper, in dark mode too, because it's a picture of a card. It can be shared or
+ * saved as an image.
+ */
+export function VirtualScorecard(props: VirtualScorecardProps) {
+  const shot = useRef<HTMLDivElement>(null);
+  const [busy, setBusy] = useState(false);
+  /** Made, but the phone wanted a fresh tap before sharing it. */
+  const [ready, setReady] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const fileName = `${[props.course?.name, props.title, props.date]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/[^\w-]+/g, '-')
+    .replace(/^-+|-+$/g, '')}.png`;
+  const canShare = typeof navigator.canShare === 'function';
+
+  // Load the image maker ahead, so the picture is ready while the tap still counts.
+  useEffect(() => {
+    void import('html-to-image').catch(() => {});
+  }, []);
+
+  const send = async (file: File) => {
+    try {
+      await shareOrSave(file, props.title);
+      setReady(null);
+    } catch (err) {
+      const name = (err as Error).name;
+      if (name === 'NotAllowedError') setReady(file);
+      else if (name !== 'AbortError') setError(`Couldn't share it: ${(err as Error).message}`);
+    }
+  };
+
+  const make = async () => {
+    setError(null);
+    setBusy(true);
+    try {
+      const { toBlob } = await import('html-to-image');
+      const blob = await toBlob(shot.current!, { pixelRatio: 2, backgroundColor: '#ffffff' });
+      if (!blob) throw new Error("couldn't draw the card");
+      await send(new File([blob], fileName, { type: 'image/png' }));
+    } catch (err) {
+      setError(`Couldn't make the image: ${(err as Error).message}`);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <figure aria-label={`${props.title} card`} className="m-0">
+        <PaperCard {...props} />
+      </figure>
+      <div className="flex flex-wrap items-center gap-2">
+        {ready ? (
+          <Button size="sm" onClick={() => void send(ready)}>
+            <Share2 /> Image ready: share it
+          </Button>
+        ) : (
+          <Button variant="outline" size="sm" disabled={busy} onClick={() => void make()}>
+            {canShare ? <Share2 /> : <Download />}
+            {busy ? 'Making image…' : canShare ? 'Share image' : 'Save image'}
+          </Button>
+        )}
+        {error && <span className="text-sm text-destructive">{error}</span>}
+      </div>
+      {/* The picture is taken from this full-width copy, so 18 holes aren't cut off. */}
+      <div aria-hidden className="pointer-events-none fixed -left-[10000px] top-0" inert>
+        <PaperCard {...props} wide ref={shot} />
+      </div>
+    </div>
+  );
+}
+
+/** Shares the image where the device can (phones), otherwise downloads it. */
+async function shareOrSave(file: File, title: string) {
+  if (navigator.canShare?.({ files: [file] })) {
+    await navigator.share({ files: [file], title });
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function PaperCard({
+  course,
+  layout,
+  title,
+  date,
+  rows,
+  matches,
+  footer,
+  wide = false,
+  ref,
+}: VirtualScorecardProps & { wide?: boolean; ref?: Ref<HTMLDivElement> }) {
   const holes = layout.holes;
   const totalLabel = holes.length > 9 ? 'TOT' : holes[0]!.number > 9 ? 'IN' : 'OUT';
   const sum = (xs: (number | null | undefined)[]) =>
@@ -55,7 +146,11 @@ export function VirtualScorecard({
 
   return (
     <div
-      className="overflow-hidden rounded-lg border-2 font-serif text-[color:var(--vc-ink)] shadow-sm"
+      ref={ref}
+      className={cn(
+        'overflow-hidden rounded-lg border-2 font-serif text-[color:var(--vc-ink)] shadow-sm',
+        wide && 'w-max min-w-[640px]',
+      )}
       style={PAPER}
     >
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 bg-[color:var(--vc-band)] px-3 py-2 text-[color:var(--vc-paper)]">
@@ -71,7 +166,7 @@ export function VirtualScorecard({
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className={wide ? '' : 'overflow-x-auto'}>
         <table className="w-full border-collapse text-center text-xs tabular-nums sm:text-sm">
           <thead>
             <tr className="bg-[color:var(--vc-band)] text-[color:var(--vc-paper)]">

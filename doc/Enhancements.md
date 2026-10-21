@@ -1010,8 +1010,8 @@ An admin uploads a scan of the course's blank card and taps the corners of the s
 In:
 - The drawn card for league rounds and playoffs, showing unsaved changes too
 - Front, back or 18 holes (scrolls sideways on a phone)
+- Sharing the card as an image from a phone, or saving it elsewhere (the image always has every hole)
 Out (for now):
-- Saving or sharing the card as an image
 - Course card templates
 
 ### Acceptance Criteria
@@ -1019,3 +1019,4 @@ Out (for now):
 - [x] Yardage, par and handicap rows come from the course's layout
 - [x] Birdies are circled, bogeys boxed, double bogeys or worse double-boxed, and strokes dotted on the hardest holes
 - [x] Totals, handicaps, nets and match results match the scorecard screen
+- [x] Share image (phones) or Save image (computers) gives a PNG of the whole card
