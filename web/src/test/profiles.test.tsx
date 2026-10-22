@@ -77,6 +77,8 @@ describe('contact links', () => {
       }),
     });
     renderAt(`/leagues/${L}`);
+    // The members list is folded on a phone.
+    await userEvent.click(await screen.findByRole('button', { name: /^Members/ }));
     expect(await screen.findByRole('link', { name: '(860) 555-1234' })).toHaveAttribute(
       'href',
       'tel:+18605551234',
