@@ -3,6 +3,10 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
+## Unreleased
+
+- **New icon.** An L and M monogram: the L's stem is the flagpole, flying a waving swallowtail pennant, on the same green. The home-screen icon on iPhone no longer has a white border, and Android's round or squircle icon is cut from a green ground instead of white.
+
 ## 1.2.0 (2026-10-21)
 
 - **New address: leaguemates.bhbslp.org.** The old teemate.bhbslp.org address forwards there, links already sent keep working, and an app installed from the old address moves itself over. Sign in once on the new address and add it to the home screen again.
