@@ -150,7 +150,7 @@ Quicker with a small test season: in **League settings**, set regular-season wee
 
 - [ ] **League → Courses → Timberlin:** front and back nines show par, index and yards. As test.user it's view-only.
 - [ ] **Edit** a nine and enter the White yardages: the total appears beside the par.
-- [ ] Change a stroke index to one already used: the box turns red and Save is disabled.
+- [ ] Change a hole handicap (Hcp) to one already used: the box turns red and Save is disabled.
 - [ ] On a nine that has scorecards (lock icon), change a par: the button becomes **Save as new version**. After saving, the old one is under **Earlier versions**, and its old cards still show their results.
 - [ ] **Site settings → Courses → New course:** add one, add a nine, delete it.
 

@@ -534,7 +534,12 @@ export function ScorecardPage() {
               </td>
             </tr>
             <tr className="border-b text-[11px] text-muted-foreground">
-              <th className="sticky left-0 z-10 bg-card p-1.5 text-left font-medium">SI</th>
+              <th
+                className="sticky left-0 z-10 bg-card p-1.5 text-left font-medium"
+                title="Hole handicap: where strokes are given (1 is the hardest hole)"
+              >
+                Hcp
+              </th>
               {layout.holes.map((h) => (
                 <td key={h.number} className="px-0.5 py-1 tabular-nums">
                   {h.strokeIndex}

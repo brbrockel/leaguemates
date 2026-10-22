@@ -431,7 +431,7 @@ function LayoutCard({
 function HoleTable({ holes }: { holes: CourseHole[] }) {
   const rows: [string, (h: CourseHole) => number | null][] = [
     ['Par', (h) => h.par],
-    ['Index', (h) => h.strokeIndex],
+    ['Hcp', (h) => h.strokeIndex],
     ...(holes.some((h) => h.yards !== null)
       ? [['Yards', (h: CourseHole) => h.yards] as [string, (h: CourseHole) => number | null]]
       : []),
@@ -574,7 +574,7 @@ function LayoutForm({
           <tr>
             <th className="w-12 pb-1 text-left font-medium">Hole</th>
             <th className="pb-1 font-medium">Par</th>
-            <th className="pb-1 font-medium">Index</th>
+            <th className="pb-1 font-medium">Hcp</th>
             <th className="pb-1 font-medium">Yards</th>
           </tr>
         </thead>
@@ -593,7 +593,7 @@ function LayoutForm({
               </td>
               <td className="p-1">
                 <Input
-                  aria-label={`Stroke index, hole ${h.number}`}
+                  aria-label={`Hole handicap, hole ${h.number}`}
                   inputMode="numeric"
                   className={cn(
                     'h-9 text-center',
@@ -620,7 +620,7 @@ function LayoutForm({
         </tbody>
       </table>
       <p className="text-xs text-muted-foreground">
-        Index is the stroke index from the card (1 is the hardest hole), used once each. Yards are
+        Hcp is the hole handicap from the card (1 is the hardest hole), used once each. Yards are
         for display only.
       </p>
       {asNewVersion && (
