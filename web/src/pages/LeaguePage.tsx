@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { useIsGuest } from '@/auth/session';
+import { useIsGuest, useMe } from '@/auth/session';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,7 @@ interface Player {
 export function LeaguePage() {
   const { leagueId = '' } = useParams();
   const guest = useIsGuest();
+  const { data: me } = useMe();
   // The list starts open where there's room (a computer), folded on a phone.
   const [open, setOpen] = useState(() => window.matchMedia('(min-width: 768px)').matches);
   const league = useQuery({
@@ -78,6 +79,10 @@ export function LeaguePage() {
   if (!league.data) return <p className="text-sm text-muted-foreground">Loading…</p>;
   const isAdmin = league.data.role === 'admin';
   const rows = members.data ? people(members.data) : null;
+  // Spots nobody has signed in to, for giving a member one of them.
+  const unlinked = members.data?.players.filter((p) => !p.userId) ?? [];
+  // Only site admins make accounts, so only they get the Invite link.
+  const canInvite = Boolean(me?.user.isSiteAdmin);
 
   return (
     <div className="flex flex-col gap-6">
@@ -175,10 +180,24 @@ export function LeaguePage() {
             )}
             <ul className="divide-y">
               {rows?.playing.map((r) => (
-                <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
+                <PersonRow
+                  key={r.key}
+                  leagueId={leagueId}
+                  person={r}
+                  canEdit={isAdmin}
+                  canInvite={canInvite}
+                  unlinked={unlinked}
+                />
               ))}
               {rows?.notPlaying.map((r) => (
-                <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
+                <PersonRow
+                  key={r.key}
+                  leagueId={leagueId}
+                  person={r}
+                  canEdit={isAdmin}
+                  canInvite={canInvite}
+                  unlinked={unlinked}
+                />
               ))}
             </ul>
             {rows && rows.past.length > 0 && (
@@ -188,14 +207,20 @@ export function LeaguePage() {
                 </summary>
                 <ul className="divide-y">
                   {rows.past.map((r) => (
-                    <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
+                    <PersonRow
+                      key={r.key}
+                      leagueId={leagueId}
+                      person={r}
+                      canEdit={isAdmin}
+                      canInvite={canInvite}
+                      unlinked={unlinked}
+                    />
                   ))}
                 </ul>
               </details>
             )}
-            {isAdmin && <AddPlayerForm leagueId={leagueId} />}
             {isAdmin && (
-              <AddMemberForm
+              <AddToLeagueForm
                 leagueId={leagueId}
                 memberIds={members.data?.members.map((m) => m.userId) ?? []}
               />
@@ -264,10 +289,15 @@ function PersonRow({
   leagueId,
   person,
   canEdit,
+  canInvite,
+  unlinked,
 }: {
   leagueId: string;
   person: Person;
   canEdit: boolean;
+  canInvite: boolean;
+  /** Spots with no account, offered when giving a member a spot. */
+  unlinked: Player[];
 }) {
   if (person.player) {
     return (
@@ -276,21 +306,110 @@ function PersonRow({
         player={person.player}
         member={person.member}
         canEdit={canEdit}
+        canInvite={canInvite}
       />
     );
   }
   const m = person.member!;
   return (
-    <li className="flex items-start gap-3 py-2.5 text-sm">
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-x-2">
-          <span className="font-medium">{m.name ?? (m.email || 'Member')}</span>
-          {m.role === 'admin' && <Badge>Admin</Badge>}
+    <li className="py-2.5 text-sm">
+      <div className="flex items-start gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-2">
+            <span className="font-medium">{m.name ?? (m.email || 'Member')}</span>
+            {m.role === 'admin' && <Badge>Admin</Badge>}
+          </div>
+          {m.email && <ContactLinks email={m.email} phone={m.phone} address={m.address} />}
         </div>
-        {m.email && <ContactLinks email={m.email} phone={m.phone} address={m.address} />}
+        <Status person={person} />
       </div>
-      <Status person={person} />
+      {canEdit && <GiveSpot leagueId={leagueId} member={m} unlinked={unlinked} />}
     </li>
+  );
+}
+
+/** Admins give a member with no spot one: a player nobody has signed in to, or a new one. */
+function GiveSpot({
+  leagueId,
+  member,
+  unlinked,
+}: {
+  leagueId: string;
+  member: Member;
+  unlinked: Player[];
+}) {
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [player, setPlayer] = useState('new');
+  const [nickname, setNickname] = useState('');
+  const give = useMutation({
+    mutationFn: () =>
+      api(`/leagues/${leagueId}/members/${member.userId}/player`, {
+        method: 'POST',
+        body:
+          player === 'new'
+            ? nickname.trim()
+              ? { nickname: nickname.trim() }
+              : {}
+            : { playerId: player },
+      }),
+    onSuccess: async () => {
+      setOpen(false);
+      await qc.invalidateQueries({ queryKey: ['league', leagueId, 'members'] });
+    },
+  });
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    give.mutate();
+  };
+  if (!open)
+    return (
+      <Button variant="outline" size="sm" className="mt-2" onClick={() => setOpen(true)}>
+        <UserPlus /> Give a spot
+      </Button>
+    );
+  return (
+    <form onSubmit={submit} className="mt-2 flex flex-wrap items-end gap-2">
+      <div className="flex flex-col gap-1">
+        <Label htmlFor={`spot-${member.userId}`}>Player</Label>
+        <Select
+          id={`spot-${member.userId}`}
+          value={player}
+          onChange={(e) => setPlayer(e.target.value)}
+        >
+          <option value="new">New player</option>
+          {unlinked.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.nickname}
+              {p.active ? '' : ' (past player)'}
+            </option>
+          ))}
+        </Select>
+      </div>
+      {player === 'new' && (
+        <div className="flex flex-col gap-1">
+          <Label htmlFor={`spot-nickname-${member.userId}`}>Nickname</Label>
+          <Input
+            id={`spot-nickname-${member.userId}`}
+            className="w-36"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder={defaultNickname(member.name) || 'First name'}
+          />
+        </div>
+      )}
+      <Button type="submit" size="sm" disabled={give.isPending}>
+        <Check /> Save
+      </Button>
+      <Button type="button" size="sm" variant="ghost" onClick={() => setOpen(false)}>
+        Cancel
+      </Button>
+      {give.isError && (
+        <Alert variant="destructive" className="basis-full">
+          {give.error.message}
+        </Alert>
+      )}
+    </form>
   );
 }
 
@@ -299,12 +418,14 @@ function PlayerRow({
   player,
   member,
   canEdit,
+  canInvite,
 }: {
   leagueId: string;
   player: Player;
   /** The account behind the spot, if any. */
   member: Member | null;
   canEdit: boolean;
+  canInvite: boolean;
 }) {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
@@ -390,9 +511,19 @@ function PlayerRow({
           </Link>
           {member?.role === 'admin' && <Badge>Admin</Badge>}
           {/* Admins see who still needs an account (the history import made spots only). */}
-          {canEdit && !player.userId && player.active && (
-            <span className="text-xs text-muted-foreground">No account</span>
-          )}
+          {canEdit &&
+            !player.userId &&
+            player.active &&
+            (canInvite ? (
+              <Link
+                to={`/people?add=1&league=${leagueId}&player=${player.id}&name=${encodeURIComponent(player.fullName ?? '')}`}
+                className="text-xs text-primary underline decoration-dotted underline-offset-2"
+              >
+                No account · Invite
+              </Link>
+            ) : (
+              <span className="text-xs text-muted-foreground">No account</span>
+            ))}
         </div>
         {secondary && secondary !== player.nickname && (
           <div className="truncate text-xs text-muted-foreground">{secondary}</div>
@@ -423,75 +554,17 @@ function PlayerRow({
   );
 }
 
-function AddPlayerForm({ leagueId }: { leagueId: string }) {
-  const qc = useQueryClient();
-  const [fullName, setFullName] = useState('');
-  const [nickname, setNickname] = useState('');
-  const add = useMutation({
-    mutationFn: () =>
-      api(`/leagues/${leagueId}/players`, {
-        method: 'POST',
-        body: {
-          ...(fullName.trim() ? { fullName } : {}),
-          ...(nickname.trim() ? { nickname } : {}),
-        },
-      }),
-    onSuccess: async () => {
-      setFullName('');
-      setNickname('');
-      await qc.invalidateQueries({ queryKey: ['league', leagueId, 'members'] });
-    },
-  });
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    add.mutate();
-  };
-  return (
-    <form onSubmit={submit} className="mt-4 flex flex-col gap-3 border-t pt-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="player-full-name">Full name</Label>
-          <Input
-            id="player-full-name"
-            autoComplete="off"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="David Smith"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="player-nickname">Nickname</Label>
-          <Input
-            id="player-nickname"
-            autoComplete="off"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder={defaultNickname(fullName) || 'Doc'}
-          />
-        </div>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        The nickname is what shows on schedules and standings. Leave it blank for first name and
-        last initial (David S). It can be changed any time.
-      </p>
-      {add.isError && <Alert variant="destructive">{add.error.message}</Alert>}
-      <Button
-        type="submit"
-        variant="secondary"
-        className="w-fit"
-        disabled={add.isPending || (!fullName.trim() && !nickname.trim())}
-      >
-        <UserPlus /> Add player
-      </Button>
-    </form>
-  );
-}
-
-/** Adds someone who already has an account (site admins create accounts on People). */
-function AddMemberForm({ leagueId, memberIds }: { leagueId: string; memberIds: string[] }) {
+/**
+ * Admins add anyone from one form: someone new (a spot on the schedule, no account yet), or a
+ * person who already has an account, with their role and whether they play.
+ */
+function AddToLeagueForm({ leagueId, memberIds }: { leagueId: string; memberIds: string[] }) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  /** '' until chosen, 'new' for someone new, else the email of a person with an account. */
+  const [who, setWho] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [nickname, setNickname] = useState('');
   const [membership, setMembership] = useState<Membership>(NEW_MEMBERSHIP);
   const directory = useQuery({
     queryKey: ['people-directory'],
@@ -499,16 +572,29 @@ function AddMemberForm({ leagueId, memberIds }: { leagueId: string; memberIds: s
     enabled: open,
   });
   const available = (directory.data ?? []).filter((p) => !memberIds.includes(p.id));
-  const chosen = available.find((p) => p.email === email);
+  const chosen = available.find((p) => p.email === who);
+  const reset = () => {
+    setWho('');
+    setFullName('');
+    setNickname('');
+    setMembership(NEW_MEMBERSHIP);
+  };
   const add = useMutation({
     mutationFn: () =>
-      api('/users', {
-        method: 'POST',
-        body: { email, leagueId, ...membershipBody(membership) },
-      }),
+      who === 'new'
+        ? api(`/leagues/${leagueId}/players`, {
+            method: 'POST',
+            body: {
+              ...(fullName.trim() ? { fullName } : {}),
+              ...(nickname.trim() ? { nickname } : {}),
+            },
+          })
+        : api('/users', {
+            method: 'POST',
+            body: { email: who, leagueId, ...membershipBody(membership) },
+          }),
     onSuccess: async () => {
-      setEmail('');
-      setMembership(NEW_MEMBERSHIP);
+      reset();
       setOpen(false);
       await qc.invalidateQueries({ queryKey: ['league', leagueId, 'members'] });
     },
@@ -517,35 +603,60 @@ function AddMemberForm({ leagueId, memberIds }: { leagueId: string; memberIds: s
     e.preventDefault();
     add.mutate();
   };
+  const ready = who === 'new' ? Boolean(fullName.trim() || nickname.trim()) : Boolean(who);
 
   if (!open)
     return (
       <Button variant="secondary" className="mt-4 w-fit" onClick={() => setOpen(true)}>
-        <UserPlus /> Add member
+        <UserPlus /> Add to league
       </Button>
     );
   return (
     <form onSubmit={submit} className="mt-4 flex flex-col gap-3 border-t pt-4">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="member-person">Person</Label>
-        <Select
-          id="member-person"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        >
-          <option value="">Choose someone…</option>
+        <Label htmlFor="add-who">Who</Label>
+        <Select id="add-who" required value={who} onChange={(e) => setWho(e.target.value)}>
+          <option value="">Choose…</option>
+          <option value="new">Someone new (no account yet)</option>
           {available.map((p) => (
             <option key={p.id} value={p.email}>
               {p.name ? `${p.name} (${p.email})` : p.email}
             </option>
           ))}
         </Select>
-        <p className="text-xs text-muted-foreground">
-          Not listed? A site admin adds new people on the People page.
-        </p>
       </div>
-      {email && (
+      {who === 'new' && (
+        <>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="player-full-name">Full name</Label>
+              <Input
+                id="player-full-name"
+                autoComplete="off"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="David Smith"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="player-nickname">Nickname</Label>
+              <Input
+                id="player-nickname"
+                autoComplete="off"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder={defaultNickname(fullName) || 'Doc'}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            They get a spot on schedules and standings; the nickname is what shows there (blank:
+            first name and last initial). A site admin can give them an account later from the
+            People page.
+          </p>
+        </>
+      )}
+      {who && who !== 'new' && (
         <MembershipFields
           leagueId={leagueId}
           value={membership}
@@ -555,10 +666,17 @@ function AddMemberForm({ leagueId, memberIds }: { leagueId: string; memberIds: s
       )}
       {add.isError && <Alert variant="destructive">{add.error.message}</Alert>}
       <div className="flex gap-2">
-        <Button type="submit" disabled={add.isPending || !email}>
+        <Button type="submit" disabled={add.isPending || !ready}>
           <UserPlus /> Add to league
         </Button>
-        <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            reset();
+            setOpen(false);
+          }}
+        >
           Cancel
         </Button>
       </div>

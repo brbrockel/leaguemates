@@ -20,8 +20,8 @@ import {
   UserPlus,
   UserRoundCheck,
 } from 'lucide-react';
-import { useMemo, useState, type FormEvent } from 'react';
-import { Link } from 'react-router';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { Link, useSearchParams } from 'react-router';
 import { useMe } from '@/auth/session';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -60,6 +60,17 @@ export function UsersPage() {
   const [leagueFilter, setLeagueFilter] = useState('');
   const [search, setSearch] = useState('');
   const [adding, setAdding] = useState(false);
+  // A league's Members list links here to invite a player who has no account yet:
+  // /people?add=1&league=…&player=…&name=… opens the form with those filled in.
+  const [params] = useSearchParams();
+  const invite = {
+    leagueId: params.get('league') ?? '',
+    playerId: params.get('player') ?? '',
+    name: params.get('name') ?? '',
+  };
+  useEffect(() => {
+    if (params.has('add') && me?.user.isSiteAdmin) setAdding(true);
+  }, [params, me?.user.isSiteAdmin]);
   const [link, setLink] = useState<{ person: Person; link: string; expiresAt: string } | null>(
     null,
   );
@@ -141,7 +152,12 @@ export function UsersPage() {
         )}
       </div>
 
-      <AddPersonDialog open={adding} onOpenChange={setAdding} leagues={adminLeagues} />
+      <AddPersonDialog
+        open={adding}
+        onOpenChange={setAdding}
+        leagues={adminLeagues}
+        initial={invite}
+      />
       {link && <SignInLinkDialog {...link} onClose={() => setLink(null)} />}
       {editing && <EditNameDialog person={editing} onClose={() => setEditing(null)} />}
       {noticeFor && (
@@ -569,16 +585,21 @@ function AddPersonDialog({
   open,
   onOpenChange,
   leagues,
+  initial,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   leagues: { id: string; name: string }[];
+  /** Filled in from an invite link: the league, the player to link, their name. */
+  initial: { leagueId: string; playerId: string; name: string };
 }) {
   const qc = useQueryClient();
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [leagueId, setLeagueId] = useState('');
-  const [membership, setMembership] = useState<Membership>(NEW_MEMBERSHIP);
+  const [name, setName] = useState(initial.name);
+  const [leagueId, setLeagueId] = useState(initial.leagueId);
+  const [membership, setMembership] = useState<Membership>(
+    initial.playerId ? { ...NEW_MEMBERSHIP, player: initial.playerId } : NEW_MEMBERSHIP,
+  );
 
   const add = useMutation({
     mutationFn: () =>

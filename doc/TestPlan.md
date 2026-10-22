@@ -35,7 +35,7 @@ Site: https://leaguemates.bhbslp.org
 ## 3. People, members and players (Admin)
 
 - [ ] **People → Add (site admin):** add someone with **League: Not in a league yet**. They can get a password link and sign in; Home says they're not in a league.
-- [ ] **League → Members → Add member:** pick that person, role User, **Plays in this league** ticked with **New player**. They appear under Players, linked.
+- [ ] **League → Members → Add to league:** under **Who**, pick that person, role User, **Plays in this league** ticked with **New player**. They appear in the Members list as **Playing**, with their name and contact links. (**Someone new** makes a spot with no account; a member shown as **Not playing** gets a **Give a spot** button; a spot with **No account** shows **Invite** to site admins, which opens People → Add with the league and player filled in.)
 - [ ] Add another existing person with **Plays** unticked: a member who can sign in but isn't on rosters.
 - [ ] Add someone linked to an existing player (e.g. a past player who's back).
 - [ ] As a league admin (not site admin): People has no Add button, and adding a brand-new email from a league is refused with "A site admin adds new people".

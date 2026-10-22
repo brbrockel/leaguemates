@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { me, mockApi, renderAt } from './render';
@@ -17,6 +17,7 @@ function leagueApi(roster: object[], onPatch?: (body: unknown) => void) {
       body: { members: [], players: roster },
     }),
     [`GET /api/leagues/${LEAGUE}/seasons`]: () => ({ status: 200, body: [] }),
+    'GET /api/users/directory': () => ({ status: 200, body: [] }),
     [`POST /api/leagues/${LEAGUE}/players`]: () => ({ status: 201, body: {} }),
     [`PATCH /api/leagues/${LEAGUE}/players/p1`]: (init) => {
       onPatch?.(JSON.parse(String(init?.body)));
@@ -32,13 +33,22 @@ async function openPlayers() {
 
 describe('members', () => {
   it('lists spots and accounts together, saying who is playing', async () => {
+    let spot: unknown = null;
     mockApi({
-      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      // A site admin: only they get the Invite link.
+      'GET /api/auth/me': () => ({
+        status: 200,
+        body: { ...me, user: { ...me.user, isSiteAdmin: true } },
+      }),
       [`GET /api/leagues/${LEAGUE}`]: () => ({
         status: 200,
         body: { ...me.leagues[0], role: 'admin' },
       }),
       [`GET /api/leagues/${LEAGUE}/seasons`]: () => ({ status: 200, body: [] }),
+      [`POST /api/leagues/${LEAGUE}/members/u2/player`]: (init) => {
+        spot = JSON.parse(String(init?.body));
+        return { status: 201, body: { playerId: 'p9' } };
+      },
       [`GET /api/leagues/${LEAGUE}/members`]: () => ({
         status: 200,
         body: {
@@ -61,6 +71,7 @@ describe('members', () => {
             },
           ],
           players: [
+            { id: 'p3', nickname: 'Solo', fullName: null, handicap: 9, userId: null, active: true },
             { id: 'p1', nickname: 'Doc', fullName: null, handicap: 12, userId: 'u1', active: true },
             {
               id: 'p2',
@@ -75,7 +86,7 @@ describe('members', () => {
       }),
     });
     renderAt(`/leagues/${LEAGUE}`);
-    expect(await screen.findByText('1 playing · 1 not playing')).toBeInTheDocument();
+    expect(await screen.findByText('2 playing · 1 not playing')).toBeInTheDocument();
     await openPlayers();
     // A spot with an account: nickname links to stats, the account's name and role beside it.
     const doc = screen.getByRole('link', { name: 'Doc' }).closest('li')!;
@@ -87,6 +98,17 @@ describe('members', () => {
     expect(within(pat).getByText('Not playing')).toBeInTheDocument();
     expect(within(pat).queryByRole('link', { name: 'Pat Watcher' })).toBeNull();
     expect(screen.getByText('Past players (1)')).toBeInTheDocument();
+    // A spot nobody has signed in to: the site admin can invite them, with the spot linked.
+    const solo = screen.getByRole('link', { name: 'Solo' }).closest('li')!;
+    expect(within(solo).getByRole('link', { name: 'No account · Invite' })).toHaveAttribute(
+      'href',
+      `/people?add=1&league=${LEAGUE}&player=p3&name=`,
+    );
+    // An account with no spot can be given one.
+    await userEvent.click(within(pat).getByRole('button', { name: 'Give a spot' }));
+    await userEvent.type(within(pat).getByLabelText('Nickname'), 'Patty');
+    await userEvent.click(within(pat).getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(spot).toEqual({ nickname: 'Patty' }));
   });
 
   it('starts open on a wide screen', async () => {
@@ -126,9 +148,12 @@ describe('players', () => {
     const calls = leagueApi([]);
     renderAt(`/leagues/${LEAGUE}`);
     await openPlayers();
+    // One form for everyone: "Someone new" makes a spot with no account.
+    await userEvent.click(await screen.findByRole('button', { name: /Add to league/ }));
+    await userEvent.selectOptions(screen.getByLabelText('Who'), 'new');
     await userEvent.type(await screen.findByLabelText('Full name'), 'Sam Example');
     await userEvent.type(screen.getByLabelText('Nickname'), 'Doc');
-    await userEvent.click(screen.getByRole('button', { name: /Add player/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Add to league/ }));
     const post = calls.find((c) => c.key === `POST /api/leagues/${LEAGUE}/players`);
     expect(JSON.parse(String(post?.init?.body))).toEqual({
       fullName: 'Sam Example',

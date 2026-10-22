@@ -41,6 +41,11 @@ const UpdatePerson = z
   })
   .refine((b) => Object.keys(b).length > 0, { message: 'Nothing to update.' });
 const SetRole = z.object({ role: Role });
+/** A spot for a member who has none: an existing unlinked player, or a new one. */
+const GiveSpot = z.object({
+  playerId: z.uuid().optional(),
+  nickname: z.string().trim().max(30).optional(),
+});
 const UpdateSelf = z
   .object({
     name: z.string().trim().max(80).nullable().optional(),
@@ -152,6 +157,18 @@ export class UsersController {
     @Body(new ZodPipe(SetRole)) body: z.infer<typeof SetRole>,
   ) {
     return this.users.setRole(actor, leagueId, userId, body.role);
+  }
+
+  @Post('leagues/:leagueId/members/:userId/player')
+  @UseGuards(LeagueGuard)
+  @RequireLeagueRole('admin')
+  giveSpot(
+    @CurrentUser() actor: SessionUser,
+    @Param('leagueId') leagueId: string,
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+    @Body(new ZodPipe(GiveSpot)) body: z.infer<typeof GiveSpot>,
+  ) {
+    return this.users.giveSpot(actor, leagueId, userId, body);
   }
 
   @Delete('leagues/:leagueId/members/:userId')
