@@ -11,6 +11,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - The hole-difficulty row on the scorecard, course pages and hole stats says **Hcp** (hole handicap), as on US cards, instead of SI; hover it for what it means.
 - **League page: one Members list.** Players and Members were two lists; now each person is one row: nickname (linking to their stats), full name, Admin badge, contact links, and a status: **Playing · HCP n**, **Not playing** (an account with no spot) or **Past**. On a computer it starts open; on a phone it stays folded, with "n playing · n not playing" in the heading.
 - **Adding people is one form.** **Add to league** asks who: someone new (a spot on the schedule, no account yet) or a person with an account, with their role and whether they play. A member shown as **Not playing** gets **Give a spot**; a spot with **No account** shows site admins an **Invite** link that opens People → Add with the league and player filled in.
+- **Virtual scorecard for imported rounds.** Rounds brought in from the spreadsheets (totals only) get the button too: names, handicaps and totals written on the course card or the drawn card, with no hole boxes filled and no legend.
 
 ## 1.2.0 (2026-10-21)
 

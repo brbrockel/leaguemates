@@ -15,6 +15,8 @@ export interface VirtualRow {
   attendance: 'played' | 'absent';
   subName: string;
   holeScores: (number | null)[];
+  /** Imported history: the round's total when there are no hole scores. */
+  total?: number | null;
   /** Match net, when the match has a result. */
   net: number | null;
 }
@@ -234,12 +236,18 @@ function OnCourseCard({
             lines={rows.map((r) => ({
               name: r.name,
               holeScores: r.holeScores,
+              total: r.total ?? null,
               absent: r.attendance === 'absent',
             }))}
           />
         </div>
       </div>
-      <CardFooter matches={matches} footer={footer} eagle={hasEagle(rows, layout.holes)} />
+      <CardFooter
+        matches={matches}
+        footer={footer}
+        eagle={hasEagle(rows, layout.holes)}
+        marks={hasMarks(rows)}
+      />
     </div>
   );
 }
@@ -266,6 +274,9 @@ function CardTop({
   );
 }
 
+/** Any hole score at all: imported history has only totals, so there's nothing to explain. */
+const hasMarks = (rows: VirtualRow[]) => rows.some((r) => r.holeScores.some((s) => s != null));
+
 /** Anyone two or more under par on a hole. */
 const hasEagle = (rows: VirtualRow[], holes: HoleInfo[]) =>
   rows.some(
@@ -278,11 +289,14 @@ function CardFooter({
   matches,
   footer,
   eagle,
+  marks,
 }: {
   matches: VirtualMatch[];
   footer?: ReactNode;
   /** Explain the double circle only when the card has one. */
   eagle: boolean;
+  /** No legend when the card has no hole scores. */
+  marks: boolean;
 }) {
   return (
     <div className="font-serif">
@@ -297,7 +311,7 @@ function CardFooter({
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[color:var(--vc-rule)] px-3 py-1.5 text-[11px]">
-        <Legend eagle={eagle} />
+        {marks ? <Legend eagle={eagle} /> : <span />}
         {footer && <span className="italic">{footer}</span>}
       </div>
     </div>
@@ -386,7 +400,12 @@ function PaperCard({
         </table>
       </div>
 
-      <CardFooter matches={matches} footer={footer} eagle={hasEagle(rows, layout.holes)} />
+      <CardFooter
+        matches={matches}
+        footer={footer}
+        eagle={hasEagle(rows, layout.holes)}
+        marks={hasMarks(rows)}
+      />
     </div>
   );
 }
@@ -418,9 +437,11 @@ function Head({ children }: { children: ReactNode }) {
 
 function PlayerRow({ row, holes }: { row: VirtualRow; holes: HoleInfo[] }) {
   const gross =
-    row.attendance === 'played' && row.holeScores.some((s) => s !== null)
-      ? row.holeScores.reduce<number>((t, s) => t + (s ?? 0), 0)
-      : null;
+    row.attendance !== 'played'
+      ? null
+      : row.holeScores.some((s) => s !== null)
+        ? row.holeScores.reduce<number>((t, s) => t + (s ?? 0), 0)
+        : (row.total ?? null);
   return (
     <tr className="h-10 sm:h-11">
       <th

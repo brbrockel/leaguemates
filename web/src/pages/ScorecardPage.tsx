@@ -961,6 +961,8 @@ function ImportedCard({
 }) {
   const nick = (id: string) => view.players.find((p) => p.playerId === id)?.nickname ?? '?';
   const round = (id: string) => view.card?.rounds.find((r) => r.playerId === id);
+  const [showVirtual, setShowVirtual] = useState(false);
+  const layout = view.layouts.find((l) => l.id === (view.card?.layoutId ?? view.plannedLayoutId));
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
@@ -975,6 +977,16 @@ function ImportedCard({
             {formatDay(view.date)} · imported from the league spreadsheet
           </p>
         </div>
+        {layout && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto"
+            onClick={() => setShowVirtual(true)}
+          >
+            <ScrollText /> Virtual scorecard
+          </Button>
+        )}
       </div>
       <Card className="overflow-hidden p-0">
         <table className="w-full text-sm">
@@ -1015,6 +1027,55 @@ function ImportedCard({
         The spreadsheets record totals, not hole-by-hole scores, and not who was absent, so the
         result shown is the one the league recorded.
       </p>
+      {showVirtual && layout && (
+        <Dialog open onOpenChange={(o) => !o && setShowVirtual(false)}>
+          <DialogContent
+            title="Virtual scorecard"
+            description="Totals only: the spreadsheet kept no hole-by-hole scores."
+            className="sm:max-w-4xl"
+          >
+            <VirtualScorecard
+              course={view.course ?? null}
+              layout={layout}
+              title={`Round ${view.round} · ${layout.name}`}
+              date={view.date}
+              rows={view.players.map((p) => {
+                const r = round(p.playerId);
+                return {
+                  playerId: p.playerId,
+                  name: p.nickname,
+                  handicap: r?.handicap ?? null,
+                  attendance: r?.attendance ?? 'played',
+                  subName: '',
+                  holeScores: [],
+                  total: r?.gross ?? null,
+                  net: null,
+                };
+              })}
+              matches={view.matches.map((m) => ({
+                a: nick(m.playerA),
+                b: nick(m.playerB),
+                result: m.result,
+              }))}
+              courseCard={
+                layout.cardGrid && view.course
+                  ? {
+                      ...layout.cardGrid,
+                      src: cardImageSrc(view.course.id, layout.cardGrid.imageId),
+                      names: layout.cardGrid.names
+                        ? {
+                            ...layout.cardGrid.names,
+                            src: cardImageSrc(view.course.id, layout.cardGrid.names.imageId),
+                          }
+                        : null,
+                    }
+                  : null
+              }
+              footer="Imported from the league spreadsheet"
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

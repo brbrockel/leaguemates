@@ -643,6 +643,62 @@ describe('standings page', () => {
 });
 
 describe('imported history card', () => {
+  it('draws a virtual card from totals alone, with no legend', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET ${PATH}`]: () => ({
+        status: 200,
+        body: view({
+          teeTime: '',
+          card: {
+            id: 'card1',
+            status: 'final',
+            layoutId: 'front',
+            version: 1,
+            enteredBy: null,
+            submittedAt: null,
+            finalAt: null,
+            dispute: null,
+            rounds: [
+              {
+                playerId: 'jerry',
+                handicap: 7,
+                attendance: 'played',
+                subName: null,
+                holeScores: [],
+                gross: 44,
+              },
+              {
+                playerId: 'brian',
+                handicap: 14,
+                attendance: 'absent',
+                subName: null,
+                holeScores: [],
+                gross: null,
+              },
+            ],
+          },
+          permissions: {
+            canEdit: false,
+            canSubmit: false,
+            canDispute: false,
+            canApprove: false,
+            needsReason: false,
+          },
+        }),
+      }),
+    });
+    renderAt(`/leagues/${L}/seasons/${S}/weeks/${W}/groups/${G}`);
+    await userEvent.click(await screen.findByRole('button', { name: 'Virtual scorecard' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Virtual scorecard' });
+    const figure = within(dialog).getByRole('figure');
+    const jerry = within(figure).getByText('Jerry').closest('tr')!;
+    expect(within(jerry).getByText('44')).toBeInTheDocument();
+    expect(within(figure).getByText(/absent/)).toBeInTheDocument();
+    // Nothing to explain: there are no hole scores to mark.
+    expect(within(dialog).queryByText('birdie')).toBeNull();
+  });
+
   it('shows totals and the official result', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),
