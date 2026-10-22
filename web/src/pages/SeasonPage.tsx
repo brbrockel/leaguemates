@@ -711,7 +711,9 @@ function GroupCard({
               const id = side === 'A' ? m.playerA : m.playerB;
               const won = r?.outcome === side;
               const g = gross(id);
-              const absent = r ? r.net[side] === null : g?.attendance === 'absent';
+              // Absent means absent: the 2018–19 sheets kept no scores at all, and those
+              // players get a dash, not "absent".
+              const absent = g ? g.attendance === 'absent' : r?.net[side] === null;
               return (
                 <div
                   key={side}
