@@ -68,7 +68,7 @@ export function HoleTable({ nine, mine = false }: { nine: NineStats; mine?: bool
               <tr key={h.number} className="border-t">
                 <td className="py-1.5">
                   {h.number}
-                  <span className="ml-1 text-xs text-muted-foreground">SI {h.strokeIndex}</span>
+                  <span className="ml-1 text-xs text-muted-foreground">Hcp {h.strokeIndex}</span>
                 </td>
                 <td className="text-center">{h.par}</td>
                 {mine ? (
