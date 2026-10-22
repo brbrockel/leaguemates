@@ -157,6 +157,26 @@ describe('people page', () => {
     });
   });
 
+  it("an invite link from a league's Members list opens Add with the spot filled in", async () => {
+    const siteAdmin = { ...me, user: { ...me.user, isSiteAdmin: true } };
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: siteAdmin }),
+      'GET /api/users': () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE.id}/members`]: () => ({
+        status: 200,
+        body: {
+          members: [],
+          players: [{ id: 'p4', nickname: 'Doc', fullName: null, userId: null, active: true }],
+        },
+      }),
+    });
+    renderAt(`/people?add=1&league=${LEAGUE.id}&player=p4&name=Sam%20Example`);
+    await screen.findByRole('dialog', { name: 'Add a person' });
+    expect(screen.getByLabelText('Name')).toHaveValue('Sam Example');
+    expect(screen.getByLabelText('League')).toHaveValue(LEAGUE.id);
+    expect(await screen.findByLabelText('Player')).toHaveValue('p4');
+  });
+
   it('league admins (not site admins) cannot create accounts here', async () => {
     mockApi({
       'GET /api/auth/me': () => ({ status: 200, body: me }),

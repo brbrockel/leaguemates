@@ -235,41 +235,7 @@ export class UsersService {
       const role = input.role ?? 'user';
       await tx.insert(leagueMemberships).values({ leagueId, userId: user!.id, role });
 
-      let playerId: string | null = null;
-      if (input.playerId) {
-        const [p] = await tx
-          .update(players)
-          .set({ userId: user!.id, active: true })
-          .where(
-            and(
-              eq(players.id, input.playerId),
-              eq(players.leagueId, leagueId),
-              isNull(players.userId),
-            ),
-          )
-          .returning();
-        if (!p) throw new BadRequestException('That player is already linked to someone.');
-        playerId = p.id;
-      } else if (input.newPlayer) {
-        const fullName = user!.name ?? input.name?.trim() ?? null;
-        const nickname =
-          input.newPlayer.nickname?.trim() ||
-          user!.nickname ||
-          defaultNickname(fullName) ||
-          email.split('@')[0]!;
-        const [p] = await tx
-          .insert(players)
-          .values({ leagueId, nickname, fullName, userId: user!.id })
-          .returning()
-          .catch((err: unknown) => {
-            if ((err as { cause?: { code?: string } }).cause?.code === '23505')
-              throw new ConflictException(
-                `"${nickname}" is already a player in this league. Pick that player instead, or use another nickname.`,
-              );
-            throw err;
-          });
-        playerId = p!.id;
-      }
+      const playerId = await this.linkPlayer(tx, leagueId, user!, input);
       await this.audit.record(
         {
           leagueId,
@@ -282,6 +248,97 @@ export class UsersService {
         tx,
       );
       return { id: user!.id, email: user!.email };
+    });
+  }
+
+  /**
+   * Gives a user a spot in the league: links an existing unlinked player, or makes a new one
+   * with the nickname given (default: theirs). Null when neither was asked for.
+   */
+  private async linkPlayer(
+    tx: Parameters<Parameters<Database['transaction']>[0]>[0],
+    leagueId: string,
+    user: { id: string; email: string; name: string | null; nickname: string | null },
+    input: {
+      playerId?: string | undefined;
+      newPlayer?: { nickname?: string | undefined } | undefined;
+      name?: string | undefined;
+    },
+  ): Promise<string | null> {
+    if (input.playerId) {
+      const [p] = await tx
+        .update(players)
+        .set({ userId: user.id, active: true })
+        .where(
+          and(
+            eq(players.id, input.playerId),
+            eq(players.leagueId, leagueId),
+            isNull(players.userId),
+          ),
+        )
+        .returning();
+      if (!p) throw new BadRequestException('That player is already linked to someone.');
+      return p.id;
+    }
+    if (!input.newPlayer) return null;
+    const fullName = user.name ?? input.name?.trim() ?? null;
+    const nickname =
+      input.newPlayer.nickname?.trim() ||
+      user.nickname ||
+      defaultNickname(fullName) ||
+      user.email.split('@')[0]!;
+    const [p] = await tx
+      .insert(players)
+      .values({ leagueId, nickname, fullName, userId: user.id })
+      .returning()
+      .catch((err: unknown) => {
+        if ((err as { cause?: { code?: string } }).cause?.code === '23505')
+          throw new ConflictException(
+            `"${nickname}" is already a player in this league. Pick that player instead, or use another nickname.`,
+          );
+        throw err;
+      });
+    return p!.id;
+  }
+
+  /** A member with no spot gets one: an existing unlinked player, or a new one. */
+  async giveSpot(
+    actor: SessionUser,
+    leagueId: string,
+    userId: string,
+    input: { playerId?: string | undefined; nickname?: string | undefined },
+  ) {
+    await this.requireLeagueAdmin(actor, leagueId);
+    return this.db.transaction(async (tx) => {
+      const [m] = await tx
+        .select({ id: users.id, email: users.email, name: users.name, nickname: users.nickname })
+        .from(leagueMemberships)
+        .innerJoin(users, eq(users.id, leagueMemberships.userId))
+        .where(and(eq(leagueMemberships.leagueId, leagueId), eq(leagueMemberships.userId, userId)))
+        .limit(1);
+      if (!m) throw new NotFoundException('Not a member of this league.');
+      const [has] = await tx
+        .select({ id: players.id })
+        .from(players)
+        .where(and(eq(players.leagueId, leagueId), eq(players.userId, userId)))
+        .limit(1);
+      if (has) throw new ConflictException('They already have a spot in this league.');
+      const playerId = await this.linkPlayer(tx, leagueId, m, {
+        playerId: input.playerId,
+        ...(input.playerId ? {} : { newPlayer: { nickname: input.nickname } }),
+      });
+      await this.audit.record(
+        {
+          leagueId,
+          actorUserId: actor.id,
+          action: 'member.player',
+          entityType: 'user',
+          entityId: userId,
+          after: { playerId },
+        },
+        tx,
+      );
+      return { playerId };
     });
   }
 

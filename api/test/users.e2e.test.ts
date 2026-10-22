@@ -277,6 +277,50 @@ describe('who can manage whom', () => {
   });
 });
 
+describe('giving a member a spot', () => {
+  it('links an existing player or makes a new one, once', async () => {
+    const wed = await league('Wednesday League');
+    const paul = await signInWithLink(
+      site,
+      (await addPerson(site, { email: 'paul@example.com', leagueId: wed.id, role: 'admin' })).id,
+    );
+    // Two members with no spot, and one spot with no account.
+    const keith = await addPerson(site, {
+      email: 'keith@example.com',
+      name: 'Keith Moon',
+      leagueId: wed.id,
+    });
+    const ringo = await addPerson(site, { email: 'ringo@example.com', leagueId: wed.id });
+    const { body: spot } = await as(paul)
+      .post(`/leagues/${wed.id}/players`, { nickname: 'Ringo' })
+      .expect(201);
+
+    // A new player, named from the account.
+    const { body: made } = await as(paul)
+      .post(`/leagues/${wed.id}/members/${keith.id}/player`, {})
+      .expect(201);
+    const [k] = await t.db.select().from(players).where(eq(players.id, made.playerId));
+    expect(k).toMatchObject({ userId: keith.id, nickname: 'Keith M', fullName: 'Keith Moon' });
+    // Only one spot each.
+    await as(paul)
+      .post(`/leagues/${wed.id}/members/${keith.id}/player`, { nickname: 'Moonie' })
+      .expect(409);
+
+    // Linking the spot that already exists on the schedules.
+    await as(paul)
+      .post(`/leagues/${wed.id}/members/${ringo.id}/player`, { playerId: spot.id })
+      .expect(201);
+    const [r] = await t.db.select().from(players).where(eq(players.id, spot.id));
+    expect(r).toMatchObject({ userId: ringo.id, nickname: 'Ringo' });
+
+    // Not for people outside the league, nor by plain users.
+    const outsider = await addPerson(site, { email: 'pete@example.com' });
+    await as(paul).post(`/leagues/${wed.id}/members/${outsider.id}/player`, {}).expect(404);
+    const keithSession = await signInWithLink(site, keith.id);
+    await as(keithSession).post(`/leagues/${wed.id}/members/${ringo.id}/player`, {}).expect(403);
+  });
+});
+
 describe('account controls', () => {
   it('disabling someone signs them out everywhere and blocks new links', async () => {
     const wed = await league('Wednesday League');
