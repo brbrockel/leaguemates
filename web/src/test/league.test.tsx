@@ -25,10 +25,84 @@ function leagueApi(roster: object[], onPatch?: (body: unknown) => void) {
   });
 }
 
-/** The player list starts folded away. */
+/** The members list starts folded away on a phone (jsdom's matchMedia never matches). */
 async function openPlayers() {
-  await userEvent.click(await screen.findByRole('button', { name: /^Players/ }));
+  await userEvent.click(await screen.findByRole('button', { name: /^Members/ }));
 }
+
+describe('members', () => {
+  it('lists spots and accounts together, saying who is playing', async () => {
+    mockApi({
+      'GET /api/auth/me': () => ({ status: 200, body: me }),
+      [`GET /api/leagues/${LEAGUE}`]: () => ({
+        status: 200,
+        body: { ...me.leagues[0], role: 'admin' },
+      }),
+      [`GET /api/leagues/${LEAGUE}/seasons`]: () => ({ status: 200, body: [] }),
+      [`GET /api/leagues/${LEAGUE}/members`]: () => ({
+        status: 200,
+        body: {
+          members: [
+            {
+              userId: 'u1',
+              email: 'doc@example.com',
+              name: 'Sam Example',
+              phone: null,
+              address: null,
+              role: 'admin',
+            },
+            {
+              userId: 'u2',
+              email: 'pat@example.com',
+              name: 'Pat Watcher',
+              phone: null,
+              address: null,
+              role: 'user',
+            },
+          ],
+          players: [
+            { id: 'p1', nickname: 'Doc', fullName: null, handicap: 12, userId: 'u1', active: true },
+            {
+              id: 'p2',
+              nickname: 'Old',
+              fullName: null,
+              handicap: null,
+              userId: null,
+              active: false,
+            },
+          ],
+        },
+      }),
+    });
+    renderAt(`/leagues/${LEAGUE}`);
+    expect(await screen.findByText('1 playing · 1 not playing')).toBeInTheDocument();
+    await openPlayers();
+    // A spot with an account: nickname links to stats, the account's name and role beside it.
+    const doc = screen.getByRole('link', { name: 'Doc' }).closest('li')!;
+    expect(within(doc).getByText('Sam Example')).toBeInTheDocument();
+    expect(within(doc).getByText('Admin')).toBeInTheDocument();
+    expect(within(doc).getByText('Playing · HCP 12')).toBeInTheDocument();
+    // An account with no spot: no stats link, marked as not playing.
+    const pat = screen.getByText('Pat Watcher').closest('li')!;
+    expect(within(pat).getByText('Not playing')).toBeInTheDocument();
+    expect(within(pat).queryByRole('link', { name: 'Pat Watcher' })).toBeNull();
+    expect(screen.getByText('Past players (1)')).toBeInTheDocument();
+  });
+
+  it('starts open on a wide screen', async () => {
+    const narrow = window.matchMedia;
+    window.matchMedia = (q: string) => ({ ...narrow(q), matches: q.includes('min-width') });
+    try {
+      leagueApi([
+        { id: 'p1', nickname: 'Doc', fullName: null, handicap: null, userId: null, active: true },
+      ]);
+      renderAt(`/leagues/${LEAGUE}`);
+      expect(await screen.findByRole('link', { name: 'Doc' })).toBeInTheDocument();
+    } finally {
+      window.matchMedia = narrow;
+    }
+  });
+});
 
 describe('players', () => {
   it('shows nicknames with full names underneath', async () => {

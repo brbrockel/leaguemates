@@ -7,7 +7,7 @@ import {
   Check,
   ChevronDown,
   History,
-  Map,
+  Map as MapIcon,
   Pencil,
   Settings,
   UserPlus,
@@ -62,7 +62,8 @@ interface Player {
 export function LeaguePage() {
   const { leagueId = '' } = useParams();
   const guest = useIsGuest();
-  const [showPlayers, setShowPlayers] = useState(false);
+  // The list starts open where there's room (a computer), folded on a phone.
+  const [open, setOpen] = useState(() => window.matchMedia('(min-width: 768px)').matches);
   const league = useQuery({
     queryKey: ['league', leagueId],
     queryFn: () => api<League>(`/leagues/${leagueId}`),
@@ -76,6 +77,7 @@ export function LeaguePage() {
   if (league.error instanceof ApiError && league.error.status === 404) return <NotFoundPage />;
   if (!league.data) return <p className="text-sm text-muted-foreground">Loading…</p>;
   const isAdmin = league.data.role === 'admin';
+  const rows = members.data ? people(members.data) : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -120,7 +122,7 @@ export function LeaguePage() {
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link to="/courses">
-              <Map /> Courses
+              <MapIcon /> Courses
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
@@ -133,118 +135,175 @@ export function LeaguePage() {
 
       <SeasonsCard leagueId={leagueId} isAdmin={isAdmin} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <button
-              type="button"
-              aria-expanded={showPlayers}
-              onClick={() => setShowPlayers((o) => !o)}
-              className="flex w-full items-center gap-2 text-left"
-            >
-              <CardTitle>Players</CardTitle>
-              {members.data && (
-                <span className="text-sm text-muted-foreground">
-                  {members.data.players.filter((p) => p.active).length}
-                </span>
+      <Card>
+        <CardHeader>
+          <button
+            type="button"
+            aria-expanded={open}
+            onClick={() => setOpen((o) => !o)}
+            className="flex w-full items-center gap-2 text-left"
+          >
+            <CardTitle>Members</CardTitle>
+            {rows && (
+              <span className="text-sm text-muted-foreground">
+                {rows.playing.length} playing
+                {rows.notPlaying.length > 0 && ` · ${rows.notPlaying.length} not playing`}
+              </span>
+            )}
+            <ChevronDown
+              className={cn(
+                'ml-auto size-5 text-muted-foreground transition-transform',
+                open && 'rotate-180',
               )}
-              <ChevronDown
-                className={cn(
-                  'ml-auto size-5 text-muted-foreground transition-transform',
-                  showPlayers && 'rotate-180',
-                )}
-                aria-hidden
-              />
-            </button>
-            <CardDescription>
-              Everyone who plays in the league. Tap a name for their scores and stats.
-            </CardDescription>
-          </CardHeader>
-          {showPlayers && (
-            <CardContent>
-              {members.data?.players.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  No players yet.{isAdmin && ' Add them by the names used on the schedule.'}
-                </p>
-              )}
-              <ul className="divide-y">
-                {members.data?.players
-                  .filter((p) => p.active)
-                  .map((p) => (
-                    <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
+              aria-hidden
+            />
+          </button>
+          <CardDescription>
+            Everyone in the league. Tap a nickname for their scores and stats.
+            {!guest &&
+              (league.data.role === 'viewer'
+                ? ' Contact details are for members only.'
+                : " Members can see each other's contact details.")}
+          </CardDescription>
+        </CardHeader>
+        {open && (
+          <CardContent>
+            {rows && rows.playing.length + rows.notPlaying.length + rows.past.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Nobody yet.{isAdmin && ' Add players by the names used on the schedule.'}
+              </p>
+            )}
+            <ul className="divide-y">
+              {rows?.playing.map((r) => (
+                <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
+              ))}
+              {rows?.notPlaying.map((r) => (
+                <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
+              ))}
+            </ul>
+            {rows && rows.past.length > 0 && (
+              <details className="mt-3 text-sm">
+                <summary className="cursor-pointer text-muted-foreground">
+                  Past players ({rows.past.length})
+                </summary>
+                <ul className="divide-y">
+                  {rows.past.map((r) => (
+                    <PersonRow key={r.key} leagueId={leagueId} person={r} canEdit={isAdmin} />
                   ))}
-              </ul>
-              {members.data?.players.some((p) => !p.active) && (
-                <details className="mt-3 text-sm">
-                  <summary className="cursor-pointer text-muted-foreground">
-                    Past players ({members.data.players.filter((p) => !p.active).length})
-                  </summary>
-                  <ul className="divide-y">
-                    {members.data.players
-                      .filter((p) => !p.active)
-                      .map((p) => (
-                        <PlayerRow key={p.id} leagueId={leagueId} player={p} canEdit={isAdmin} />
-                      ))}
-                  </ul>
-                </details>
-              )}
-              {isAdmin && <AddPlayerForm leagueId={leagueId} />}
-            </CardContent>
-          )}
-        </Card>
-
-        {!guest && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Members</CardTitle>
-              <CardDescription>
-                People in this league.{' '}
-                {league.data.role === 'viewer'
-                  ? 'Contact details are for members only.'
-                  : "Members can see each other's contact details."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {members.data?.members.length === 0 && (
-                <p className="text-sm text-muted-foreground">Nobody has been added yet.</p>
-              )}
-              <ul className="divide-y">
-                {members.data?.members.map((m) => (
-                  <li
-                    key={m.userId}
-                    className="flex items-start justify-between gap-3 py-2.5 text-sm"
-                  >
-                    <div className="min-w-0">
-                      <div className="truncate font-medium">{m.name ?? (m.email || 'Member')}</div>
-                      {m.email && (
-                        <ContactLinks email={m.email} phone={m.phone} address={m.address} />
-                      )}
-                    </div>
-                    <Badge>{m.role === 'admin' ? 'Admin' : 'User'}</Badge>
-                  </li>
-                ))}
-              </ul>
-              {isAdmin && (
-                <AddMemberForm
-                  leagueId={leagueId}
-                  memberIds={members.data?.members.map((m) => m.userId) ?? []}
-                />
-              )}
-            </CardContent>
-          </Card>
+                </ul>
+              </details>
+            )}
+            {isAdmin && <AddPlayerForm leagueId={leagueId} />}
+            {isAdmin && (
+              <AddMemberForm
+                leagueId={leagueId}
+                memberIds={members.data?.members.map((m) => m.userId) ?? []}
+              />
+            )}
+          </CardContent>
         )}
-      </div>
+      </Card>
     </div>
+  );
+}
+
+type Member = Members['members'][number];
+
+/** One row per person: a player spot, the account behind it, or both. */
+interface Person {
+  key: string;
+  player: Player | null;
+  member: Member | null;
+}
+
+/** Joins spots to accounts: playing, accounts with no spot, and past players. */
+function people(data: Members): { playing: Person[]; notPlaying: Person[]; past: Person[] } {
+  const byUser = new Map(data.members.map((m) => [m.userId, m]));
+  const withSpot = data.players.map((p) => ({
+    key: p.id,
+    player: p,
+    member: p.userId ? (byUser.get(p.userId) ?? null) : null,
+  }));
+  const linked = new Set(data.players.map((p) => p.userId));
+  const accountOnly = data.members
+    .filter((m) => !linked.has(m.userId))
+    .map((m) => ({ key: m.userId, player: null, member: m }));
+  const label = (r: Person) =>
+    (r.player?.nickname ?? r.member?.name ?? r.member?.email ?? '').toLowerCase();
+  const sorted = (xs: Person[]) => xs.sort((a, b) => label(a).localeCompare(label(b)));
+  return {
+    playing: sorted(withSpot.filter((r) => r.player.active)),
+    notPlaying: sorted(accountOnly),
+    past: sorted(withSpot.filter((r) => !r.player.active)),
+  };
+}
+
+/** Playing (with handicap), not playing, or past: a dot and a word, never colour alone. */
+function Status({ person }: { person: Person }) {
+  const p = person.player;
+  const playing = p?.active ?? false;
+  const text = !p
+    ? 'Not playing'
+    : !p.active
+      ? 'Past'
+      : p.handicap === null
+        ? 'Playing · no HCP'
+        : `Playing · HCP ${p.handicap}`;
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs text-muted-foreground">
+      <span
+        className={cn('size-2 rounded-full', playing ? 'bg-primary' : 'bg-muted-foreground/40')}
+        aria-hidden
+      />
+      {text}
+    </span>
+  );
+}
+
+function PersonRow({
+  leagueId,
+  person,
+  canEdit,
+}: {
+  leagueId: string;
+  person: Person;
+  canEdit: boolean;
+}) {
+  if (person.player) {
+    return (
+      <PlayerRow
+        leagueId={leagueId}
+        player={person.player}
+        member={person.member}
+        canEdit={canEdit}
+      />
+    );
+  }
+  const m = person.member!;
+  return (
+    <li className="flex items-start gap-3 py-2.5 text-sm">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-x-2">
+          <span className="font-medium">{m.name ?? (m.email || 'Member')}</span>
+          {m.role === 'admin' && <Badge>Admin</Badge>}
+        </div>
+        {m.email && <ContactLinks email={m.email} phone={m.phone} address={m.address} />}
+      </div>
+      <Status person={person} />
+    </li>
   );
 }
 
 function PlayerRow({
   leagueId,
   player,
+  member,
   canEdit,
 }: {
   leagueId: string;
   player: Player;
+  /** The account behind the spot, if any. */
+  member: Member | null;
   canEdit: boolean;
 }) {
   const qc = useQueryClient();
@@ -318,25 +377,31 @@ function PlayerRow({
     );
   }
 
+  const secondary = player.fullName ?? member?.name ?? null;
   return (
-    <li className="flex items-center gap-3 py-2.5 text-sm">
+    <li className="flex items-start gap-3 py-2.5 text-sm">
       <div className="min-w-0 flex-1">
-        <Link
-          to={`/leagues/${leagueId}/players/${player.id}`}
-          className="font-medium hover:text-primary hover:underline"
-        >
-          {player.nickname}
-        </Link>
-        {player.fullName && (
-          <div className="truncate text-xs text-muted-foreground">{player.fullName}</div>
+        <div className="flex flex-wrap items-center gap-x-2">
+          <Link
+            to={`/leagues/${leagueId}/players/${player.id}`}
+            className="font-medium hover:text-primary hover:underline"
+          >
+            {player.nickname}
+          </Link>
+          {member?.role === 'admin' && <Badge>Admin</Badge>}
+          {/* Admins see who still needs an account (the history import made spots only). */}
+          {canEdit && !player.userId && player.active && (
+            <span className="text-xs text-muted-foreground">No account</span>
+          )}
+        </div>
+        {secondary && secondary !== player.nickname && (
+          <div className="truncate text-xs text-muted-foreground">{secondary}</div>
+        )}
+        {member?.email && (
+          <ContactLinks email={member.email} phone={member.phone} address={member.address} />
         )}
       </div>
-      <span className="w-14 text-right text-xs tabular-nums text-muted-foreground">
-        {player.handicap === null ? 'No HCP' : `HCP ${player.handicap}`}
-      </span>
-      {!player.userId && player.active && (
-        <span className="hidden text-xs text-muted-foreground sm:inline">Not signed up</span>
-      )}
+      <Status person={{ key: player.id, player, member }} />
       {canEdit && (
         <Button
           variant="ghost"

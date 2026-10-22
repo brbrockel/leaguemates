@@ -9,6 +9,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 - **Fix: updates and the icon reached phones late.** The CDN in front of the server was holding the service worker and icons for up to 4 hours. It is now told not to, and the in-app logo is built into the app so a new icon shows on the next load.
 - **Fix: the name in the top bar was cut off** on phones with a long league name; the league switcher shortens instead.
 - The hole-difficulty row on the scorecard, course pages and hole stats says **Hcp** (hole handicap), as on US cards, instead of SI; hover it for what it means.
+- **League page: one Members list.** Players and Members were two lists; now each person is one row: nickname (linking to their stats), full name, Admin badge, contact links, and a status: **Playing · HCP n**, **Not playing** (an account with no spot) or **Past**. On a computer it starts open; on a phone it stays folded, with "n playing · n not playing" in the heading.
 
 ## 1.2.0 (2026-10-21)
 
