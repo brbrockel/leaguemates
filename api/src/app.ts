@@ -70,10 +70,15 @@ function serveWebApp(app: NestExpressApplication, dir: string): void {
     expressStatic(dir, {
       index: false,
       setHeaders(res, path) {
-        res.setHeader(
-          'Cache-Control',
-          path.includes('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache',
-        );
+        if (path.includes('/assets/')) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        } else {
+          res.setHeader('Cache-Control', 'no-cache');
+          // Cloudflare caches .js, .svg, .png and .ico by extension regardless of
+          // Cache-Control, which held back sw.js (new versions) and the icons for hours.
+          // This header is for its edge only, and it honours it.
+          res.setHeader('Cloudflare-CDN-Cache-Control', 'no-store');
+        }
       },
     }),
   );

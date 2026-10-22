@@ -41,6 +41,9 @@ describe('serving the web app', () => {
     expect(asset.headers['cache-control']).toContain('immutable');
     const sw = await http().get('/sw.js').expect(200);
     expect(sw.headers['cache-control']).toBe('no-cache');
+    // The CDN must not hold the service worker either, or updates lag by hours.
+    expect(sw.headers['cloudflare-cdn-cache-control']).toBe('no-store');
+    expect(asset.headers['cloudflare-cdn-cache-control']).toBeUndefined();
   });
 
   it('never answers API paths with the web app', async () => {
