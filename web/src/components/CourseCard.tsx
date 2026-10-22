@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils';
 export interface PenLine {
   name: string;
   holeScores: (number | null)[];
+  /** Imported history: the total alone, when there are no hole scores to add up. */
+  total?: number | null;
   absent?: boolean;
 }
 
@@ -137,9 +139,9 @@ export function CourseCard({
                       </span>
                     ),
                   )}
-                {grid.total && !line.absent && played.length === n && (
+                {grid.total && !line.absent && (played.length === n || line.total != null) && (
                   <span style={at(own(gridOffset(grid, row, grid.total)))}>
-                    {played.reduce((t, s) => t + s, 0)}
+                    {played.length === n ? played.reduce((t, s) => t + s, 0) : line.total}
                   </span>
                 )}
               </div>
