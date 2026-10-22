@@ -80,7 +80,11 @@ export function AppLayout() {
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-40 border-b bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-4">
-          <NavLink to="/" className="flex items-center gap-2 font-semibold tracking-tight">
+          {/* The name never gives way: the league switcher truncates instead. */}
+          <NavLink
+            to="/"
+            className="flex shrink-0 items-center gap-2 whitespace-nowrap font-semibold tracking-tight"
+          >
             <Logo className="size-7" />
             <span>LeagueMates</span>
           </NavLink>
@@ -103,14 +107,14 @@ export function AppLayout() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex min-w-0 items-center gap-2">
             {me.leagues.length > 1 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="max-w-[48vw] sm:max-w-xs"
+                    className="min-w-0 max-w-[40vw] sm:max-w-xs"
                     aria-label="Switch league"
                   >
                     <span className="truncate">{current?.name ?? 'League'}</span>
