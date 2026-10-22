@@ -3,7 +3,7 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
-## Unreleased
+## 1.3.0 (2026-10-22)
 
 - **New icon.** An L and M monogram: the L's stem is the flagpole, flying a waving swallowtail pennant, on the same green. The home-screen icon on iPhone no longer has a white border, and Android's round or squircle icon is cut from a green ground instead of white.
 - **Fix: updates and the icon reached phones late.** The CDN in front of the server was holding the service worker and icons for up to 4 hours. It is now told not to, and the in-app logo is built into the app so a new icon shows on the next load.

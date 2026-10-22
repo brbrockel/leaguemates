@@ -11,7 +11,7 @@ describe('report a problem', () => {
     });
     renderAt('/');
     await userEvent.click(await screen.findByRole('button', { name: 'Account menu' }));
-    expect(await screen.findByText('LeagueMates 1.2.0 (dev)')).toBeInTheDocument();
+    expect(await screen.findByText('LeagueMates 1.3.0 (dev)')).toBeInTheDocument();
   });
 
   it('sends a report from the profile menu with the current page', async () => {
