@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- LeagueMates: L and M, the L's stem rising into a flagpole with a waving swallowtail pennant. -->
   <rect width="512" height="512" rx="112" fill="#15803d"/>
-  <ellipse cx="256" cy="392" rx="132" ry="34" fill="#166534"/>
-  <rect x="244" y="104" width="22" height="292" rx="11" fill="#ffffff"/>
-  <path d="M266 112 L392 160 L266 208 Z" fill="#facc15"/>
-  <circle cx="190" cy="372" r="30" fill="#ffffff"/>
+  <path d="M96 94 a6 6 0 0 1 6 -6 h28 a6 6 0 0 1 6 6 V376 H196 V416 H96 Z" fill="#ffffff"/>
+  <path d="M136 98 C 180 70, 230 140, 290 120 C 340 104, 380 112, 416 114 L 376 142 L 416 170 C 380 168, 340 160, 290 176 C 230 196, 180 126, 136 154 Z" fill="#facc15"/>
+  <path d="M216 416 V202 H256 L316 330 L376 202 H416 V416 H376 V274 L336 360 H296 L256 274 V416 Z" fill="#ffffff"/>
 </svg>
