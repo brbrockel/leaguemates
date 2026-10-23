@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Camera } from 'lucide-react';
-import { useRef, type MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { useNavigate } from 'react-router';
+import { PhotoPicker } from '@/components/PhotoPicker';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -48,7 +48,6 @@ export function ScanCardButton({
   label?: string;
 }) {
   const navigate = useNavigate();
-  const input = useRef<HTMLInputElement>(null);
   const to = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}/groups/${groupId}`;
   const scan = useMutation({
     mutationFn: (file: File) => {
@@ -62,28 +61,15 @@ export function ScanCardButton({
 
   return (
     <span onClick={stop} className={cn('inline-flex flex-col items-start gap-1', className)}>
-      <Button
-        type="button"
+      <PhotoPicker
         size="sm"
-        variant="outline"
-        disabled={scan.isPending}
-        onClick={() => input.current?.click()}
-      >
-        <Camera /> {scan.isPending ? 'Reading…' : label}
-      </Button>
-      {scan.isError && <span className="text-xs text-destructive">{scan.error.message}</span>}
-      <input
-        ref={input}
-        type="file"
-        accept="image/*"
-        data-card-scan
-        hidden
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          e.target.value = '';
-          if (f) scan.mutate(f);
-        }}
+        label={label}
+        pending={scan.isPending}
+        pendingLabel="Reading…"
+        onFiles={([f]) => scan.mutate(f!)}
+        inputProps={{ 'data-card-scan': true } as object}
       />
+      {scan.isError && <span className="text-xs text-destructive">{scan.error.message}</span>}
     </span>
   );
 }
@@ -113,7 +99,6 @@ export function RoundScanButton({
   groupLabel: (groupId: string) => string;
 }) {
   const navigate = useNavigate();
-  const input = useRef<HTMLInputElement>(null);
   const base = `/leagues/${leagueId}/seasons/${seasonId}/weeks/${weekId}`;
   const qc = useQueryClient();
   // The card shows two matches that were regrouped at the course: do the same here, then
@@ -152,28 +137,15 @@ export function RoundScanButton({
 
   return (
     <div className="flex flex-col gap-2">
-      <Button
-        type="button"
+      <PhotoPicker
         size="sm"
-        variant="outline"
         className="w-fit"
-        disabled={scan.isPending}
-        onClick={() => input.current?.click()}
-      >
-        <Camera /> {scan.isPending ? 'Reading cards…' : 'Scan cards'}
-      </Button>
-      <input
-        ref={input}
-        type="file"
-        accept="image/*"
+        label="Scan cards"
+        pending={scan.isPending}
+        pendingLabel="Reading cards…"
         multiple
-        hidden
-        data-round-scan
-        onChange={(e) => {
-          const files = [...(e.target.files ?? [])];
-          e.target.value = '';
-          if (files.length) scan.mutate(files);
-        }}
+        onFiles={(files) => scan.mutate(files)}
+        inputProps={{ 'data-round-scan': true } as object}
       />
       {scan.isError && <span className="text-xs text-destructive">{scan.error.message}</span>}
       {together.isError && (

@@ -3,6 +3,10 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
+## Unreleased
+
+- **Fix: taking a photo on a phone.** The installed app’s picture chooser on Android stopped offering the camera, leaving only the gallery. Every photo button (scan a card, scan cards, add photos, add a card picture) now opens the camera straight away on a phone, with **From photos** beside it for the gallery; on a computer it opens the file dialog as before.
+
 ## 1.3.0 (2026-10-22)
 
 - **New icon.** An L and M monogram: the L's stem is the flagpole, flying a waving swallowtail pennant, on the same green. The home-screen icon on iPhone no longer has a white border, and Android's round or squircle icon is cut from a green ground instead of white.
