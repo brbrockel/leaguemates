@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { Camera, ScanLine } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { ScanLine } from 'lucide-react';
+import { useState } from 'react';
 import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { PhotoPicker } from '@/components/PhotoPicker';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select } from '@/components/ui/input';
 import { api } from '@/lib/api';
@@ -41,7 +41,6 @@ const OMIT = '';
  * row out) and fix any score it misread. Nothing is saved.
  */
 export function PracticeScanCard() {
-  const input = useRef<HTMLInputElement>(null);
   const [rows, setRows] = useState<Row[]>([]);
   const scan = useMutation({
     mutationFn: (file: File) => {
@@ -87,26 +86,12 @@ export function PracticeScanCard() {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <div>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={scan.isPending}
-            onClick={() => input.current?.click()}
-          >
-            <Camera />{' '}
-            {scan.isPending ? 'Reading the card…' : r ? 'Try another card' : 'Scan a card'}
-          </Button>
-          <input
-            ref={input}
-            type="file"
-            accept="image/*"
-            aria-label="Card photo"
-            hidden
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              e.target.value = '';
-              if (f) scan.mutate(f);
-            }}
+          <PhotoPicker
+            label={r ? 'Try another card' : 'Scan a card'}
+            pending={scan.isPending}
+            pendingLabel="Reading the card…"
+            onFiles={([f]) => scan.mutate(f!)}
+            inputProps={{ 'aria-label': 'Card photo' }}
           />
         </div>
         {scan.isError && <Alert variant="destructive">{scan.error.message}</Alert>}

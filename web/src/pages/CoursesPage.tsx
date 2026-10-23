@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
-  Camera,
   Check,
   ChevronRight,
   Lock,
@@ -11,12 +10,13 @@ import {
   Trash2,
   ScrollText,
 } from 'lucide-react';
-import { useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useMe } from '@/auth/session';
 import { CardGridSetup } from '@/components/CardGridSetup';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { PhotoPicker } from '@/components/PhotoPicker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
@@ -649,7 +649,6 @@ function LayoutForm({
 /** Pictures of the course's printed scorecard; tap one to open it full size. */
 function CardImages({ course, canEdit }: { course: Course; canEdit: boolean }) {
   const qc = useQueryClient();
-  const input = useRef<HTMLInputElement>(null);
   const done = (c: Course) =>
     qc.setQueryData<Course[]>(COURSES_KEY, (cs) => cs?.map((x) => (x.id === c.id ? c : x)));
   const add = useMutation({
@@ -676,24 +675,11 @@ function CardImages({ course, canEdit }: { course: Course; canEdit: boolean }) {
         </div>
         {canEdit && (
           <>
-            <Button
+            <PhotoPicker
               size="sm"
-              variant="outline"
-              disabled={add.isPending}
-              onClick={() => input.current?.click()}
-            >
-              <Camera /> {add.isPending ? 'Uploading…' : 'Add a picture'}
-            </Button>
-            <input
-              ref={input}
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                e.target.value = '';
-                if (f) add.mutate(f);
-              }}
+              label="Add a picture"
+              pending={add.isPending}
+              onFiles={([f]) => add.mutate(f!)}
             />
           </>
         )}

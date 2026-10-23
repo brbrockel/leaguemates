@@ -3,7 +3,6 @@ import { scoreMatch, type Layout } from '@teemate/shared';
 import {
   AlertTriangle,
   ArrowLeft,
-  Camera,
   Check,
   Flag,
   History,
@@ -21,6 +20,7 @@ import { cardImageSrc } from '@/components/CourseCard';
 import type { CardReading, ScanResult } from '@/components/ScanCardButton';
 import { Alert } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { PhotoPicker } from '@/components/PhotoPicker';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -1172,7 +1172,6 @@ function ScanCard({
   /** A scan made before opening the card (from the schedule or Home). */
   initial?: ScanResult | null;
 }) {
-  const input = useRef<HTMLInputElement>(null);
   const scan = useMutation({
     mutationFn: (file: File) => {
       const body = new FormData();
@@ -1245,25 +1244,17 @@ function ScanCard({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant="outline" disabled={scan.isPending} onClick={() => input.current?.click()}>
-          <Camera /> {scan.isPending ? 'Reading the card…' : 'Scan the foursome’s card'}
-        </Button>
+        <PhotoPicker
+          label="Scan the foursome’s card"
+          pending={scan.isPending}
+          pendingLabel="Reading the card…"
+          onFiles={([f]) => scan.mutate(f!)}
+          inputProps={{ 'data-card-scan': true } as object}
+        />
         <span className="text-xs text-muted-foreground">
           Take a photo or choose one: a single picture of the foursome’s card fills in all four
           players for you to check. Only one person needs to do this.
         </span>
-        <input
-          ref={input}
-          type="file"
-          accept="image/*"
-          data-card-scan
-          hidden
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            e.target.value = '';
-            if (f) scan.mutate(f);
-          }}
-        />
       </div>
       {scan.isError && <Alert variant="destructive">{scan.error.message}</Alert>}
       {r && (

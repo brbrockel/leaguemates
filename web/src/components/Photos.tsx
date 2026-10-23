@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Camera, Check, ChevronLeft, ChevronRight, Crop, ImageIcon, Trash2, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useIsGuest, useMe } from '@/auth/session';
 import { CoverCropEditor, CroppedPhoto } from '@/components/CoverCrop';
+import { PhotoPicker } from '@/components/PhotoPicker';
 import { api, type CoverCrop, type PhotoView } from '@/lib/api';
 import { formatDay, timeAgo } from '@/lib/time';
 
@@ -53,7 +54,6 @@ export function PhotosCard({
     queryFn: () => api<PhotoView[]>(`/leagues/${leagueId}/photos${filter}`),
     enabled: !guest,
   });
-  const input = useRef<HTMLInputElement>(null);
   const [viewing, setViewing] = useState<number | null>(null);
 
   const upload = useMutation({
@@ -98,22 +98,15 @@ export function PhotosCard({
           </CardDescription>
         </div>
         {kind === 'photo' && (
-          <Button size="sm" disabled={upload.isPending} onClick={() => input.current?.click()}>
-            <Camera /> {upload.isPending ? 'Uploading…' : 'Add photos'}
-          </Button>
+          <PhotoPicker
+            size="sm"
+            variant="default"
+            label="Add photos"
+            pending={upload.isPending}
+            multiple
+            onFiles={(files) => upload.mutate(files)}
+          />
         )}
-        <input
-          ref={input}
-          type="file"
-          accept="image/*"
-          multiple
-          hidden
-          onChange={(e) => {
-            const files = [...(e.target.files ?? [])];
-            e.target.value = '';
-            if (files.length) upload.mutate(files);
-          }}
-        />
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {upload.isError && <Alert variant="destructive">{upload.error.message}</Alert>}
