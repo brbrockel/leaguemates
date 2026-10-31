@@ -13,7 +13,7 @@ import {
   withDefaults,
   type LeagueSettings,
   type ScheduledWeek,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import { and, asc, desc, eq, gte, inArray, isNull, ne, sql } from 'drizzle-orm';
 import { randomInt } from 'node:crypto';
 import { AnnouncementsService } from '../announcements/announcements.js';

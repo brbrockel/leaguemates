@@ -16,7 +16,7 @@ const FOLDER_NAME = 'LeagueMates Golf League Export';
 const EXTENSIONS = ['xlsx', 'xlsm', 'xls', 'csv', 'ods', 'pdf'];
 const THREADS_PER_BATCH = 50;
 const RUN_BUDGET_MS = 5 * 60 * 1000; // Apps Script stops a run after 6 minutes
-const START_KEY = 'teemate_export_start';
+const START_KEY = 'leaguemates_export_start';
 
 function exportGolfLeagueAttachments() {
   const label = GmailApp.getUserLabelByName(LABEL);

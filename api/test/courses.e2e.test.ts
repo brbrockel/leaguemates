@@ -18,7 +18,7 @@ let site: SignedIn;
 let dir: string;
 
 beforeAll(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'teemate-courses-'));
+  dir = await mkdtemp(join(tmpdir(), 'leaguemates-courses-'));
   t = await createTestApp({ PHOTOS_DIR: dir });
 });
 afterAll(async () => {

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CARD_GRID_MAX_ROWS, type CardGrid, type GridPoint } from '@teemate/shared';
+import { CARD_GRID_MAX_ROWS, type CardGrid, type GridPoint } from '@leaguemates/shared';
 import { Minus, Plus, RotateCcw, Save, SkipForward, Trash2, Undo2 } from 'lucide-react';
 import { useState, type MouseEvent } from 'react';
 import { Alert } from '@/components/ui/alert';

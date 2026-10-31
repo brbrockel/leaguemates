@@ -5,6 +5,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 ## Unreleased
 
+- **Everyone signs in once more.** Internal names were cleaned up, so existing sign-ins end, and this browser's saved preferences and any scores typed but not saved are reset. The previous web address no longer works; use https://leaguemates.bhbslp.org.
 - **Fix: taking a photo on a phone.** The installed app’s picture chooser on Android stopped offering the camera, leaving only the gallery. Every photo button (scan a card, scan cards, add photos, add a card picture) now opens the camera straight away on a phone, with **From photos** beside it for the gallery; on a computer it opens the file dialog as before.
 
 ## 1.3.0 (2026-10-22)
@@ -20,14 +21,14 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 ## 1.2.0 (2026-10-21)
 
-- **New address: leaguemates.bhbslp.org.** The old teemate.bhbslp.org address forwards there, links already sent keep working, and an app installed from the old address moves itself over. Sign in once on the new address and add it to the home screen again.
-- **TeeMate is now LeagueMates.** The new name is on every page, the home screen icon, emails, texts and notifications. The address and sign-ins stay the same.
+- **New address: leaguemates.bhbslp.org.** The previous address forwards there, links already sent keep working, and an app installed from it moves itself over. Sign in once on the new address and add it to the home screen again.
+- **New name: LeagueMates.** The name is on every page, the home screen icon, emails, texts and notifications. The address and sign-ins stay the same.
 - **Virtual scorecard** (EH-019): a button on the scorecard shows the round drawn as a paper card, with the course's yardage, par and handicap rows, birdies and eagles circled, bogeys boxed. **Share image** sends it from a phone (Messages, email, …); elsewhere **Save image** downloads it.
 - **Course cards:** a site admin marks where the scores go on a picture of the club's card (a few taps per nine, with a preview); the virtual scorecard then writes the round on the real card in pen, with a switch to the drawn card.
 - **Fold-over cards:** a nine printed on a flap with no name column (Timberlin's back nine) takes the name column from another nine's card, shown beside it as when the card is folded.
 - **Download image** beside **Share image**, so a phone can save the card as well as send it.
 - The card's legend explains the eagle's double circle when the card has one.
-- **Fix: unsaved scores were lost when the app reloaded.** TeeMate updated itself by reloading the page, and phones also reload apps left in the background, wiping scores typed but not saved. Unsaved scores are now kept on the device and brought back (with **Discard** to drop them); leaving the page with unsaved scores asks first; and an update no longer reloads the app: **A new version of TeeMate is ready → Reload** lets you choose when.
+- **Fix: unsaved scores were lost when the app reloaded.** LeagueMates updated itself by reloading the page, and phones also reload apps left in the background, wiping scores typed but not saved. Unsaved scores are now kept on the device and brought back (with **Discard** to drop them); leaving the page with unsaved scores asks first; and an update no longer reloads the app: **A new version of LeagueMates is ready → Reload** lets you choose when.
 - **Fix: correcting a submitted card on a phone.** The reason box and any save error sat below the card, hidden under the Save bar, so Save seemed to do nothing. Both are now in the bar, and Save waits until a reason is given.
 - **Errors go to the problem:** Submit with an empty hole (or a missing handicap or reason) says what's missing in the Save bar, scrolls to it and puts the cursor there, outlining every empty hole; nothing is sent until it's fixed. A refusal from the server does the same where the form can tell what it's about.
 - **Frame the season photo:** on a season's banner, admins tap **Adjust**, zoom and drag so the people fill a wide banner. The photo itself isn't changed; **Show the whole photo** undoes it, and choosing a different photo starts unframed.
@@ -37,12 +38,12 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 - **Notices panel:** opening it no longer marks everything read; ✓ marks one, **Mark all read** marks them all.
 - **Notice emails:** rainouts and skipped rounds are emailed to the league; each person can turn notice emails off on Account.
-- **Push notifications** (EH-013 done): turned on per phone or computer on Account. Rainouts and skips, admin notices, your foursome's news (who can't make it, a card to check) and TeeMate's notices. Never for your own actions.
+- **Push notifications** (EH-013 done): turned on per phone or computer on Account. Rainouts and skips, admin notices, your foursome's news (who can't make it, a card to check) and LeagueMates's notices. Never for your own actions.
 
 ## 1.0.0 (2026-10-17)
 
-The first release. TeeMate replaces the league spreadsheet, and the homelab deployment at
-https://teemate.bhbslp.org is now production.
+The first release. LeagueMates replaces the league spreadsheet, and the homelab deployment at
+https://leaguemates.bhbslp.org is now production.
 
 - **Accounts and leagues:** passwords with admin-sent sign-in links, lockouts and optional
   authenticator codes; several leagues with Admin and User roles, private or public; a

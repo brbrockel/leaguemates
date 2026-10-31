@@ -23,7 +23,7 @@ export function configureApp(app: INestApplication, config: Config): void {
 }
 
 /**
- * The app's old addresses (TeeMate's) send everything to APP_URL. Phones that installed the
+ * The app's old addresses (MOVED_FROM) send everything to APP_URL. Phones that installed the
  * app there keep a service worker serving a cached copy, which a redirect can't replace, so
  * the old address's /sw.js is one that clears that copy, removes itself and opens the new
  * address.

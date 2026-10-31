@@ -2,7 +2,7 @@
 
 Export the history league's rounds first (dev database):
 
-  docker exec teemate-dev-postgres-1 psql -U teemate -d teemate -AtF, -c "
+  docker exec leaguemates-dev-postgres-1 psql -U leaguemates -d leaguemates -AtF, -c "
     select p.display_name, s.name, w.date, w.round, coalesce(w.playoff_round,0), cr.handicap,
            cr.attendance, cr.gross
     from card_rounds cr join scorecards sc on sc.id=cr.scorecard_id join groups g on g.id=sc.group_id

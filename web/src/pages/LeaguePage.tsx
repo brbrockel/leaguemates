@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { defaultNickname } from '@teemate/shared';
+import { defaultNickname } from '@leaguemates/shared';
 import {
   BarChart3,
   Calculator,

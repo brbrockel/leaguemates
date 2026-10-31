@@ -14,7 +14,7 @@ import {
   type Layout,
   type LeagueSettings,
   type Outcome,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import { and, asc, eq, inArray, ne } from 'drizzle-orm';
 import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';

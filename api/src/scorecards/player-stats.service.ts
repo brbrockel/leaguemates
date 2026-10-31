@@ -5,7 +5,7 @@ import {
   type Layout,
   type LeagueSettings,
   type Outcome,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import { and, desc, eq, inArray, ne, or } from 'drizzle-orm';
 import { DB, type Database } from '../db/db.js';
 import {

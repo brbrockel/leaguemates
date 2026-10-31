@@ -34,15 +34,15 @@ export const GUEST_USER: SessionUser = {
 
 export type AuthedRequest = Request & { user?: SessionUser };
 
-export const IS_PUBLIC = 'teemate:public';
+export const IS_PUBLIC = 'leaguemates:public';
 /** Route needs no session. */
 export const Public = () => SetMetadata(IS_PUBLIC, true);
 
-export const SITE_ADMIN = 'teemate:site-admin';
+export const SITE_ADMIN = 'leaguemates:site-admin';
 /** Route is limited to site admins. */
 export const SiteAdminOnly = () => SetMetadata(SITE_ADMIN, true);
 
-export const GUEST_OK = 'teemate:guest-ok';
+export const GUEST_OK = 'leaguemates:guest-ok';
 /**
  * Guests may use this route. Everything else is closed to them, so a new route never shows
  * guests anything by accident. Routes marked here must leave out personal details for guests.

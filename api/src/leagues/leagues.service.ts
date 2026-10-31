@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { and, asc, desc, eq, isNull } from 'drizzle-orm';
-import { withDefaults, type LeagueSettings, defaultNickname } from '@teemate/shared';
+import { withDefaults, type LeagueSettings, defaultNickname } from '@leaguemates/shared';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';
 import { MembershipService, type LeagueRole } from '../auth/membership.service.js';

@@ -102,7 +102,7 @@ Out:
   2. If the email belongs to an invited or existing user, the server creates a random 32-byte token, stores its SHA-256 hash with a 15-minute expiry, and emails the link.
   3. `GET /api/auth/magic-link/verify?token=...` uses the token (once only), creates a session and redirects to the app.
 - **Google:** OIDC with state and nonce cookies, ported from RigTracker. Only an email that matches an invite or existing user can sign in.
-- **Sessions:** a random ID stored in Postgres. The cookie is `teemate_session`: httpOnly, Secure, SameSite=Lax, 30 days.
+- **Sessions:** a random ID stored in Postgres. The cookie is `leaguemates_session`: httpOnly, Secure, SameSite=Lax, 30 days.
 - **Invites:** a commissioner invites an email to a league. Accepting the invite creates the user and the league membership.
 - **Protections:** rate limits on magic-link requests (per email and per IP) and on verification attempts. CSRF tokens on all state-changing routes.
 - **Email:** sent through Gmail SMTP (`smtp.gmail.com:465`) from a dedicated league Gmail account using an App Password. Code calls a `Mailer` interface, so Resend or SES can replace Gmail later.

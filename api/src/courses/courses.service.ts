@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { createReadStream } from 'node:fs';
 import { StreamableFile } from '@nestjs/common';
-import type { CardGrid } from '@teemate/shared';
+import type { CardGrid } from '@leaguemates/shared';
 import { and, asc, desc, eq, ne, sql } from 'drizzle-orm';
 import type { SessionUser } from '../auth/decorators.js';
 import { AuditService } from '../audit/audit.js';

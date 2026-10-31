@@ -1,6 +1,6 @@
 /** Testing-mode conveniences remembered on this device only. */
-const CODE_KEY = 'teemate-test-code';
-const EMAILS_KEY = 'teemate-test-emails';
+const CODE_KEY = 'leaguemates-test-code';
+const EMAILS_KEY = 'leaguemates-test-emails';
 
 function read(key: string): string | null {
   try {

@@ -1,4 +1,4 @@
-import { foldOver, gridBox, type CardGrid } from '@teemate/shared';
+import { foldOver, gridBox, type CardGrid } from '@leaguemates/shared';
 import { Download, Share2 } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type Ref } from 'react';
 import { CourseCard } from '@/components/CourseCard';

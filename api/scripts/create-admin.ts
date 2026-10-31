@@ -2,7 +2,7 @@
  * Creates (or promotes) a site admin. Accounts are invite-only, so this is
  * how the first person gets in; they then sign in with a magic link.
  *
- *   pnpm --filter @teemate/api admin:create you@example.com ["Your Name"]
+ *   pnpm --filter @leaguemates/api admin:create you@example.com ["Your Name"]
  */
 import { eq } from 'drizzle-orm';
 import { normalizeEmail } from '../src/auth/tokens.js';

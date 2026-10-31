@@ -40,7 +40,7 @@ export function useMarkNotices(leagueId: string | undefined) {
 }
 
 /** Guests can't keep anything on the server: the site banners they close are kept here. */
-const GUEST_KEY = 'teemate.siteNotices.dismissed';
+const GUEST_KEY = 'leaguemates.siteNotices.dismissed';
 function guestDismissed(): string[] {
   try {
     return JSON.parse(localStorage.getItem(GUEST_KEY) ?? '[]') as string[];

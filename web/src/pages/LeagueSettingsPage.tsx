@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { LeagueSettings } from '@teemate/shared';
+import type { LeagueSettings } from '@leaguemates/shared';
 import { ArrowLeft, Check, Save } from 'lucide-react';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';

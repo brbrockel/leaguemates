@@ -4,9 +4,10 @@ import { defineConfig } from 'vitest/config';
 const env = {
   NODE_ENV: 'test',
   DATABASE_URL:
-    process.env.TEST_DATABASE_URL ?? 'postgres://teemate:teemate@localhost:15432/teemate_test',
+    process.env.TEST_DATABASE_URL ??
+    'postgres://leaguemates:leaguemates@localhost:15432/leaguemates_test',
   APP_URL: 'http://localhost:4101',
-  MAIL_FROM: 'LeagueMates <teemate@test>',
+  MAIL_FROM: 'LeagueMates <leaguemates@test>',
 };
 // Global setup runs in this process, before `test.env` reaches the workers.
 Object.assign(process.env, env);

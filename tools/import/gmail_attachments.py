@@ -5,7 +5,7 @@ Two sources:
 
   imap  Download directly from Gmail using an app password (fastest):
           python3 -I tools/import/gmail_attachments.py imap you@gmail.com ../leaguemates-data/history
-        The app password is read from TEEMATE_GMAIL_APP_PASSWORD or prompted for.
+        The app password is read from LEAGUEMATES_GMAIL_APP_PASSWORD or prompted for.
         Mailbox access is read-only.
 
   mbox  Extract from a Google Takeout .mbox export:
@@ -107,7 +107,7 @@ def from_mbox(args, sink):
 
 
 def from_imap(args, sink):
-    password = os.environ.get("TEEMATE_GMAIL_APP_PASSWORD") or getpass.getpass("Gmail app password: ")
+    password = os.environ.get("LEAGUEMATES_GMAIL_APP_PASSWORD") or getpass.getpass("Gmail app password: ")
     password = password.replace(" ", "")  # Google displays app passwords in groups of four
 
     with imaplib.IMAP4_SSL("imap.gmail.com") as imap:

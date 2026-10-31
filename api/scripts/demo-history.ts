@@ -14,7 +14,7 @@
  */
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { createRng } from '@teemate/shared';
+import { createRng } from '@leaguemates/shared';
 import { and, eq, gte, inArray, isNotNull } from 'drizzle-orm';
 import { AppModule } from '../src/app.module.js';
 import type { SessionUser } from '../src/auth/decorators.js';

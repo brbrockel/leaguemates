@@ -220,7 +220,7 @@ describe('roster sign-in links', () => {
       return {
         status: 201,
         body: {
-          link: 'https://teemate.test/set-password#token=abc',
+          link: 'https://leaguemates.test/set-password#token=abc',
           phone: '+18605551234',
           hours: 72,
           greeting: 'Brian',
@@ -271,7 +271,7 @@ describe('roster sign-in links', () => {
     const href = send.getAttribute('href')!;
     expect(href).toMatch(/^sms:\+18605551234[?&]body=/);
     expect(decodeURIComponent(href)).toContain(
-      "Hi Brian, here's your LeagueMates sign-in link. Set your password and you're in: https://teemate.test/set-password#token=abc",
+      "Hi Brian, here's your LeagueMates sign-in link. Set your password and you're in: https://leaguemates.test/set-password#token=abc",
     );
     expect(posts).toEqual(['text']);
   });

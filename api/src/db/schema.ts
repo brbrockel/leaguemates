@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import type { CardGrid } from '@teemate/shared';
+import type { CardGrid } from '@leaguemates/shared';
 import {
   type AnyPgColumn,
   bigserial,
@@ -111,7 +111,7 @@ export const leagues = pgTable('leagues', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
-  /** Points, handicap, absence, tee-time and playoff rules (typed in @teemate/shared later). */
+  /** Points, handicap, absence, tee-time and playoff rules (typed in @leaguemates/shared later). */
   settings: jsonb('settings').notNull().default({}),
   /** private: only members see it. public: anyone signed in can view it (read-only). */
   visibility: text('visibility', { enum: ['private', 'public'] })

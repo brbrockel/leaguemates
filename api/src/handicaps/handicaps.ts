@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { computeHandicap, withDefaults, type LeagueSettings } from '@teemate/shared';
+import { computeHandicap, withDefaults, type LeagueSettings } from '@leaguemates/shared';
 import { and, asc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { AuditService } from '../audit/audit.js';

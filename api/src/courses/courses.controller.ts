@@ -12,7 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CARD_GRID_MAX_ROWS } from '@teemate/shared';
+import { CARD_GRID_MAX_ROWS } from '@leaguemates/shared';
 import { z } from 'zod';
 import { CurrentUser, GuestOk, SiteAdminOnly, type SessionUser } from '../auth/decorators.js';
 import { ZodPipe } from '../common/validation.js';

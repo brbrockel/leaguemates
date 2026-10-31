@@ -1,5 +1,11 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { addDays, teeTime, withDefaults, type Layout, type LeagueSettings } from '@teemate/shared';
+import {
+  addDays,
+  teeTime,
+  withDefaults,
+  type Layout,
+  type LeagueSettings,
+} from '@leaguemates/shared';
 import { and, asc, desc, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
 import { AnnouncementsService } from '../announcements/announcements.js';
 import { AuditService } from '../audit/audit.js';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** Validation for league settings updates (shape: LeagueSettings in @teemate/shared). */
+/** Validation for league settings updates (shape: LeagueSettings in @leaguemates/shared). */
 export const LeagueSettingsInput = z.object({
   points: z.object({
     win: z.number().int().min(0).max(10),
