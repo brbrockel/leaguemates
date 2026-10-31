@@ -1,7 +1,7 @@
 import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type { CardGrid } from '@teemate/shared';
+import type { CardGrid } from '@leaguemates/shared';
 import type { ScorecardView } from '@/lib/api';
 import { me, mockApi, renderAt } from './render';
 
@@ -299,12 +299,12 @@ describe('scorecard entry', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Discard' }));
     expect(screen.getByLabelText('Jerry hole 1')).toHaveValue('');
     expect(screen.queryByText(/brought back/)).toBeNull();
-    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
+    expect(localStorage.getItem(`leaguemates.card-draft.${G}`)).toBeNull();
   });
 
   it('drops kept edits once someone else has saved the card', async () => {
     localStorage.setItem(
-      `teemate.card-draft.${G}`,
+      `leaguemates.card-draft.${G}`,
       JSON.stringify({
         version: 1,
         layoutId: 'front',
@@ -337,7 +337,7 @@ describe('scorecard entry', () => {
     await screen.findByText('Round 1 scorecard');
     expect(screen.queryByText(/brought back/)).toBeNull();
     expect(screen.getByLabelText('Jerry hole 1')).toHaveValue('');
-    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
+    expect(localStorage.getItem(`leaguemates.card-draft.${G}`)).toBeNull();
   });
 
   it('an admin correcting a final card gives the reason beside Save', async () => {
@@ -484,7 +484,7 @@ describe('scorecard entry', () => {
     await fillAll('Jerry', '5', 10);
     await fillAll('Brian', '6', 10);
     // Kept on the device while unsaved...
-    expect(localStorage.getItem(`teemate.card-draft.${G}`)).not.toBeNull();
+    expect(localStorage.getItem(`leaguemates.card-draft.${G}`)).not.toBeNull();
     await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
     expect(await screen.findByRole('button', { name: /Dispute/ })).toBeInTheDocument();
     expect(bodies[0]).toMatchObject({
@@ -496,7 +496,7 @@ describe('scorecard entry', () => {
     });
     expect(calls.map((c) => c.key)).toContain(`POST ${PATH}/submit`);
     // ...and gone once saved.
-    expect(localStorage.getItem(`teemate.card-draft.${G}`)).toBeNull();
+    expect(localStorage.getItem(`leaguemates.card-draft.${G}`)).toBeNull();
   });
 
   it('read-only for people outside the group', async () => {

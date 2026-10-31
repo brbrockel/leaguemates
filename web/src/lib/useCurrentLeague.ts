@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useMe } from '@/auth/session';
 
-const KEY = 'teemate-league';
+const KEY = 'leaguemates-league';
 
 function readStored(): string | null {
   try {

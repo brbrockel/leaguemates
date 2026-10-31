@@ -8,7 +8,7 @@ import {
   type LeagueSettings,
   type PlayoffDecision,
   type SeededPlayer,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import { isComplete, type RoundData } from '../scorecards/results.js';
 
 export interface PlayoffMatchRef {

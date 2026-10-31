@@ -1,5 +1,5 @@
 {
-  "name": "@teemate/api",
+  "name": "@leaguemates/api",
   "version": "1.3.0",
   "private": true,
   "scripts": {
@@ -26,7 +26,7 @@
     "@nestjs/platform-express": "^12.1.3",
     "@nestjs/throttler": "^6.7.1",
     "@node-rs/argon2": "^2.2.2",
-    "@teemate/shared": "workspace:*",
+    "@leaguemates/shared": "workspace:*",
     "@tesseract.js-data/eng": "^1.0.0",
     "cookie-parser": "^1.4.7",
     "drizzle-orm": "^0.45.4",

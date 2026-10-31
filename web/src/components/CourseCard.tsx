@@ -6,7 +6,7 @@ import {
   gridOffset,
   type CardGrid,
   type GridPoint,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 import { cn } from '@/lib/utils';
 

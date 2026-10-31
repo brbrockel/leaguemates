@@ -1,7 +1,7 @@
 /**
  * Adds a picture of a course's printed scorecard, e.g. the club's published card:
  *
- *   pnpm --filter @teemate/api course-image "Timberlin Golf Club" front.jpg back.jpg
+ *   pnpm --filter @leaguemates/api course-image "Timberlin Golf Club" front.jpg back.jpg
  *   docker exec <container> node dist/scripts/add-course-image.js "Timberlin Golf Club" /tmp/card.jpg
  */
 import { readFile } from 'node:fs/promises';

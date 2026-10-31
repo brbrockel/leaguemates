@@ -26,7 +26,7 @@ A forgotten password works the same way: an admin gets a **password reset link**
 The first site admin on a new server, or anyone if every admin is locked out:
 
 ```bash
-docker exec $(docker ps -qf name=teemate_teemate) node dist/scripts/sign-in-link.js you@example.com
+docker exec $(docker ps -qf name=leaguemates_leaguemates) node dist/scripts/sign-in-link.js you@example.com
 ```
 
 ## Guessing and lockouts
@@ -66,7 +66,7 @@ Every change is recorded: who did it, when, what it was before and after, and a 
 
 ## Scorecard photos
 
-**Scan paper card** sends the photo of a filled-in card to Anthropic's API (Claude) to read the scores; the owner agreed to this. Anthropic doesn't train models on API data. The key is the Docker secret `teemate_anthropic_api_key`. Without a key, or if the call fails, cards are read on the server with tesseract.js, and nothing leaves the homelab. Card photos are stored like match photos: re-encoded without metadata, and members only.
+**Scan paper card** sends the photo of a filled-in card to Anthropic's API (Claude) to read the scores; the owner agreed to this. Anthropic doesn't train models on API data. The key is the Docker secret `leaguemates_anthropic_api_key`. Without a key, or if the call fails, cards are read on the server with tesseract.js, and nothing leaves the homelab. Card photos are stored like match photos: re-encoded without metadata, and members only.
 
 ## Still possible to add
 

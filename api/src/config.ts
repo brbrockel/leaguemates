@@ -29,7 +29,7 @@ const EnvSchema = z.object({
   /** Comma-separated origins allowed to call the API cross-origin. Empty: same origin only. */
   CORS_ORIGINS: z.string().default(''),
   /**
-   * Comma-separated old addresses of the app (host names, e.g. teemate.bhbslp.org): every
+   * Comma-separated old addresses of the app (host names, e.g. old.example.com): every
    * request to one is redirected to APP_URL.
    */
   MOVED_FROM: z.string().default(''),

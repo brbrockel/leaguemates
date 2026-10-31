@@ -72,7 +72,7 @@ After a fix to the exporter, rebuild just that season in place. Its rounds, rost
 
 ```bash
 python3 -I tools/import/history_export.py ../leaguemates-data/history ../leaguemates-data/history-export.json
-docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-history.js - --season 2025 < ../leaguemates-data/history-export.json
+docker exec -i $(docker ps -qf name=leaguemates_leaguemates) node dist/scripts/import-history.js - --season 2025 < ../leaguemates-data/history-export.json
 ```
 
 **2025 rounds 11–13.** Three sheets (emails of July 1, 4 and 14) have their dates typed as dates, which the sheet stores as numbers, so the exporter couldn't read them. On the July 2 sheet, Jerry's row also shows one game too many (12; everyone else has 11). Together these dropped round 12 (July 2) and left rounds 11 and 13 without scores. The exporter now reads those dates and takes the most common games count on a standings sheet. Jerry's matches in rounds 11 and 12 have no official result (his standings line can't be compared), so the app scores them from gross and handicap. Every 2025 record then matches the published final standings.
@@ -86,8 +86,8 @@ pip install --target /tmp/pylib xlrd==2.0.1     # the sheet is the old .xls form
 PYTHONPATH=/tmp/pylib python3 tools/import/roster_people.py \
   "../leaguemates-data/history/<date>_<hash>_Roster of J&J League Players 2026.xls" \
   ../leaguemates-data/people-nicknames.json ../leaguemates-data/people-2026.json
-docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-people.js - --dry-run < ../leaguemates-data/people-2026.json
-docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-people.js - < ../leaguemates-data/people-2026.json
+docker exec -i $(docker ps -qf name=leaguemates_leaguemates) node dist/scripts/import-people.js - --dry-run < ../leaguemates-data/people-2026.json
+docker exec -i $(docker ps -qf name=leaguemates_leaguemates) node dist/scripts/import-people.js - < ../leaguemates-data/people-2026.json
 ```
 
 Nothing is emailed. It only fills in blanks, keeps a player's existing account, and can be run again safely. Site admins then send each person a sign-in link from the season roster.

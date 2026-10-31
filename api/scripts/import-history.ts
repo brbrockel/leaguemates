@@ -18,7 +18,7 @@
  * - --replace removes previously imported seasons first; --drop-old deletes the separate
  *   "Wednesday League (History)" league from before the merge.
  */
-import { DEFAULT_LEAGUE_SETTINGS, withDefaults, type LeagueSettings } from '@teemate/shared';
+import { DEFAULT_LEAGUE_SETTINGS, withDefaults, type LeagueSettings } from '@leaguemates/shared';
 import { and, asc, eq, isNotNull } from 'drizzle-orm';
 import { readFileSync } from 'node:fs';
 import { loadConfig } from '../src/config.js';

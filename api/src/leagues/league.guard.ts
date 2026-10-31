@@ -15,7 +15,7 @@ import {
   type LeagueRole,
 } from '../auth/membership.service.js';
 
-const LEAGUE_ROLE = 'teemate:league-role';
+const LEAGUE_ROLE = 'leaguemates:league-role';
 /** Route requires this role in the :leagueId league (default: any member). */
 export const RequireLeagueRole = (role: LeagueRole) => SetMetadata(LEAGUE_ROLE, role);
 

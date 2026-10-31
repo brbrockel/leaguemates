@@ -2,7 +2,7 @@
  * Prints a single-use link to set (or reset) a user's password, without sending email.
  * For the first sign-in on a server, or if every admin is locked out:
  *
- *   pnpm --filter @teemate/api sign-in-link you@example.com
+ *   pnpm --filter @leaguemates/api sign-in-link you@example.com
  *   docker exec <container> node api/dist/scripts/sign-in-link.js you@example.com
  */
 import { eq } from 'drizzle-orm';

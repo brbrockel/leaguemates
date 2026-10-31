@@ -18,7 +18,7 @@ beforeAll(async () => {
     WEB_DIST: web,
     CLIENT_IP_HEADER: 'cf-connecting-ip',
     MAGIC_LINK_LIMIT_PER_IP: 2,
-    movedFrom: ['teemate.example.com'],
+    movedFrom: ['old.example.com'],
   });
 });
 afterAll(async () => {
@@ -54,17 +54,17 @@ describe('serving the web app', () => {
 
 describe('the old address', () => {
   it('redirects pages and the API to APP_URL, keeping the path', async () => {
-    const page = await http().get('/leagues/123?x=1').set('Host', 'teemate.example.com');
+    const page = await http().get('/leagues/123?x=1').set('Host', 'old.example.com');
     expect(page.status).toBe(301);
     expect(page.headers.location).toBe('http://localhost:4101/leagues/123?x=1');
-    const post = await http().post('/api/auth/login').set('Host', 'TeeMate.example.com');
+    const post = await http().post('/api/auth/login').set('Host', 'OLD.example.com');
     expect(post.status).toBe(308);
     // The new address is served as usual.
     await http().get('/leagues/123').expect(200);
   });
 
   it("replaces an installed app's service worker with one that moves it", async () => {
-    const sw = await http().get('/sw.js').set('Host', 'teemate.example.com').expect(200);
+    const sw = await http().get('/sw.js').set('Host', 'old.example.com').expect(200);
     expect(sw.headers['content-type']).toContain('javascript');
     expect(sw.headers['cache-control']).toBe('no-cache');
     expect(sw.text).toContain('registration.unregister()');
@@ -89,11 +89,11 @@ describe('client IP from the edge header', () => {
 describe('secrets from files', () => {
   it('reads FOO from FOO_FILE', () => {
     const dir = mkdtempSync(join(tmpdir(), 'leaguemates-secret-'));
-    writeFileSync(join(dir, 'db'), 'postgres://u:p@db/teemate\n');
+    writeFileSync(join(dir, 'db'), 'postgres://u:p@db/leaguemates\n');
     const env = resolveFileVars({ DATABASE_URL_FILE: join(dir, 'db') });
-    expect(env.DATABASE_URL).toBe('postgres://u:p@db/teemate');
-    const c = loadConfig({ ...env, APP_URL: 'https://teemate.test', MAIL_FROM: 'x' });
-    expect(c.DATABASE_URL).toBe('postgres://u:p@db/teemate');
+    expect(env.DATABASE_URL).toBe('postgres://u:p@db/leaguemates');
+    const c = loadConfig({ ...env, APP_URL: 'https://leaguemates.test', MAIL_FROM: 'x' });
+    expect(c.DATABASE_URL).toBe('postgres://u:p@db/leaguemates');
     rmSync(dir, { recursive: true, force: true });
   });
 });

@@ -1,5 +1,5 @@
 /** Thin fetch wrapper for the LeagueMates API (same origin; nginx or the Vite dev server proxies /api). */
-import type { CardGrid } from '@teemate/shared';
+import type { CardGrid } from '@leaguemates/shared';
 
 let csrfToken: string | null = null;
 
@@ -561,7 +561,7 @@ export interface SiteNotice {
 }
 
 export interface HandicapSuggestions {
-  rule: import('@teemate/shared').HandicapRule;
+  rule: import('@leaguemates/shared').HandicapRule;
   includedLeague: { id: string; name: string } | null;
   players: {
     playerId: string;

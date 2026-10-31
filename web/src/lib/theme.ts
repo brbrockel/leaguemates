@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export type Theme = 'system' | 'light' | 'dark';
-const KEY = 'teemate-theme';
+const KEY = 'leaguemates-theme';
 
 function readTheme(): Theme {
   try {

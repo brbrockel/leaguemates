@@ -31,11 +31,11 @@ How to set up, run and check LeagueMates locally.
 | `pnpm format` | Format the code with Prettier |
 | `pnpm build` | Build all packages |
 | `pnpm history:fixture` | Rebuild the history test fixture from `../leaguemates-data/history/` (the private data repository, cloned next to this one) |
-| `pnpm --filter @teemate/api dev` | Run the API with reload on change (http://localhost:4100/api) |
-| `pnpm --filter @teemate/api db:migrate` | Apply database migrations (build first) |
-| `pnpm --filter @teemate/api db:generate --name <change>` | Create a migration after editing `api/src/db/schema.ts` |
-| `pnpm --filter @teemate/api admin:create <email> [name]` | Create or promote a site admin (accounts are invite-only) |
-| `pnpm --filter @teemate/api sign-in-link <email>` | Print a single-use sign-in link without sending email |
+| `pnpm --filter @leaguemates/api dev` | Run the API with reload on change (http://localhost:4100/api) |
+| `pnpm --filter @leaguemates/api db:migrate` | Apply database migrations (build first) |
+| `pnpm --filter @leaguemates/api db:generate --name <change>` | Create a migration after editing `api/src/db/schema.ts` |
+| `pnpm --filter @leaguemates/api admin:create <email> [name]` | Create or promote a site admin (accounts are invite-only) |
+| `pnpm --filter @leaguemates/api sign-in-link <email>` | Print a single-use sign-in link without sending email |
 
 Copy `.env.example` to `.env` for local settings.
 
@@ -45,10 +45,10 @@ Copy `.env.example` to `.env` for local settings.
 pnpm install
 pnpm dev:services                                  # Postgres + Mailpit
 pnpm build
-pnpm --filter @teemate/api db:migrate
-pnpm --filter @teemate/api admin:create you@example.com "Your Name"
-pnpm --filter @teemate/api dev        # API on :4100
-pnpm --filter @teemate/web dev        # web app on http://localhost:4101
+pnpm --filter @leaguemates/api db:migrate
+pnpm --filter @leaguemates/api admin:create you@example.com "Your Name"
+pnpm --filter @leaguemates/api dev        # API on :4100
+pnpm --filter @leaguemates/web dev        # web app on http://localhost:4101
 ```
 
 Open http://localhost:4101, enter the admin email, and open the link from the email in Mailpit (http://localhost:18025).
@@ -57,7 +57,7 @@ The API uses port **4100** because RigTracker's container already uses 4000 on t
 
 ## API tests
 
-The API tests run against a real Postgres database, `teemate_test`, which is created and migrated automatically. Start `pnpm dev:services` first. They cover:
+The API tests run against a real Postgres database, `leaguemates_test`, which is created and migrated automatically. Start `pnpm dev:services` first. They cover:
 
 - sign-in links: single use, expiry, never revealing whether an email exists
 - sessions and logout

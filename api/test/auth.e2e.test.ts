@@ -35,7 +35,7 @@ describe('everything requires sign-in', () => {
   it('a made-up session cookie is rejected', async () => {
     await http()
       .get('/api/auth/me')
-      .set('Cookie', 'teemate_session=not-a-real-session')
+      .set('Cookie', 'leaguemates_session=not-a-real-session')
       .expect(401);
   });
 
@@ -111,7 +111,7 @@ describe('magic link sign-in', () => {
       .post('/api/auth/verify')
       .send({ token: tokenFromOutbox(t.outbox, 'brian@example.com') });
     const cookie = String(res.headers['set-cookie']);
-    expect(cookie).toMatch(/teemate_session=/);
+    expect(cookie).toMatch(/leaguemates_session=/);
     expect(cookie).toMatch(/HttpOnly/i);
     expect(cookie).toMatch(/SameSite=Lax/i);
   });

@@ -17,7 +17,7 @@ let site: SignedIn;
 let dir: string;
 
 beforeAll(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'teemate-scan-'));
+  dir = await mkdtemp(join(tmpdir(), 'leaguemates-scan-'));
   // No ANTHROPIC_API_KEY: the local OCR fallback reads the card.
   t = await createTestApp({ PHOTOS_DIR: dir, ANTHROPIC_API_KEY: undefined });
 });

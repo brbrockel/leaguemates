@@ -50,7 +50,7 @@ importers:
       '@node-rs/argon2':
         specifier: ^2.2.2
         version: 2.2.2
-      '@teemate/shared':
+      '@leaguemates/shared':
         specifier: workspace:*
         version: link:../packages/shared
       '@tesseract.js-data/eng':
@@ -143,7 +143,7 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.104.3
         version: 5.104.3(react@19.3.1)
-      '@teemate/shared':
+      '@leaguemates/shared':
         specifier: workspace:*
         version: link:../packages/shared
       class-variance-authority:

@@ -47,9 +47,9 @@ In production, the frontend and API run in a single container:
 
 ## Deployment Topology
 
-- Docker Swarm stack defined in `homelab-docker-linux/teemate/teemate-stack.yml`
+- Docker Swarm stack defined in `homelab-docker-linux/leaguemates/leaguemates-stack.yml`
 - Services:
-  - `teemate`: the combined nginx + API container
+  - `leaguemates`: the combined nginx + API container
   - `postgres`
   - `minio` (omitted if Cloudflare R2 is used)
 - Images are published to `ghcr.io/brbrockel/leaguemates`

@@ -1,4 +1,4 @@
-import { addDays } from '@teemate/shared';
+import { addDays } from '@leaguemates/shared';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { todayInLeague } from '../src/seasons/seasons.service.js';
 import {

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { scoreMatch, type Layout } from '@teemate/shared';
+import { scoreMatch, type Layout } from '@leaguemates/shared';
 import {
   AlertTriangle,
   ArrowLeft,
@@ -70,7 +70,7 @@ interface Draft {
   entries: Entry[];
   reason: string;
 }
-const draftKey = (groupId: string) => `teemate.card-draft.${groupId}`;
+const draftKey = (groupId: string) => `leaguemates.card-draft.${groupId}`;
 function readDraft(groupId: string): Draft | null {
   try {
     return JSON.parse(localStorage.getItem(draftKey(groupId)) ?? 'null') as Draft | null;

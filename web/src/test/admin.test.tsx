@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DEFAULT_LEAGUE_SETTINGS } from '@teemate/shared';
+import { DEFAULT_LEAGUE_SETTINGS } from '@leaguemates/shared';
 import { describe, expect, it } from 'vitest';
 import { me, mockApi, renderAt } from './render';
 
@@ -53,7 +53,7 @@ describe('people page', () => {
       'POST /api/users/u2/password-link': () => ({
         status: 201,
         body: {
-          link: 'https://teemate.test/sign-in/verify#token=abc',
+          link: 'https://leaguemates.test/sign-in/verify#token=abc',
           expiresAt: '2026-10-16T20:00:00Z',
         },
       }),
@@ -62,7 +62,7 @@ describe('people page', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Actions for Jerry' }));
     await userEvent.click(await screen.findByRole('menuitem', { name: /Get password link/ }));
     expect(await screen.findByRole('textbox', { name: 'Password link' })).toHaveValue(
-      'https://teemate.test/sign-in/verify#token=abc',
+      'https://leaguemates.test/sign-in/verify#token=abc',
     );
     expect(calls.filter((c) => c.key.startsWith('POST'))).toHaveLength(1);
   });
@@ -84,7 +84,7 @@ describe('people page', () => {
       'POST /api/users/u1/password-link/text': () => ({
         status: 201,
         body: {
-          link: 'https://teemate.test/set-password#token=abc',
+          link: 'https://leaguemates.test/set-password#token=abc',
           phone: '+18605551234',
           hours: 72,
           greeting: 'Brian',

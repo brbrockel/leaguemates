@@ -6,7 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { defaultNickname } from '@teemate/shared';
+import { defaultNickname } from '@leaguemates/shared';
 import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
 import { AuditService } from '../audit/audit.js';
 import type { SessionUser } from '../auth/decorators.js';

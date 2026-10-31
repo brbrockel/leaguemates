@@ -44,13 +44,13 @@ describe('testing mode sign-in', () => {
       email: 'test.user@example.com',
       code: 'TEE-1234-5678',
     });
-    expect(localStorage.getItem('teemate-test-code')).toBe('TEE-1234-5678');
+    expect(localStorage.getItem('leaguemates-test-code')).toBe('TEE-1234-5678');
   });
 
   it('remembers accounts on this device for one-tap sign-in', async () => {
-    localStorage.setItem('teemate-test-code', 'TEE-1234-5678');
+    localStorage.setItem('leaguemates-test-code', 'TEE-1234-5678');
     localStorage.setItem(
-      'teemate-test-emails',
+      'leaguemates-test-emails',
       JSON.stringify(['test.admin@example.com', 'test.user@example.com']),
     );
     const calls = testApi();
@@ -65,14 +65,14 @@ describe('testing mode sign-in', () => {
   });
 
   it('a wrong code forgets the saved code and asks again', async () => {
-    localStorage.setItem('teemate-test-code', 'OLD-CODE-0000');
-    localStorage.setItem('teemate-test-emails', JSON.stringify(['test.user@example.com']));
+    localStorage.setItem('leaguemates-test-code', 'OLD-CODE-0000');
+    localStorage.setItem('leaguemates-test-emails', JSON.stringify(['test.user@example.com']));
     testApi(() => 401);
     renderAt('/sign-in');
     await userEvent.click(await screen.findByRole('button', { name: 'test.user@example.com' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('not right');
     expect(screen.getByLabelText('Test access code')).toBeInTheDocument();
-    expect(localStorage.getItem('teemate-test-code')).toBeNull();
+    expect(localStorage.getItem('leaguemates-test-code')).toBeNull();
   });
 });
 
@@ -87,7 +87,7 @@ describe('site settings', () => {
     secure: false,
     user: null,
     hasPassword: false,
-    from: 'LeagueMates <teemate@test>',
+    from: 'LeagueMates <leaguemates@test>',
     canStorePassword: true,
   };
   const view = (over = {}) => ({

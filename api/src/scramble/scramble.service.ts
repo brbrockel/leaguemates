@@ -14,7 +14,7 @@ import {
   withDefaults,
   type Layout,
   type LeagueSettings,
-} from '@teemate/shared';
+} from '@leaguemates/shared';
 import { randomInt } from 'node:crypto';
 import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { AuditService } from '../audit/audit.js';

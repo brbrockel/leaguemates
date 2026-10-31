@@ -7,14 +7,13 @@ How LeagueMates runs in the homelab, and how to update it. Since 1.0.0 (2026-10-
 | | |
 |---|---|
 | URL | https://leaguemates.bhbslp.org (Cloudflare tunnel wildcard, then Traefik, then the container) |
-| Old address | https://teemate.bhbslp.org (TeeMate's) still routes to the container, which redirects it to the URL above (`MOVED_FROM`) and replaces an app installed there with a service worker that moves it |
-| Stack | `teemate` on the homelab Docker Swarm; stack file `homelab-docker-linux/teemate/teemate-stack.yml` |
-| Services | `teemate_teemate` (API + web app, port 4100 on the Docker network only) and `teemate_postgres` (PostgreSQL 18, internal network only) |
+| Stack | `leaguemates` on the homelab Docker Swarm; stack file `homelab-docker-linux/leaguemates/leaguemates-stack.yml` |
+| Services | `leaguemates_leaguemates` (API + web app, port 4100 on the Docker network only) and `leaguemates_postgres` (PostgreSQL 18, internal network only) |
 | Host ports | **None.** Nothing is published on the host. Traefik reaches the app over `traefik-public` |
-| Data | Docker volume `teemate_prod-db`. It's kept separate from the dev volume `teemate_postgres-data`; the two must never share a name |
-| Backups | Service `teemate_backup`: compressed `pg_dump` nightly at 07:00 UTC (about 3 AM Eastern), checked with `pg_restore --list`, 30 days kept in the volume `teemate_backups`. A test restore was done on 2026-10-15 and matched production exactly |
-| Secrets | Swarm secrets `teemate_db_password`, `teemate_database_url` and `teemate_app_secret` (encrypts authenticator keys) `teemate_anthropic_api_key` (reads scorecard photos) and `teemate_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/leaguemates`), and `teemate_vapid_private_key` (signs push notifications; its public half is `VAPID_PUBLIC_KEY` in the stack file), created once and never stored in a file |
-| Photos | Volume `teemate_photos` at `/data/photos` (`PHOTOS_DIR`). Files are served only through the app, to league members |
+| Data | Docker volume `leaguemates_prod-db`. It's kept separate from the dev volume `leaguemates_postgres-data`; the two must never share a name |
+| Backups | Service `leaguemates_backup`: compressed `pg_dump` nightly at 07:00 UTC (about 3 AM Eastern), checked with `pg_restore --list`, 30 days kept in the volume `leaguemates_backups`. A test restore was done on 2026-10-15 and matched production exactly |
+| Secrets | Swarm secrets `leaguemates_db_password`, `leaguemates_database_url` and `leaguemates_app_secret` (encrypts authenticator keys) `leaguemates_anthropic_api_key` (reads scorecard photos) and `leaguemates_github_token` (files "Report a problem" as issues on the public repo: a fine-grained token limited to Issues on `brbrockel/leaguemates`), and `leaguemates_vapid_private_key` (signs push notifications; its public half is `VAPID_PUBLIC_KEY` in the stack file), created once and never stored in a file |
+| Photos | Volume `leaguemates_photos` at `/data/photos` (`PHOTOS_DIR`). Files are served only through the app, to league members |
 | Email | Set in the app: profile menu → **Site settings → Email** (site admins only): who gets email (off, an allowlist, or everyone), the mail server and its password (stored encrypted with `APP_SECRET`), and the From address. **Send me a test email** checks it. Until it's saved there, the stack's `MAIL_MODE=off` applies and nothing is sent. Sending to everyone is only with the owner's consent |
 | Dashboard | Heimdall tile "LeagueMates" (dashboard.bhbslp.org) |
 | Testing mode | Switched on and off in the app: profile menu → **Site settings** (site admins only). While on, the sign-in page offers instant sign-in with a shared access code, and new emails become users in the chosen league. It can't be on while email goes to everyone. Turn it off before go-live |
@@ -25,45 +24,45 @@ How LeagueMates runs in the homelab, and how to update it. Since 1.0.0 (2026-10-
 cd ~/repos/leaguemates
 git pull && pnpm check                      # must pass
 TAG=$(git rev-parse --short HEAD)           # a release uses its version instead, e.g. TAG=1.0.0
-docker build --build-arg APP_VERSION=$TAG -t teemate:$TAG -t teemate:latest .
+docker build --build-arg APP_VERSION=$TAG -t leaguemates:$TAG -t leaguemates:latest .
 cd ~/repos/homelab-docker-linux
-TEEMATE_TAG=$TAG docker stack deploy -c teemate/teemate-stack.yml teemate
-docker service logs -f teemate_teemate       # expect "Migrations applied" then "listening"
+LEAGUEMATES_TAG=$TAG docker stack deploy -c leaguemates/leaguemates-stack.yml leaguemates
+docker service logs -f leaguemates_leaguemates       # expect "Migrations applied" then "listening"
 ```
 
 The image is built locally; this single-node Swarm runs it without a registry. Pushing to `ghcr.io/brbrockel/leaguemates` needs a token with `write:packages`.
 
 **A release:** bump `version` in the four `package.json` files, add it to [Changelog.md](Changelog.md), commit, tag `vX.Y.Z`, build and deploy with `TAG=X.Y.Z`, push with the tag and create a GitHub release from the tag. Take a backup first (below).
 
-**Roll back:** redeploy a previous tag (`docker image ls teemate`). Database migrations only move forward, so check the migration list before rolling back across a schema change.
+**Roll back:** redeploy a previous tag (`docker image ls leaguemates`). Database migrations only move forward, so check the migration list before rolling back across a schema change.
 
 ## Backups and restore
 
-The nightly backup also writes `teemate-photos.tar.gz`, one current copy of all match photos, beside the database dumps. Restore it with `tar -xzf teemate-photos.tar.gz -C <photos volume>`.
+The nightly backup also writes `leaguemates-photos.tar.gz`, one current copy of all match photos, beside the database dumps. Restore it with `tar -xzf leaguemates-photos.tar.gz -C <photos volume>`.
 
 ```bash
-B=$(docker ps -qf name=teemate_backup)
-docker service logs teemate_backup --tail 5                  # "backup ok: ... (56.0K)"
+B=$(docker ps -qf name=leaguemates_backup)
+docker service logs leaguemates_backup --tail 5                  # "backup ok: ... (56.0K)"
 docker exec $B ls -lh /backups                               # available backups
-docker cp $B:/backups/teemate-2026-10-15.dump ~/              # copy one off the machine
+docker cp $B:/backups/leaguemates-2026-10-15.dump ~/              # copy one off the machine
 ```
 
 **Test restore** (safe, into a scratch database):
 
 ```bash
-PG=$(docker ps -qf name=teemate_postgres)
-docker exec $PG psql -U teemate -c "create database restore_test"
-docker exec $B sh -c 'PGPASSWORD="$(cat /run/secrets/teemate_db_password)" pg_restore -h postgres -U teemate -d restore_test --no-owner /backups/<file>.dump'
+PG=$(docker ps -qf name=leaguemates_postgres)
+docker exec $PG psql -U leaguemates -c "create database restore_test"
+docker exec $B sh -c 'PGPASSWORD="$(cat /run/secrets/leaguemates_db_password)" pg_restore -h postgres -U leaguemates -d restore_test --no-owner /backups/<file>.dump'
 # compare counts, then:
-docker exec $PG psql -U teemate -c "drop database restore_test"
+docker exec $PG psql -U leaguemates -c "drop database restore_test"
 ```
 
 **Real restore** (replaces production data; stop the app first):
 
 ```bash
-docker service scale teemate_teemate=0
-docker exec $B sh -c 'PGPASSWORD="$(cat /run/secrets/teemate_db_password)" pg_restore -h postgres -U teemate -d teemate --clean --if-exists --no-owner /backups/<file>.dump'
-docker service scale teemate_teemate=1
+docker service scale leaguemates_leaguemates=0
+docker exec $B sh -c 'PGPASSWORD="$(cat /run/secrets/leaguemates_db_password)" pg_restore -h postgres -U leaguemates -d leaguemates --clean --if-exists --no-owner /backups/<file>.dump'
+docker service scale leaguemates_leaguemates=1
 ```
 
 The backups are on the same disk as the database. They protect against mistakes and bad data, not against losing the disk. Copying them off the machine (e.g. to Nextcloud) is still to be set up.
@@ -71,10 +70,10 @@ The backups are on the same disk as the database. They protect against mistakes 
 ## Admin tasks
 
 ```bash
-C=$(docker ps -qf name=teemate_teemate)
+C=$(docker ps -qf name=leaguemates_leaguemates)
 docker exec $C node dist/scripts/create-admin.js someone@example.com "Name"   # site admin
 docker exec $C node dist/scripts/sign-in-link.js someone@example.com           # 24h single-use link
-docker exec $(docker ps -qf name=teemate_postgres) psql -U teemate             # database shell
+docker exec $(docker ps -qf name=leaguemates_postgres) psql -U leaguemates             # database shell
 ```
 
 ## League history
@@ -83,7 +82,7 @@ The spreadsheets in `../leaguemates-data/history/` (private data repository) are
 
 ```bash
 python3 -I tools/import/history_export.py ../leaguemates-data/history ../leaguemates-data/history-export.json   # prints a per-season report
-docker exec -i $(docker ps -qf name=teemate_teemate) node dist/scripts/import-history.js - --season 2025 < ../leaguemates-data/history-export.json
+docker exec -i $(docker ps -qf name=leaguemates_leaguemates) node dist/scripts/import-history.js - --season 2025 < ../leaguemates-data/history-export.json
 ```
 
 `--replace` rebuilds every imported season from scratch, which deletes and recreates them (and so unlinks anything attached to them, such as season photos); prefer `--season`.

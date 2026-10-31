@@ -1,4 +1,4 @@
-import { scoreMatch, type Layout, type MatchResult, type Outcome } from '@teemate/shared';
+import { scoreMatch, type Layout, type MatchResult, type Outcome } from '@leaguemates/shared';
 
 export interface RoundData {
   playerId: string;

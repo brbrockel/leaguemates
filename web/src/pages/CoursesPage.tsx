@@ -53,7 +53,7 @@ function miles(a: { lat: number; lng: number }, b: { lat: number; lng: number })
   return 3958.8 * 2 * Math.asin(Math.sqrt(h));
 }
 
-const SORT_KEY = 'teemate-course-sort';
+const SORT_KEY = 'leaguemates-course-sort';
 
 export function CoursesPage() {
   const { data: me } = useMe();

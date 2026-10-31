@@ -1,7 +1,7 @@
 import { Share, SquarePlus, X } from 'lucide-react';
 import { useState } from 'react';
 
-const KEY = 'teemate.installHint.dismissed';
+const KEY = 'leaguemates.installHint.dismissed';
 
 /** An iPhone or iPad (iPadOS reports itself as a Mac, but with touch). */
 export function isIos(nav: Navigator = navigator): boolean {
