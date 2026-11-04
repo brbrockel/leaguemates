@@ -3,7 +3,7 @@
 What changed in each release. Versions follow [semantic versioning](https://semver.org/); the
 git tag is `vX.Y.Z` and the running version shows on problem reports.
 
-## Unreleased
+## 1.3.1 (2026-11-04)
 
 - **Everyone signs in once more.** Internal names were cleaned up, so existing sign-ins end, and this browser's saved preferences and any scores typed but not saved are reset. The previous web address no longer works; use https://leaguemates.bhbslp.org.
 - **Fix: taking a photo on a phone.** The installed app’s picture chooser on Android stopped offering the camera, leaving only the gallery. Every photo button (scan a card, scan cards, add photos, add a card picture) now opens the camera straight away on a phone, with **From photos** beside it for the gallery; on a computer it opens the file dialog as before.
