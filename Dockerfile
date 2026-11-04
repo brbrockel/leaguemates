@@ -35,7 +35,8 @@ COPY --from=build /repo/web/dist /app/web
 RUN mkdir -p /data/photos && chown node:node /data/photos
 USER node
 EXPOSE 4100
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
+# Generous start period: after a host restart everything boots at once and startup is slow.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=180s --start-interval=5s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:4100/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 # Apply database migrations, then start. Admin helpers: node dist/scripts/<name>.js
 CMD ["sh", "-c", "node dist/src/db/migrate.js && exec node dist/src/main.js"]

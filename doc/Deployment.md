@@ -27,7 +27,7 @@ TAG=$(git rev-parse --short HEAD)           # a release uses its version instead
 docker build --build-arg APP_VERSION=$TAG -t leaguemates:$TAG -t leaguemates:latest .
 cd ~/repos/homelab-docker-linux
 LEAGUEMATES_TAG=$TAG docker stack deploy -c leaguemates/leaguemates-stack.yml leaguemates
-docker service logs -f leaguemates_leaguemates       # expect "Migrations applied" then "listening"
+docker service logs -f leaguemates_leaguemates       # expect "Migrations applied" then "listening" ("Database not ready ... retrying" for up to 2 min is normal after a host restart)
 ```
 
 The image is built locally; this single-node Swarm runs it without a registry. Pushing to `ghcr.io/brbrockel/leaguemates` needs a token with `write:packages`.

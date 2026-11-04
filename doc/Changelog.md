@@ -7,6 +7,7 @@ git tag is `vX.Y.Z` and the running version shows on problem reports.
 
 - **Everyone signs in once more.** Internal names were cleaned up, so existing sign-ins end, and this browser's saved preferences and any scores typed but not saved are reset. The previous web address no longer works; use https://leaguemates.bhbslp.org.
 - **Fix: taking a photo on a phone.** The installed app’s picture chooser on Android stopped offering the camera, leaving only the gallery. Every photo button (scan a card, scan cards, add photos, add a card picture) now opens the camera straight away on a phone, with **From photos** beside it for the gallery; on a computer it opens the file dialog as before.
+- **Fix: the site stayed down after the server restarted.** When everything on the server started at once, the app gave up if the database wasn't ready yet, or was stopped for being slow to start, and was down for about 30 minutes on 2026-11-04. It now waits up to 2 minutes for the database and has 3 minutes to start before its health check counts.
 
 ## 1.3.0 (2026-10-22)
 
